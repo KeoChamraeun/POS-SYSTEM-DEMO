@@ -2,9 +2,11 @@
 @include('admin.layout.head')
 
 <body>
-    <div id="global-loader">
+    {{-- <div id="global-loader">
 		<div class="whirly-loader"> </div>
-	</div>
+	</div> --}}
+
+    
 	<!-- Main Wrapper -->
 	<div class="main-wrapper">
 
@@ -17,8 +19,9 @@
 		<!-- /Sidebar -->
 
 		<div class="page-wrapper">
-			@yield('content')
-			
+            <div class="content">
+                @yield('content')
+            </div>
             @include('admin.layout.footer')
 		</div>
 
