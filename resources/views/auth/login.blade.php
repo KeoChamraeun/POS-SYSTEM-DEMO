@@ -1,47 +1,119 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="en">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+<head>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{  asset('backend/assets/css/bootstrap.min.css') }}">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{{  asset('backend/assets/plugins/fontawesome/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{  asset('backend/assets/plugins/fontawesome/css/all.min.css') }}">
+
+    <!-- Tabler Icon CSS -->
+    <link rel="stylesheet" href="{{  asset('backend/assets/plugins/tabler-icons/tabler-icons.css')}}">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{  asset('backend/assets/css/style.css')}}">
+
+</head>
+
+<body class="account-page bg-white">
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <div class="account-content">
+            <div class="login-wrapper login-new">
+                <div class="row w-100">
+                    <div class="col-lg-5 mx-auto">
+                        <div class="login-content user-login">
+                            <div class="login-logo">
+                                {{-- <img src="assets/img/logo.svg" alt="img"> --}}
+                                <h3 class="mb-3">POS Inventory</h3>
+                                <a href="{{ route('login') }}" class="login-logo logo-white">
+                                    {{-- <img src="assets/img/logo-white.svg" alt="Img"> --}}
+                                    POS Inventory
+                                </a>
+                            </div>
+                            <form action="{{ route('login') }}" method="POST">
+                                @csrf
+                                <div class="card">
+                                    <div class="card-body p-5">
+                                        <div class="login-userheading">
+                                            <h3>Sign In</h3>
+                                            <h4>Access the Nebula POS admin panel using your email and password.</h4>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email <span class="text-danger"> *</span></label>
+                                            <div class="input-group">
+                                                <input type="text" name="email" class="form-control border-end-0">
+                                                <span class="input-group-text border-start-0">
+                                                    <i class="ti ti-mail"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Password <span class="text-danger">
+                                                    *</span></label>
+                                            <div class="pass-group">
+                                                <input type="password" name="password" class="pass-input form-control">
+                                                <span class="ti toggle-password ti-eye-off text-gray-9"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-login authentication-check">
+                                            <div class="row">
+                                                <div class="col-12 d-flex align-items-center justify-content-between">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <label
+                                                            class="checkboxs ps-4 mb-0 pb-0 line-height-1 fs-16 text-gray-6">
+                                                            <input type="checkbox" name="remember" class="form-control">
+                                                            <span class="checkmarks"></span>Remember me
+                                                        </label>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <a class="text-orange fs-16 fw-medium"
+                                                            href="{{ route('password.request') }}">Forgot Password?</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-login">
+                                            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
+                            <p>Copyright &copy; 2025 Nebula POS</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    <!-- /Main Wrapper -->
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    <!-- jQuery -->
+    <script src="{{  asset('backend/assets/js/jquery-3.7.1.min.js') }}"></script>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    <!-- Feather Icon JS -->
+    <script src="{{  asset('backend/assets/js/feather.min.js') }}"></script>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    <!-- Bootstrap Core JS -->
+    <script src="{{  asset('backend/assets/js/bootstrap.bundle.min.js') }}"></script>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <!-- Custom JS -->
+    <script src="{{  asset('backend/assets/js/script.js') }}"></script>
+</body>
+</html>
