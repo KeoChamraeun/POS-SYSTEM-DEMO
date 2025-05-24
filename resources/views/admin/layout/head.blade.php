@@ -11,40 +11,50 @@
 	<meta name="robots" content="index, follow">
 	@yield('title')
 
-	<script src="{{ asset('backend/assets/js/theme-script.js') }}"></script>	
+    <script src="{{ asset('backend/assets/js/theme-script.js') }}"></script>
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('backend/assets/img/favicon.png') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('backend/assets/img/favicon.png') }}">
 
-	<!-- Apple Touch Icon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('backend/assets/img/apple-touch-icon.png') }}">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('backend/assets/img/apple-touch-icon.png') }}">
 
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/css/bootstrap.min.css') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/bootstrap.min.css') }}">
 
-	<!-- Datetimepicker CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/css/bootstrap-datetimepicker.min.css') }}">
+    <!-- Datetimepicker CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/bootstrap-datetimepicker.min.css') }}">
 
-	<!-- animation CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/css/animate.css') }}">
+    <!-- animation CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/animate.css') }}">
 
-	<!-- Select2 CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/plugins/select2/css/select2.min.css') }}">
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/select2/css/select2.min.css') }}">
 
-	<!-- Daterangepikcer CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/plugins/daterangepicker/daterangepicker.css') }}">
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/dataTables.bootstrap5.min.css') }}">
 
-	<!-- Tabler Icon CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/plugins/tabler-icons/tabler-icons.css') }}">
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/fontawesome/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/fontawesome/css/all.min.css') }}">
 
-	<!-- Fontawesome CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/plugins/fontawesome/css/fontawesome.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('backend/assets/plugins/fontawesome/css/all.min.css') }}">
+    <!-- Daterangepikcer CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/daterangepicker/daterangepicker.css') }}">
 
-	<!-- Color Picker Css -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/plugins/%40simonwep/pickr/themes/nano.min.css') }}">
+    <!-- Tabler Icon CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/tabler-icons/tabler-icons.css') }}">
 
-	<!-- Main CSS -->
-	<link rel="stylesheet" href="{{ asset('backend/assets/css/style.css') }}">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/owlcarousel/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/owlcarousel/owl.theme.default.min.css') }}">
+
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/plugins/%40simonwep/pickr/themes/nano.min.css') }}">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/style.css') }}">
+
+    <!-- jQuery -->
+    <script src="{{ asset('backend/assets/js/jquery-3.7.1.min.js') }}"></script>
 
 </head>
