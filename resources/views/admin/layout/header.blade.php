@@ -204,9 +204,9 @@
                     </div>
                 </div>
             </li>
-            
+
             <li class="nav-item pos-nav">
-                <a href="pos.html" class="btn btn-dark btn-md d-inline-flex align-items-center">
+                <a href="{{ route('pos') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
                     <i class="ti ti-device-laptop me-1"></i>POS
                 </a>
             </li>

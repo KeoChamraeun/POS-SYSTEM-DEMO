@@ -16,8 +16,11 @@ return new class extends Migration
             $table->string('table_no')->nullable();
             $table->string('order_number')->nullable();
             $table->string('customer_name')->nullable();
-            $table->enum('status', ['pending', 'confirmed', 'paid'])->default('pending');
+            $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('adjustment', 10, 2)->default(0);
+            $table->string('payment_method')->nullable();
             $table->decimal('total', 10, 2)->default(0);
+            $table->enum('status', ['pending', 'confirmed', 'paid'])->default('pending');
             $table->timestamps();
         });
     }
