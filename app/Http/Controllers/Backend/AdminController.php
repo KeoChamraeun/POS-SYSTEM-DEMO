@@ -20,9 +20,7 @@ class AdminController extends Controller
         return redirect('/login')->with($notification);
     }
 
-    public function POS(){
-        return view('admin.pos.pos_page');
-    }
+
 
     public function POSTable(){
         $menus = Menu::all();

@@ -8,18 +8,23 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Livewire\Component;
 
+use function Laravel\Prompts\alert;
+
 class Pos extends Component
 {
     public $cart = [];
     public $selectedCategory = null;
     public $searchTerm = '';
-
     public $table = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     public $tableNo; // fixed, initialized in mount()
     public $orderNumber; // fixed, initialized in mount()
     public $customerName = 'Walk in Customer';
     public $status = 'pending';
     public $paymentMethod = 'cash';
+    public $subTotal = 0;
+    public $discount = 0;
+    public $discountType = 'percentage'; // Default discount type
+    public $discountValue = 0; // Default discount value
 
     public function mount()
     {
@@ -96,6 +101,12 @@ class Pos extends Component
         }
     }
 
+    public function getSubTotal()
+    {
+        return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
+   
+    }
+    
     public function getTotal()
     {
         return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
@@ -116,6 +127,7 @@ class Pos extends Component
             'status' => $this->status,
             'payment_method' => $this->paymentMethod,
             'discount' => 0, // Default discount
+            'sub_total' => $this->getTotal(),
             'adjustment' => 0, // Default adjustment
             'total' => $this->getTotal(),
         ]);
@@ -129,11 +141,15 @@ class Pos extends Component
                 'price' => $entry['price'],
             ]);
         }
-
+        // Clear the cart after submitting the order
         $this->cart = [];
 
         session()->flash('success', 'Order submitted successfully!');
+        // $this->dispatch('printReceiptShow');
+
+        return redirect()->route('order.confirmation', $order->id);
     }
+
 
     public function clearCart()
     {
@@ -141,6 +157,25 @@ class Pos extends Component
         session()->flash('success', 'Cart cleared successfully!');
     }
 
+
+    public function getDiscount()
+    {
+        if ($this->discountValue < 0) {
+            session()->flash('error', 'Discount cannot be negative.');
+            return;
+        }
+
+        $this->subTotal = $this->getSubTotal();
+        if($this->discountType == 'percentage'){
+            $this->discount = $this->subTotal * $this->discountValue / 100;
+        }else{
+           $this->discount= $this->discountValue;
+        }
+        
+        $this->dispatch('closeDiscountModal');
+        return $this->discount;
+
+    }
     public function render()
     {
         $items = $this->selectedCategory

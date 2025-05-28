@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\OrderConfirmation;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,8 +25,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
-    Route::get('/pos', [AdminController::class, 'POS'])->name('pos');
+    Route::get('/pos', [PosController::class, 'POS'])->name('pos');
     Route::get('/pos-table', [AdminController::class, 'POSTable']);
+    Route::get('/order/confirmed/{orderId}', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
 });
 
 Route::middleware('auth')->controller(SiteSettingController::class)->group(function () {

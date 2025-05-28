@@ -126,28 +126,22 @@
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Shipping</label>
-                            <input type="number" class="form-control" value="0">
+                            <input type="number" class="form-control" value="0"> 
                         </div>
                         <div class="mb-2">
                             <label class="form-label text-danger">Discount
-                                <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i
-                                        class="ti ti-edit"></i></a>
+                                <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i class="ti ti-edit"></i></a>
                             </label>
-                            <input type="text" class="form-control" value="{{ $this->getDiscount() }}"
-                                readonly>
+                            <input type="text" class="form-control" value="0">
                         </div>
                         <hr>
-                        <p class="mb-1">Sub Total: <span class="float-end">${{ number_format($this->getSubTotal(), 2)
+                        <p class="mb-1">Sub Total: <span class="float-end">${{ number_format($this->getTotal(), 2)
                                 }}</span></p>
-                        <p class="mb-1"> 
-                            <span class="text-danger">Discount 
-                            <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i class="ti ti-edit"></i></a>: </span>
-                            <span class="float-end">${{ number_format($this->getDiscount(), 2) }}</span></p>
                         <p class="mb-1">Tax (GST 5%): <span class="float-end">${{ number_format($this->getTotal() *
                                 0.05, 2) }}</span></p>
                         <p class="mb-1">Adjustment: <span class="float-end">$0.00</span></p>
                         <hr>
-                        <p class="fw-bold">Total: <span class="float-end">${{ number_format($this->getTotal() * 1.05, 2)
+                        <p class="fw-bold">Total: <span class="float-end">${{ number_format($total,2)
                                 }}</span></p>
 
                         <div class="block-section payment-method">
@@ -181,46 +175,37 @@
     </div>
 
     <!-- Discount -->
-    <div class="modal fade modal-default" id="discount">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Discount </h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form wire:submit.prevent="getDiscount">
-                    <div class="modal-body pb-1">
-                        <div class="mb-3">
-                            <label class="form-label">Order Discount Type <span class="text-danger">*</span></label>
-                            <select class="select" wire:model="discountType">
-                                <option>Select</option>
-                                <option>Flat</option>
-                                <option>Percentage</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Value <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" wire:model="discountValue"
-                                placeholder="Enter discount value">
-                        </div>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-end flex-wrap gap-2">
-                        <button type="button" class="btn btn-md btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-md btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- /Discount -->
+		<div class="modal fade modal-default" id="discount">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Discount </h5>
+					   <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						   <span aria-hidden="true">×</span>
+					   </button>
+				   </div>
+				   <form action="" wire:submit.prevent="applyDiscount">
+						<div class="modal-body pb-1">
+							<div class="mb-3">
+								<label class="form-label">Order Discount Type <span class="text-danger">*</span></label>
+								<select class="select">
+									<option>Select</option>
+									<option>Flat</option>
+									<option>Percentage</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Value <span class="text-danger">*</span></label>
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="modal-footer d-flex justify-content-end flex-wrap gap-2">
+							<button type="button" class="btn btn-md btn-secondary" data-bs-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-md btn-primary">Submit</button>
+						</div>
+				   </form>
+				</div>
+			</div>
+		</div>
+		<!-- /Discount -->
 </div>
-
-@script
-<script>
-    window.addEventListener('closeDiscountModal', () => {
-        $('#discount').modal('hide');
-    });
-</script>
-@endscript
