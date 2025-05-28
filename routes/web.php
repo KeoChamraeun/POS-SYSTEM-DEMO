@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
 use App\Http\Controllers\ProfileController;
@@ -20,6 +21,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Category Routes
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/category', 'index')->name('category.index');
+    Route::post('/category/store', 'store')->name('category.store');
+    Route::post('/category/update', 'update')->name('category.update');
+    Route::post('/category/delete', 'destroy')->name('category.delete');
 });
 
 
