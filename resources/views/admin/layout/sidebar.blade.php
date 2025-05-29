@@ -86,28 +86,16 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Inventory</h6>
                     <ul>
-                        <li><a href="product-list.html"><i data-feather="box"></i><span>Products</span></a></li>
-                        <li><a href="add-product.html"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create
-                                    Product</span></a></li>
-                        <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired
-                                    Products</span></a></li>
-                        <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low
-                                    Stocks</span></a></li>
-                        <li><a href="{{ route('category.index') }}"><i
-                                    class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
-                        <li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub
-                                    Category</span></a></li>
-                        <li><a href="brand-list.html"><i class="ti ti-triangles fs-16 me-2"></i><span>Brands</span></a>
+                        <li>
+                            <a href="{{ route('category.index') }}">
+                                <i class="ti ti-list-details fs-16 me-2"></i><span>Category</span>
+                            </a>
                         </li>
-                        <li><a href="units.html"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
-                        <li><a href="varriant-attributes.html"><i class="ti ti-checklist fs-16 me-2"></i><span>Variant
-                                    Attributes</span></a></li>
-                        <li><a href="warranty.html"><i
-                                    class="ti ti-certificate fs-16 me-2"></i><span>Warranties</span></a></li>
-                        <li><a href="barcode.html"><i class="ti ti-barcode fs-16 me-2"></i><span>Print
-                                    Barcode</span></a></li>
-                        <li><a href="qrcode.html"><i class="ti ti-qrcode fs-16 me-2"></i><span>Print QR
-                                    Code</span></a></li>
+                        <li>
+                            <a href="{{ route('menu.index') }}">
+                                <i class="ti ti-list-details fs-16 me-2"></i><span>Menu</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="submenu-open">

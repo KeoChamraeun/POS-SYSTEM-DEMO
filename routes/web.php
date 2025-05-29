@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
 use App\Http\Controllers\ProfileController;
@@ -30,6 +31,24 @@ Route::controller(CategoryController::class)->group(function () {
     Route::post('/category/update', 'update')->name('category.update');
     Route::post('/category/delete', 'destroy')->name('category.delete');
     Route::delete('/category/bulk-delete', 'bulkDelete')->name('category.bulk.delete');
+});
+
+// menu Routes
+Route::controller(MenuController::class)->group(function () {
+    Route::get('/menu', 'index')->name('menu.index');
+    Route::post('/menu/store', 'store')->name('menu.store');
+    Route::post('/menu/update', 'update')->name('menu.update');
+    Route::post('/menu/delete', 'destroy')->name('menu.delete');
+    Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
+});
+
+// menu Routes
+Route::controller(MenuController::class)->group(function () {
+    Route::get('/menu', 'index')->name('menu.index');
+    Route::post('/menu/store', 'store')->name('menu.store');
+    Route::post('/menu/update', 'update')->name('menu.update');
+    Route::post('/menu/delete', 'destroy')->name('menu.delete');
+    Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
 });
 
 

@@ -12,8 +12,8 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4 class="fw-bold">Category</h4>
-                    <h6>Manage your categories</h6>
+                    <h4 class="fw-bold">menu</h4>
+                    <h6>Manage your menu</h6>
                 </div>
             </div>
             <ul class="table-top-head">
@@ -25,12 +25,12 @@
                 </li>
             </ul>
             <div class="page-btn">
-                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-category"><i class="ti ti-circle-plus me-1"></i>Add Category</a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-menu"><i class="ti ti-circle-plus me-1"></i>Add menu</a>
             </div>
         </div>
 
         <!-- Bulk Delete Form Start -->
-        <form action="{{ route('category.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected categories?');">
+        <form action="{{ route('menu.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menus?');" enctype="multipart/form-data">
             @csrf
             @method('DELETE')
 
@@ -59,8 +59,9 @@
                                             <span class="checkmarks"></span>
                                         </label>
                                     </th>
-                                    <th>Category</th>
-                                    <th>Created On</th>
+                                    <th>Menu</th>
+                                    <th>Price</th>
+                                    <th>Image</th>
                                     <th>Status</th>
                                     <th class="no-sort"></th>
                                 </tr>
@@ -77,19 +78,25 @@
                                     </div>
                                 @endif
 
-                                @foreach ($categories as $category)
+                                @foreach ($menus as $menu)
                                     <tr>
                                         <td>
                                             <label class="checkboxs">
-                                                <input type="checkbox" name="ids[]" value="{{ $category->id }}">
+                                                <input type="checkbox" name="ids[]" value="{{ $menu->id }}">
                                                 <span class="checkmarks"></span>
                                             </label>
                                         </td>
 
-                                        <td><span class="text-gray-9">{{ $category->name }}</span></td>
-                                        <td>{{ $category->created_at->format('d M Y') }}</td>
+                                        <td><span class="text-gray-9">{{ $menu->name }}</span></td>
                                         <td>
-                                            @if ($category->status == 'active')
+                                            <span class="text-gray-9">${{ $menu->price }}</span>
+                                        </td>
+
+                                        <td>
+                                            <img src="{{ asset(  $menu->image) }}" width="50" height="50" alt="image">
+                                        </td>
+                                        <td>
+                                            @if ($menu->status == 'active')
                                                 <span class="badge bg-success fw-medium fs-10">Active</span>
                                             @else
                                                 <span class="badge bg-danger fw-medium fs-10">Inactive</span>
@@ -97,12 +104,14 @@
                                         </td>
                                         <td class="action-table-data">
                                             <div class="edit-delete-action">
-                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-category" id="edit-cat">
+                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-menu" id="edit-cat">
                                                     <i data-feather="edit" class="feather-edit"></i>
                                                 </a>
-                                                <input type="hidden" name="cat_id" value="{{ $category->id }}" id="cat_id">
-                                                <input type="hidden" name="cat_name" value="{{ $category->name }}" id="cat_name">
-                                                <input type="hidden" name="cat_status" value="{{ $category->status }}" id="cat_status">
+                                                <input type="hidden" name="menu_id" value="{{ $menu->id }}" id="menu_id">
+                                                <input type="hidden" name="menu_name" value="{{ $menu->name }}" id="menu_name">
+                                                <input type="hidden" name="menu_price" value="{{ $menu->price }}" id="menu_price">
+                                                <input type="hidden" name="menu_image" value="{{ $menu->image }}" id="menu_image">
+                                                <input type="hidden" name="menu_status" value="{{ $menu->status }}" id="menu_status">
 
                                                 <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-3" href="javascript:void(0);" id="delete-cat">
                                                     <i data-feather="trash-2" class="feather-trash-2"></i>
@@ -130,27 +139,50 @@
         </script>
 
 
-        <!-- Add Category -->
-        <div class="modal fade" id="add-category">
+        <!-- Add menu -->
+        <div class="modal fade" id="add-menu">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Add Category</h4>
+                            <h4>Add menu</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('category.store') }}" method="POST">
+                    <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter category name" required>
+                        <div class="modal-body add-list add">
+                            <div class="add-choosen">
+                                <div class="mb-3">
+                                    <div class="image-upload image-upload-two">
+                                        <input type="file" name="image" class="form-control" accept="image/*" required onchange="loadImage(this)">
+                                        <div class="image-uploads">
+                                            <i data-feather="plus-circle" class="plus-down-add me-0"></i>
+                                            <h4>Add Images</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="phone-img">
+                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image">
+                                    {{-- <a href="javascript:void(0);"></a> --}}
+                                </div>
                             </div>
-                            <div class="mb-0">
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter menu name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" name="price" placeholder="Enter menu price" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                                 <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
+
                                     <select name="status" class="form-select">
                                         <option value="">Select Status</option>
                                         <option value="active">Active</option>
@@ -161,38 +193,57 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Add Category</button>
+                            <button type="submit" class="btn btn-primary">Add menu</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- /Add Category -->
+        <!-- /Add menu -->
         <!-- /product list -->
 
-        <!-- Edit Category -->
-        <div class="modal fade" id="edit-category">
-            <div class="modal-dialog modal-dialog-centered">
+        <!-- Edit menu -->
+        <div class="modal fade" id="edit-menu">
+            <div class="modal-dialog modal-dialog-centered" >
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Edit Category</h4>
+                            <h4>Edit menu</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('category.update') }}" method="POST">
+                    <form action="{{ route('menu.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id" value="1" id="category_id">
+                        <input type="text" name="id" value="" id="id">
                         <div class="modal-body">
+                            <div class="add-choosen">
+                                <div class="mb-3">
+                                    <div class="image-upload image-upload-two">
+                                        <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this)">
+                                        <div class="image-uploads">
+                                            <i data-feather="plus-circle" class="plus-down-add me-0"></i>
+                                            <h4>Add Images</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="phone-img">
+                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
+                                </div>
+                            </div>
                             <div class="mb-3">
-                                <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="Computers" id="category_name" name="name" placeholder="Enter category name" required>
+                                <label class="form-label">menu<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter menu name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" value="" id="price" name="price" placeholder="Enter menu price" required>
                             </div>
                             <div class="mb-0">
+                                <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                                 <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-                                    <select name="status" class="form-select" id="category_status">
+                                    <select name="status" class="form-select" id="status">
                                         <option value="">Select Status</option>
                                     </select>
                                 </div>
@@ -213,14 +264,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Delete Category</h4>
+                        <h4 class="modal-title">Delete menu</h4>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('category.delete') }}" method="POST">
+                    <form action="{{ route('menu.delete') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" value="" id="delete_category_id">
+                        <input type="hidden" name="id" value="" id="delete_menu_id">
                         <div class="modal-body">
                             <h1>Are you sure you want to delete?</h1>
                         </div>
@@ -236,29 +287,37 @@
     </div>
 
     <script>
-        //jQuery for edit category
+        //jQuery for edit menu
         $(document).on('click', '#edit-cat', function() {
-            var cat_id = $(this).closest('tr').find('#cat_id').val();
-            $('#category_id').val(cat_id);
-            var cat_name = $(this).closest('tr').find('#cat_name').val();
-            $('#category_name').val(cat_name);
 
-            var cat_status = $(this).closest('tr').find('#cat_status').val();
-            $('#category_status').val(cat_status);
+            var menu_id = $(this).closest('tr').find('#menu_id').val();
+            $('#id').val(menu_id);
 
-            $('#category_status').html(`
+            var menu_name = $(this).closest('tr').find('#menu_name').val();
+            $('#name').val(menu_name);
+
+            var menu_price = $(this).closest('tr').find('#menu_price').val();
+            $('#price').val(menu_price);
+
+            var menu_image = $(this).closest('tr').find('#menu_image').val();
+            $('.image-preview').attr('src', menu_image);
+
+            var menu_status = $(this).closest('tr').find('#menu_status').val();
+            $('#status').val(menu_status);
+
+            $('#status').html(`
             <option value="">Select Status</option>
-            <option value="active" ${cat_status === 'active' ? 'selected' : ''}>Active</option>
-            <option value="inactive" ${cat_status === 'inactive' ? 'selected' : ''}>Inactive</option>
+            <option value="active" ${menu_status === 'active' ? 'selected' : ''}>Active</option>
+            <option value="inactive" ${menu_status === 'inactive' ? 'selected' : ''}>Inactive</option>
         `);
 
 
         });
 
-        //jQuery for delete category
+        //jQuery for delete menu
         $(document).on('click', '#delete-cat', function() {
-            var cat_id = $(this).closest('tr').find('#cat_id').val();
-            $('#delete_category_id').val(cat_id);
+            var menu_id = $(this).closest('tr').find('#menu_id').val();
+            $('#delete_menu_id').val(menu_id);
         });
     </script>
 
@@ -267,6 +326,20 @@
             let checkboxes = document.querySelectorAll('input[name="ids[]"]');
             for (let checkbox of checkboxes) {
                 checkbox.checked = this.checked;
+            }
+        }
+    </script>
+
+    <script>
+        function loadImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('image-preview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                document.getElementById('image-preview').src = "";
             }
         }
     </script>
