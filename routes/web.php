@@ -29,6 +29,7 @@ Route::controller(CategoryController::class)->group(function () {
     Route::post('/category/store', 'store')->name('category.store');
     Route::post('/category/update', 'update')->name('category.update');
     Route::post('/category/delete', 'destroy')->name('category.delete');
+    Route::delete('/category/bulk-delete', 'bulkDelete')->name('category.bulk.delete');
 });
 
 

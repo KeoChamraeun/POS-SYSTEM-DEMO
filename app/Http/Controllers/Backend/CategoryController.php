@@ -44,15 +44,14 @@ class CategoryController extends Controller
 
             Log::error('Error creating category: ' . $th->getMessage());
 
-          return redirect()->back()->with('error', 'Category created Failed. Please try again!');
+            return redirect()->back()->with('error', 'Category created Failed. Please try again!');
         }
     }
 
     public function update(Request $request)
     {
-       DB::beginTransaction();
+        DB::beginTransaction();
         try {
-
             $category = Category::findOrFail($request->id);
             $category->name = $request->name;
             $category->status = $request->status;
@@ -66,9 +65,8 @@ class CategoryController extends Controller
 
             Log::error('Error updating category: ' . $th->getMessage());
 
-          return redirect()->back()->with('error', 'Category updated Failed. Please try again successfully.');
+            return redirect()->back()->with('error', 'Category updated Failed. Please try again successfully.');
         }
-        
     }
 
     public function destroy(Request $request)
@@ -86,7 +84,31 @@ class CategoryController extends Controller
 
             Log::error('Error deleting category: ' . $th->getMessage());
 
-          return redirect()->back()->with('error', 'Category deleted Failed. Please try again!');
+            return redirect()->back()->with('error', 'Category deleted Failed. Please try again!');
+        }
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $ids = $request->ids;
+
+            if (!$ids || count($ids) === 0) {
+                return redirect()->route('category.index')->with('error', 'No categories selected for deletion.');
+            }
+
+            Category::whereIn('id', $ids)->delete();
+
+            DB::commit();
+
+            return redirect()->route('category.index')->with('success', 'Categories deleted successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            Log::error('Error bulk deleting categories: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
         }
     }
 }

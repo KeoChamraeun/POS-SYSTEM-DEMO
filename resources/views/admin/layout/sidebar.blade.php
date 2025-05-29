@@ -93,7 +93,7 @@
                                     Products</span></a></li>
                         <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low
                                     Stocks</span></a></li>
-                        <li><a href="category-list.html"><i
+                        <li><a href="{{ route('category.index') }}"><i
                                     class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
                         <li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub
                                     Category</span></a></li>

@@ -29,7 +29,7 @@
             </div>
         </div>
         <!-- /product list -->
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                 <div class="search-set">
                     <div class="search-input">
@@ -37,18 +37,10 @@
                     </div>
                 </div>
                 <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-                    <div class="dropdown">
-                        {{-- <a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown" wire:model="selectedStatus">
-                        Status
-                    </a>
-                    <ul class="dropdown-menu  dropdown-menu-end p-3">
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item rounded-1">Active</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item rounded-1">Inactive</a>
-                        </li>
-                    </ul> --}}
+                    <div class="dropdowns">
+                        <a class="btn btn-danger" href="{{ route('category.bulk.delete') }}" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti ti-trash"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -120,7 +112,108 @@
 
                 </div>
             </div>
-        </div>
+        </div> --}}
+
+        <!-- Bulk Delete Form Start -->
+        <form action="{{ route('category.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected categories?');">
+            @csrf
+            @method('DELETE')
+
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                    <div class="search-set">
+                        <div class="search-input">
+                            <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                        </div>
+                    </div>
+                    <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="ti ti-trash"></i> Delete Selected
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table datatable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="no-sort">
+                                        <label class="checkboxs">
+                                            <input type="checkbox" id="select-all">
+                                            <span class="checkmarks"></span>
+                                        </label>
+                                    </th>
+                                    <th>Category</th>
+                                    <th>Created On</th>
+                                    <th>Status</th>
+                                    <th class="no-sort"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (session()->has('success'))
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <strong>{{ session('success') }}</strong>
+                                    </div>
+                                @endif
+                                @if (session()->has('error'))
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>{{ session('error') }}</strong>
+                                    </div>
+                                @endif
+
+                                @foreach ($categories as $category)
+                                    <tr>
+                                        <td>
+                                            <label class="checkboxs">
+                                                <input type="checkbox" name="ids[]" value="{{ $category->id }}">
+                                                <span class="checkmarks"></span>
+                                            </label>
+                                        </td>
+
+                                        <td><span class="text-gray-9">{{ $category->name }}</span></td>
+                                        <td>{{ $category->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            @if ($category->status == 'active')
+                                                <span class="badge bg-success fw-medium fs-10">Active</span>
+                                            @else
+                                                <span class="badge bg-danger fw-medium fs-10">Inactive</span>
+                                            @endif
+                                        </td>
+                                        <td class="action-table-data">
+                                            <div class="edit-delete-action">
+                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-category" id="edit-cat">
+                                                    <i data-feather="edit" class="feather-edit"></i>
+                                                </a>
+                                                <input type="hidden" name="cat_id" value="{{ $category->id }}" id="cat_id">
+                                                <input type="hidden" name="cat_name" value="{{ $category->name }}" id="cat_name">
+                                                <input type="hidden" name="cat_status" value="{{ $category->status }}" id="cat_status">
+
+                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-3" href="javascript:void(0);" id="delete-cat">
+                                                    <i data-feather="trash-2" class="feather-trash-2"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- Bulk Delete Form End -->
+
+        <!-- Select All Checkbox Script -->
+        <script>
+            document.getElementById('select-all').onclick = function() {
+                let checkboxes = document.querySelectorAll('input[name="ids[]"]');
+                for (let checkbox of checkboxes) {
+                    checkbox.checked = this.checked;
+                }
+            }
+        </script>
+
 
         <!-- Add Category -->
         <div class="modal fade" id="add-category">
@@ -212,7 +305,7 @@
                     </div>
                     <form action="{{ route('category.delete') }}" method="POST">
                         @csrf
-                        <input type="text" name="id" value="" id="delete_category_id">
+                        <input type="hidden" name="id" value="" id="delete_category_id">
                         <div class="modal-body">
                             <h1>Are you sure you want to delete?</h1>
                         </div>
@@ -224,7 +317,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
     <script>
@@ -252,6 +345,14 @@
             var cat_id = $(this).closest('tr').find('#cat_id').val();
             $('#delete_category_id').val(cat_id);
         });
+    </script>
 
+    <script>
+        document.getElementById('select-all').onclick = function() {
+            let checkboxes = document.querySelectorAll('input[name="ids[]"]');
+            for (let checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        }
     </script>
 @endsection
