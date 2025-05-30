@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\OrderConfirmation;
 use Illuminate\Support\Facades\Route;
+use Pest\ArchPresets\Custom;
 
 
 Route::get('/', function () {
@@ -42,13 +44,13 @@ Route::controller(MenuController::class)->group(function () {
     Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
 });
 
-// menu Routes
-Route::controller(MenuController::class)->group(function () {
-    Route::get('/menu', 'index')->name('menu.index');
-    Route::post('/menu/store', 'store')->name('menu.store');
-    Route::post('/menu/update', 'update')->name('menu.update');
-    Route::post('/menu/delete', 'destroy')->name('menu.delete');
-    Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
+// customer Routes
+Route::controller(CustomerController::class)->group(function () {
+    Route::get('/customer', 'index')->name('customer.index');
+    Route::post('/customer/store', 'store')->name('customer.store');
+    Route::post('/customer/update', 'update')->name('customer.update');
+    Route::post('/customer/delete', 'destroy')->name('customer.delete');
+    Route::delete('/customer/bulk-delete', 'bulkDelete')->name('customer.bulk.delete');
 });
 
 
