@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
+use App\Models\MenuItem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -145,6 +146,107 @@ class MenuController extends Controller
             DB::commit();
 
             return redirect()->route('menu.index')->with('success', 'Selected Menu deleted successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            Log::error('Error bulk deleting menu: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
+        }
+    }
+
+
+    // Menu Item Methods
+     public function menuItemIndex()
+    {
+        $menus = Menu::orderBy('id', 'desc')->get();
+        $menuItems = MenuItem::orderBy('id', 'desc')->get();
+
+        return view('admin.menu_item.menu_item_list', compact('menuItems', 'menus'));
+    }
+
+    public function menuItemStore(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            $menu = new MenuItem();
+            $menu->name = $request->name;
+            $menu->price = $request->price;
+            $menu->status = $request->status;
+            $menu->category = $request->menu;
+            $menu->save();
+
+            DB::commit();
+
+            return redirect()->route('menu.item.index')->with('success', 'menu item created successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            Log::error('Error creating menu: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'menu item created Failed. Please try again!');
+        }
+    }
+
+    public function menuItemUpdate(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $menu = MenuItem::findOrFail($request->id);
+            $menu->name = $request->name;
+            $menu->price = $request->price;
+            $menu->status = $request->status;
+            $menu->category = $request->menu;
+            $menu->save();
+
+            DB::commit();
+
+            return redirect()->route('menu.item.index')->with('success', 'Menu Item updated successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            Log::error('Error updating menu item: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Menu Item update failed. Please try again!');
+        }
+    }
+
+    public function menuItemDestroy(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $menu = MenuItem::findOrFail($request->id);
+            $menu->delete();
+
+            DB::commit();
+
+            return redirect()->route('menu.item.index')->with('success', 'Menu item deleted successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            Log::error('Error deleting menu item: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Menu item deletion failed. Please try again!');
+        }
+    }
+
+    public function menuItemBulkDelete(Request $request)
+    {
+        
+         DB::beginTransaction();
+        try {
+            $ids = $request->ids;
+
+            if (!$ids || count($ids) === 0) {
+                return redirect()->route('menu.item.index')->with('error', 'No Menu item selected for deletion.');
+            }
+
+            MenuItem::whereIn('id', $ids)->delete();            
+
+            DB::commit();
+
+            return redirect()->route('menu.item.index')->with('success', 'Selected Menu deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 

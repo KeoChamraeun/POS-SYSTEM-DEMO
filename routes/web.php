@@ -43,6 +43,13 @@ Route::controller(MenuController::class)->group(function () {
     Route::post('/menu/update', 'update')->name('menu.update');
     Route::post('/menu/delete', 'destroy')->name('menu.delete');
     Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
+
+    //menu item Routes
+    Route::get('/menu-item', 'menuItemIndex')->name('menu.item.index');
+    Route::post('/menu-item/store', 'menuItemStore')->name('menu.item.store');
+    Route::post('/menu-item/update', 'menuItemUpdate')->name('menu.item.update');
+    Route::post('/menu-item/delete', 'menuItemDestroy')->name('menu.item.delete');
+    Route::delete('/menu-item/bulk-delete', 'menuItemBulkDelete')->name('menu.item.bulk.delete');
 });
 
 // customer Routes
