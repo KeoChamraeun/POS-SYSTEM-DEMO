@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
+use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\OrderConfirmation;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,15 @@ Route::controller(CustomerController::class)->group(function () {
     Route::post('/customer/update', 'update')->name('customer.update');
     Route::post('/customer/delete', 'destroy')->name('customer.delete');
     Route::delete('/customer/bulk-delete', 'bulkDelete')->name('customer.bulk.delete');
+});
+
+// supplier Routes
+Route::controller(SupplierController::class)->group(function () {
+    Route::get('/supplier', 'index')->name('supplier.index');
+    Route::post('/supplier/store', 'store')->name('supplier.store');
+    Route::post('/supplier/update', 'update')->name('supplier.update');
+    Route::post('/supplier/delete', 'destroy')->name('supplier.delete');
+    Route::delete('/supplier/bulk-delete', 'bulkDelete')->name('supplier.bulk.delete');
 });
 
 

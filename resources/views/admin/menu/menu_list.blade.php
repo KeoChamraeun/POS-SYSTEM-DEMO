@@ -93,7 +93,7 @@
                                         </td>
 
                                         <td>
-                                            <img src="{{ asset(  $menu->image) }}" width="50" height="50" alt="image">
+                                            <img src="{{ asset($menu->image) }}" width="50" height="50" alt="image">
                                         </td>
                                         <td>
                                             @if ($menu->status == 'active')
@@ -157,7 +157,7 @@
                             <div class="add-choosen">
                                 <div class="mb-3">
                                     <div class="image-upload image-upload-two">
-                                        <input type="file" name="image" class="form-control" accept="image/*" required onchange="loadImage(this)">
+                                        <input type="file" name="image" class="form-control" accept="image/*" required onchange="loadImage(this, 'image-preview')">
                                         <div class="image-uploads">
                                             <i data-feather="plus-circle" class="plus-down-add me-0"></i>
                                             <h4>Add Images</h4>
@@ -165,11 +165,11 @@
                                     </div>
                                 </div>
                                 <div class="phone-img">
-                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image">
+                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
                                     {{-- <a href="javascript:void(0);"></a> --}}
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter menu name" required>
@@ -204,7 +204,7 @@
 
         <!-- Edit menu -->
         <div class="modal fade" id="edit-menu">
-            <div class="modal-dialog modal-dialog-centered" >
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
@@ -221,7 +221,7 @@
                             <div class="add-choosen">
                                 <div class="mb-3">
                                     <div class="image-upload image-upload-two">
-                                        <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this)">
+                                        <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview-edit')">
                                         <div class="image-uploads">
                                             <i data-feather="plus-circle" class="plus-down-add me-0"></i>
                                             <h4>Add Images</h4>
@@ -229,7 +229,7 @@
                                     </div>
                                 </div>
                                 <div class="phone-img">
-                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
+                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview-edit">
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -300,7 +300,7 @@
             $('#price').val(menu_price);
 
             var menu_image = $(this).closest('tr').find('#menu_image').val();
-            $('.image-preview').attr('src', menu_image);
+            $('.image-preview-edit').attr('src', menu_image);
 
             var menu_status = $(this).closest('tr').find('#menu_status').val();
             $('#status').val(menu_status);
@@ -320,27 +320,5 @@
             $('#delete_menu_id').val(menu_id);
         });
     </script>
-
-    <script>
-        document.getElementById('select-all').onclick = function() {
-            let checkboxes = document.querySelectorAll('input[name="ids[]"]');
-            for (let checkbox of checkboxes) {
-                checkbox.checked = this.checked;
-            }
-        }
-    </script>
-
-    <script>
-        function loadImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('image-preview').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                document.getElementById('image-preview').src = "";
-            }
-        }
-    </script>
+   
 @endsection

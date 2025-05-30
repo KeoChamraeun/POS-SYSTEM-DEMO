@@ -191,7 +191,7 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
-                        <li><a href="customers.html"><i
+                        <li><a href="{{ route('customer.index') }}"><i
                                     class="ti ti-users-group fs-16 me-2"></i><span>Customers</span></a></li>
                         <li><a href="billers.html"><i class="ti ti-user-up fs-16 me-2"></i><span>Billers</span></a>
                         </li>

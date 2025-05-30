@@ -12,8 +12,8 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4 class="fw-bold">Customer</h4>
-                    <h6>Manage your customer</h6>
+                    <h4 class="fw-bold">Supplier</h4>
+                    <h6>Manage your supplier</h6>
                 </div>
             </div>
             <ul class="table-top-head">
@@ -25,12 +25,12 @@
                 </li>
             </ul>
             <div class="page-btn">
-                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-customer"><i class="ti ti-circle-plus me-1"></i>Add Customer</a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-supplier"><i class="ti ti-circle-plus me-1"></i>Add supplier</a>
             </div>
         </div>
 
         <!-- Bulk Delete Form Start -->
-        <form action="{{ route('customer.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected customers?');" enctype="multipart/form-data">
+        <form action="{{ route('supplier.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected suppliers?');" enctype="multipart/form-data">
             @csrf
             @method('DELETE')
 
@@ -59,7 +59,7 @@
                                             <span class="checkmarks"></span>
                                         </label>
                                     </th>
-                                    <th>Customer</th>
+                                    <th>supplier</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Status</th>
@@ -80,11 +80,11 @@
                                     </div>
                                 @endif
 
-                                @foreach ($customers as $customer)
+                                @foreach ($suppliers as $supplier)
                                     <tr>
                                         <td>
                                             <label class="checkboxs">
-                                                <input type="checkbox" name="ids[]" value="{{ $customer->id }}">
+                                                <input type="checkbox" name="ids[]" value="{{ $supplier->id }}">
                                                 <span class="checkmarks"></span>
                                             </label>
                                         </td>
@@ -92,19 +92,19 @@
                                         <td>
                                             <div class="d-flex align-items-center">
 													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img src="{{ asset($customer->image) }}" alt="customer image" class="avatar-img rounded-circle">
+														<img src="{{ asset($supplier->image) }}" alt="supplier image" class="avatar-img rounded-circle">
 													</a>
-													<a href="javascript:void(0);">{{ $customer->name }}</a>
+													<a href="javascript:void(0);">{{ $supplier->name }}</a>
 												</div>
                                         </td>
                                         <td>
-                                            <span class="text-gray-9">{{ $customer->email }}</span>
+                                            <span class="text-gray-9">{{ $supplier->email }}</span>
                                         </td>
                                         <td>
-                                            <span class="text-gray-9">{{ $customer->phone }}</span>
+                                            <span class="text-gray-9">{{ $supplier->phone }}</span>
                                         </td>
                                         <td>
-                                            @if ($customer->status == 'active')
+                                            @if ($supplier->status == 'active')
                                                 <span class="badge bg-success fw-medium fs-10">Active</span>
                                             @else
                                                 <span class="badge bg-danger fw-medium fs-10">Inactive</span>
@@ -112,16 +112,16 @@
                                         </td>
                                         <td class="action-table-data">
                                             <div class="edit-delete-action">
-                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-customer" id="edit-cat">
+                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-supplier" id="edit-cat">
                                                     <i data-feather="edit" class="feather-edit"></i>
                                                 </a>
-                                                <input type="hidden" name="customer_id" value="{{ $customer->id }}" id="customer_id">
-                                                <input type="hidden" name="customer_name" value="{{ $customer->name }}" id="customer_name">
-                                                <input type="hidden" name="customer_email" value="{{ $customer->email }}" id="customer_email">
-                                                <input type="hidden" name="customer_phone" value="{{ $customer->phone }}" id="customer_phone">
-                                                <input type="hidden" name="customer_address" value="{{ $customer->address }}" id="customer_address">
-                                                <input type="hidden" name="customer_image" value="{{ $customer->image }}" id="customer_image">
-                                                <input type="hidden" name="customer_status" value="{{ $customer->status }}" id="customer_status">
+                                                <input type="hidden" name="supplier_id" value="{{ $supplier->id }}" id="supplier_id">
+                                                <input type="hidden" name="supplier_name" value="{{ $supplier->name }}" id="supplier_name">
+                                                <input type="hidden" name="supplier_email" value="{{ $supplier->email }}" id="supplier_email">
+                                                <input type="hidden" name="supplier_phone" value="{{ $supplier->phone }}" id="supplier_phone">
+                                                <input type="hidden" name="supplier_address" value="{{ $supplier->address }}" id="supplier_address">
+                                                <input type="hidden" name="supplier_image" value="{{ $supplier->image }}" id="supplier_image">
+                                                <input type="hidden" name="supplier_status" value="{{ $supplier->status }}" id="supplier_status">
 
                                                 <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-3" href="javascript:void(0);" id="delete-cat">
                                                     <i data-feather="trash-2" class="feather-trash-2"></i>
@@ -149,19 +149,19 @@
         </script>
 
 
-        <!-- Add customer -->
-        <div class="modal fade" id="add-customer">
+        <!-- Add supplier -->
+        <div class="modal fade" id="add-supplier">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Add customer</h4>
+                            <h4>Add supplier</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('supplier.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body add-list add">
                             <div class="add-choosen">
@@ -175,21 +175,21 @@
                                     </div>
                                 </div>
                                 <div class="phone-img">
-                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image">
+                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
 \                                </div>
                             </div>
                             
                             <div class="mb-3">
                                 <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" name="name" placeholder="Enter customer name" required>
+                                <input type="text" class="form-control" name="name" placeholder="Enter supplier name" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter customer email">
+                                <input type="email" class="form-control" name="email" placeholder="Enter supplier email">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" name="phone" placeholder="Enter customer price" required>
+                                <input type="text" class="form-control" name="phone" placeholder="Enter supplier price" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
@@ -209,28 +209,28 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Add customer</button>
+                            <button type="submit" class="btn btn-primary">Add supplier</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- /Add customer -->
+        <!-- /Add supplier -->
         <!-- /product list -->
 
-        <!-- Edit customer -->
-        <div class="modal fade" id="edit-customer">
+        <!-- Edit supplier -->
+        <div class="modal fade" id="edit-supplier">
             <div class="modal-dialog modal-dialog-centered" >
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Edit customer</h4>
+                            <h4>Edit supplier</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('customer.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('supplier.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" value="" id="id">
                         <div class="modal-body">
@@ -245,20 +245,20 @@
                                     </div>
                                 </div>
                                 <div class="phone-img">
-                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
+                                    <img src="" id="image-preview" alt="image" class="image-preview image-preview-edit">
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">customer<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter customer name" required>
+                                <label class="form-label">supplier<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter supplier name" required>
                             </div>
                              <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter customer email" id="email">
+                                <input type="email" class="form-control" name="email" placeholder="Enter supplier email" id="email">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" name="phone" placeholder="Enter customer price" required id="phone">
+                                <input type="text" class="form-control" name="phone" placeholder="Enter supplier price" required id="phone">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
@@ -288,14 +288,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Delete customer</h4>
+                        <h4 class="modal-title">Delete supplier</h4>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('customer.delete') }}" method="POST">
+                    <form action="{{ route('supplier.delete') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" value="" id="delete_customer_id">
+                        <input type="hidden" name="id" value="" id="delete_supplier_id">
                         <div class="modal-body">
                             <h1>Are you sure you want to delete?</h1>
                         </div>
@@ -311,43 +311,43 @@
     </div>
 
     <script>
-        //jQuery for edit customer
+        //jQuery for edit supplier
         $(document).on('click', '#edit-cat', function() {
 
-            var customer_id = $(this).closest('tr').find('#customer_id').val();
-            $('#id').val(customer_id);
+            var supplier_id = $(this).closest('tr').find('#supplier_id').val();
+            $('#id').val(supplier_id);
 
-            var customer_name = $(this).closest('tr').find('#customer_name').val();
-            $('#name').val(customer_name);
+            var supplier_name = $(this).closest('tr').find('#supplier_name').val();
+            $('#name').val(supplier_name);
 
-            var customer_email = $(this).closest('tr').find('#customer_email').val();
-            $('#email').val(customer_email);
+            var supplier_email = $(this).closest('tr').find('#supplier_email').val();
+            $('#email').val(supplier_email);
 
-            var customer_phone = $(this).closest('tr').find('#customer_phone').val();
-            $('#phone').val(customer_phone);
+            var supplier_phone = $(this).closest('tr').find('#supplier_phone').val();
+            $('#phone').val(supplier_phone);
 
-            var customer_address = $(this).closest('tr').find('#customer_address').val();
-            $('#address').val(customer_address);
+            var supplier_address = $(this).closest('tr').find('#supplier_address').val();
+            $('#address').val(supplier_address);
 
-            var customer_image = $(this).closest('tr').find('#customer_image').val();
-            $('.image-preview').attr('src', customer_image);
+            var supplier_image = $(this).closest('tr').find('#supplier_image').val();
+            $('.image-preview').attr('src', supplier_image);
 
-            var customer_status = $(this).closest('tr').find('#customer_status').val();
-            $('#status').val(customer_status);
+            var supplier_status = $(this).closest('tr').find('#supplier_status').val();
+            $('#status').val(supplier_status);
 
             $('#status').html(`
             <option value="">Select Status</option>
-            <option value="active" ${customer_status === 'active' ? 'selected' : ''}>Active</option>
-            <option value="inactive" ${customer_status === 'inactive' ? 'selected' : ''}>Inactive</option>
+            <option value="active" ${supplier_status === 'active' ? 'selected' : ''}>Active</option>
+            <option value="inactive" ${supplier_status === 'inactive' ? 'selected' : ''}>Inactive</option>
         `);
 
 
         });
 
-        //jQuery for delete customer
+        //jQuery for delete supplier
         $(document).on('click', '#delete-cat', function() {
-            var customer_id = $(this).closest('tr').find('#customer_id').val();
-            $('#delete_customer_id').val(customer_id);
+            var supplier_id = $(this).closest('tr').find('#supplier_id').val();
+            $('#delete_supplier_id').val(supplier_id);
         });
     </script>
 @endsection
