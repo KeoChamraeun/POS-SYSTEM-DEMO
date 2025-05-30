@@ -127,11 +127,11 @@
                 attribute: 'image',
                 scale: {
                     marker1title: {
-                        url: '../assets/images/brand-logos/toggle-logo.svg',
+                        url: '../backend/assets/images/brand-logos/toggle-logo.svg',
                         offset: [10, 0]
                     },
                     marker2title: {
-                        url: '../assets/images/brand-logos/toggle-logo.svg',
+                        url: '../backend/assets/images/brand-logos/toggle-logo.svg',
                         offset: [10, 0]
                     }
                 },

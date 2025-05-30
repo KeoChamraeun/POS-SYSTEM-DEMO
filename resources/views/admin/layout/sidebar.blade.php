@@ -2,13 +2,13 @@
     <!-- Logo -->
     <div class="sidebar-logo active">
         <a href="index-2.html" class="logo logo-normal">
-            <img src="backend/assets/img/logo.svg" alt="Img">
+            <img src="{{ asset('backend/assets/img/logo.svg') }}" alt="Img">
         </a>
         <a href="index-2.html" class="logo logo-white">
-            <img src="backend/assets/img/logo-white.svg" alt="Img">
+            <img src="{{ asset('backend/assets/img/logo-white.svg') }}" alt="Img">
         </a>
         <a href="index-2.html" class="logo-small">
-            <img src="backend/assets/img/logo-small.png" alt="Img">
+            <img src="{{ asset('backend/assets/img/logo-small.png') }}" alt="Img">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
             <i data-feather="chevrons-left" class="feather-16"></i>
@@ -18,7 +18,7 @@
     <div class="modern-profile p-3 pb-0">
         <div class="text-center rounded bg-light p-3 mb-4 user-profile">
             <div class="avatar avatar-lg online mb-3">
-                <img src="backend/assets/img/customer/customer15.jpg" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
             </div>
             <h6 class="fs-14 fw-bold mb-1">Adrian Herman</h6>
             <p class="fs-12 mb-0">System Admin</p>
@@ -34,7 +34,7 @@
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md onlin">
-                <img src="backend/assets/img/customer/customer15.jpg" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
                 <h6 class="fs-14 fw-bold mb-1">Adrian Herman</h6>
@@ -94,6 +94,11 @@
                         <li>
                             <a href="{{ route('menu.index') }}">
                                 <i class="ti ti-list-details fs-16 me-2"></i><span>Menu</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('menu.item.index') }}">
+                                <i class="ti ti-list-details fs-16 me-2"></i><span>Menu Item</span>
                             </a>
                         </li>
                     </ul>
@@ -191,16 +196,15 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
-                        <li><a href="{{ route('customer.index') }}"><i
-                                    class="ti ti-users-group fs-16 me-2"></i><span>Customers</span></a></li>
-                        <li><a href="billers.html"><i class="ti ti-user-up fs-16 me-2"></i><span>Billers</span></a>
+                        <li>
+                            <a href="{{ route('customer.index') }}">
+                                <i class="ti ti-users-group fs-16 me-2"></i><span>Customers</span>
+                            </a>
                         </li>
-                        <li><a href="suppliers.html"><i
-                                    class="ti ti-user-dollar fs-16 me-2"></i><span>Suppliers</span></a></li>
-                        <li><a href="store-list.html"><i
-                                    class="ti ti-home-bolt fs-16 me-2"></i><span>Stores</span></a></li>
-                        <li><a href="warehouse.html"><i
-                                    class="ti ti-archive fs-16 me-2"></i><span>Warehouses</span></a>
+                        <li>
+                            <a href="{{ route('supplier.index') }}"><i
+                                    class="ti ti-user-dollar fs-16 me-2"></i><span>Suppliers</span>
+                            </a>
                         </li>
                     </ul>
                 </li>

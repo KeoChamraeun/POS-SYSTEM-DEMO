@@ -4,10 +4,10 @@
  <!-- Slimscroll JS -->
  <script src="{{ asset('backend/assets/js/jquery.slimscroll.min.js') }}"></script>
 
- <script src="{{ asset('backend/assets/js/jquery.ui.touch-punch.min.js') }}"></script>
+ {{-- <script src="{{ asset('backend/assets/js/jquery.ui.touch-punch.min.js') }}"></script>
 
  <script src="{{ asset('backend/assets/js/jquery-ui.min.js') }}"></script>
- <script src="{{ asset('backend/assets/js/jsvectormap.js') }}"></script>
+ <script src="{{ asset('backend/assets/js/jsvectormap.js') }}"></script> --}}
 
  <!-- Bootstrap Core JS -->
  <script src="{{ asset('backend/assets/js/bootstrap.bundle.min.js') }}"></script>
@@ -38,7 +38,7 @@
  <script src="{{ asset('backend/assets/js/email-decode.min.js') }}"></script>
  <script src="{{ asset('backend/assets/js/validation.js') }}"></script>
  <script src="{{ asset('backend/assets/js/calculator.js') }}"></script>
- <script src="{{ asset('backend/assets/js/canada.js') }}"></script>
+ {{-- <script src="{{ asset('backend/assets/js/canada.js') }}"></script> --}}
  <script src="{{ asset('backend/assets/js/plyr-js.js') }}"></script>
 
  <!-- Owl JS -->
