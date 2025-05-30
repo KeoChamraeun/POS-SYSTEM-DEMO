@@ -54,10 +54,12 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="no-sort">
-                                        <label class="checkboxs">
-                                            <input type="checkbox" id="select-all">
-                                            <span class="checkmarks"></span>
-                                        </label>
+                                        @if (count($categories) > 0)
+                                            <label class="checkboxs">
+                                                <input type="checkbox" id="select-all">
+                                                <span class="checkmarks"></span>
+                                            </label>
+                                        @endif
                                     </th>
                                     <th>Category</th>
                                     <th>Created On</th>
@@ -104,7 +106,7 @@
                                                 <input type="hidden" name="cat_name" value="{{ $category->name }}" id="cat_name">
                                                 <input type="hidden" name="cat_status" value="{{ $category->status }}" id="cat_status">
 
-                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-3" href="javascript:void(0);" id="delete-cat">
+                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat" href="#">
                                                     <i data-feather="trash-2" class="feather-trash-2"></i>
                                                 </a>
                                             </div>

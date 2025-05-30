@@ -54,10 +54,12 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="no-sort">
-                                        <label class="checkboxs">
-                                            <input type="checkbox" id="select-all">
-                                            <span class="checkmarks"></span>
-                                        </label>
+                                        @if (count($customers) > 0)
+                                            <label class="checkboxs">
+                                                <input type="checkbox" id="select-all">
+                                                <span class="checkmarks"></span>
+                                            </label>
+                                        @endif
                                     </th>
                                     <th>Customer</th>
                                     <th>Email</th>
@@ -123,7 +125,7 @@
                                                 <input type="hidden" name="customer_image" value="{{ $customer->image }}" id="customer_image">
                                                 <input type="hidden" name="customer_status" value="{{ $customer->status }}" id="customer_status">
 
-                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-3" href="javascript:void(0);" id="delete-cat">
+                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
                                                     <i data-feather="trash-2" class="feather-trash-2"></i>
                                                 </a>
                                             </div>

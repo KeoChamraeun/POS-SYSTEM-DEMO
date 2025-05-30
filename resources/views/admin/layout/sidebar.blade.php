@@ -93,17 +93,17 @@
                         </li>
                         <li>
                             <a href="{{ route('menu.index') }}">
-                                <i class="ti ti-list-details fs-16 me-2"></i><span>Menu</span>
+                                <i class="ti ti-tools-kitchen-2 fs-16 me-2"></i><span>Menu</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('menu.item.index') }}">
-                                <i class="ti ti-list-details fs-16 me-2"></i><span>Menu Item</span>
+                                <i class="ti ti-tools-kitchen fs-16 me-2"></i><span>Menu Item</span>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="submenu-open">
+                {{-- <li class="submenu-open">
                     <h6 class="submenu-hdr">Stock</h6>
                     <ul>
                         <li><a href="manage-stocks.html"><i class="ti ti-stack-3 fs-16 me-2"></i><span>Manage
@@ -192,7 +192,7 @@
                                     class="ti ti-file-infinity fs-16 me-2"></i><span>Account Statement</span></a></li>
 
                     </ul>
-                </li>
+                </li> --}}
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
@@ -208,7 +208,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="submenu-open">
+                {{-- <li class="submenu-open">
                     <h6 class="submenu-hdr">HRM</h6>
                     <ul>
                         <li><a href="employees-grid.html"><i
@@ -340,7 +340,7 @@
                             <a href="signin.html"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </div>
