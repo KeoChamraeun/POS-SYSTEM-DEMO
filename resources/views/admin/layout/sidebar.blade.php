@@ -76,7 +76,7 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Main</h6>
                     <ul>
-                        <li>
+                        <li class=" {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}" class="active">
                                 <i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span>
                             </a>
@@ -86,17 +86,17 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Inventory</h6>
                     <ul>
-                        <li>
+                        <li class=" {{ request()->routeIs('category.index') ? 'active' : '' }}">
                             <a href="{{ route('category.index') }}">
                                 <i class="ti ti-list-details fs-16 me-2"></i><span>Category</span>
                             </a>
                         </li>
-                        <li>
+                        <li class=" {{ request()->routeIs('menu.index') ? 'active' : '' }}">
                             <a href="{{ route('menu.index') }}">
                                 <i class="ti ti-tools-kitchen-2 fs-16 me-2"></i><span>Menu</span>
                             </a>
                         </li>
-                        <li>
+                        <li class=" {{ request()->routeIs('menu.item.index') ? 'active' : '' }}">
                             <a href="{{ route('menu.item.index') }}">
                                 <i class="ti ti-tools-kitchen fs-16 me-2"></i><span>Menu Item</span>
                             </a>
@@ -196,12 +196,12 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
-                        <li>
+                        <li class=" {{ request()->routeIs('customer.index') ? 'active' : '' }}">
                             <a href="{{ route('customer.index') }}">
                                 <i class="ti ti-users-group fs-16 me-2"></i><span>Customers</span>
                             </a>
                         </li>
-                        <li>
+                        <li class=" {{ request()->routeIs('supplier.index') ? 'active' : '' }}">
                             <a href="{{ route('supplier.index') }}"><i
                                     class="ti ti-user-dollar fs-16 me-2"></i><span>Suppliers</span>
                             </a>
