@@ -324,23 +324,16 @@
                         <li><a href="delete-account.html"><i class="ti ti-trash-x fs-16 me-2"></i><span>Delete Account
                                     Request</span></a></li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Settings</h6>
                     <ul>
-                        <li class="submenu">
-                            <a href="javascript:void(0);"><i class="ti ti-settings fs-16 me-2"></i><span>General
-                                    Settings</span><span class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="{{ route('site.setting.index') }}">Site Settings</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="signin.html"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
+                        <li class=" {{ request()->routeIs('vat.index') ? 'active' : '' }}">
+                                <a href="{{ route('vat.index') }}">Vat Settings</a>
                         </li>
                     </ul>
-                </li> --}}
+                </li>
             </ul>
         </div>
     </div>

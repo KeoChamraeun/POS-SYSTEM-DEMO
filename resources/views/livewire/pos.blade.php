@@ -49,7 +49,7 @@
                         <img src="{{asset($item->image)}}" class="card-img-top"
                             alt="{{ $item->name }}">
                         <div class="card-body d-flex flex-column">
-                            <h6 class="text-muted">{{ $item->category }}</h6>
+                            <h6 class="text-muted">{{ $item->menu->name }}</h6>
                             <h5 class="fw-bold">{{ $item->name }}</h5>
                             {{-- <p class="mb-1 text-pink">30 Pcs</p> --}}
                             <p class="text-success fw-bold">${{ number_format($item->price, 2) }}</p>
@@ -96,7 +96,7 @@
                         @foreach($cart as $index => $cartItem)
                         <div class="d-flex align-items-center mb-3 border rounded p-2">
                             <img src="{{asset($cartItem['image'])}}" class="me-2 rounded"
-                                alt="{{ $cartItem['name'] }}" width="50">
+                                alt="{{ $cartItem['name'] }}" width="25" height="25">
                             <div class="flex-grow-1">
                                 <small class="badge bg-warning text-dark mb-1">#{{ strtoupper($cartItem['type'])
                                     }}</small>
@@ -121,22 +121,13 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-2">
-                            <label class="form-label">Order Tax</label>
-                            <select class="form-select mb-2">
-                                <option>Select</option>
+                            <label class="form-label">Order VAT</label>
+                            <select class="form-select mb-2" name="vat" wire:model.live="vat">
+                                <option value="">Select Vat</option>
+                                @foreach ($vats as $vat)
+                                <option value="{{ $vat->rate }}">{{ $vat->name }} ({{ $vat->rate }}%)</option>
+                                @endforeach
                             </select>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Shipping</label>
-                            <input type="number" class="form-control" value="0">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label text-danger">Discount
-                                <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i
-                                        class="ti ti-edit"></i></a>
-                            </label>
-                            <input type="text" class="form-control" value="{{ $this->getDiscount() }}"
-                                readonly>
                         </div>
                         <hr>
                         <p class="mb-1">Sub Total: <span class="float-end">${{ number_format($this->getSubTotal(), 2)
@@ -145,11 +136,11 @@
                             <span class="text-danger">Discount 
                             <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i class="ti ti-edit"></i></a>: </span>
                             <span class="float-end">${{ number_format($this->getDiscount(), 2) }}</span></p>
-                        <p class="mb-1">Tax (GST 5%): <span class="float-end">${{ number_format($this->getTotal() *
-                                0.05, 2) }}</span></p>
+                        <p class="mb-1">VAT (GST {{ $this->vat  }}%): <span class="float-end">${{ number_format($this->getTotal() *
+                                ($this->vat / 100), 2) }}</span></p>
                         <p class="mb-1">Adjustment: <span class="float-end">$0.00</span></p>
                         <hr>
-                        <p class="fw-bold">Total: <span class="float-end">${{ number_format($this->getTotal() * 1.05, 2)
+                        <p class="fw-bold">Total: <span class="float-end">${{ number_format($this->getTotal() - $this->getDiscount() + ($this->getTotal() * ($this->vat / 100)), 2)
                                 }}</span></p>
 
                         <div class="block-section payment-method">

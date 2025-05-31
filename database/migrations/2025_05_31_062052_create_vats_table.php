@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menu_items', function (Blueprint $table) {
+        Schema::create('vats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('price', 10, 2);
-            $table->string('category')->nullable();
-            $table->string('image')->nullable()->comment('Path to the menu item image');
-            $table->string('status')->default('available')->comment('Status of the menu item');
+            $table->decimal('rate', 10, 2);
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menu_items');
+        Schema::dropIfExists('vats');
     }
 };

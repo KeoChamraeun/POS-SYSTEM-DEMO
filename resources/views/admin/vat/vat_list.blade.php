@@ -12,8 +12,8 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4 class="fw-bold">Menu Item</h4>
-                    <h6>Manage your Menu Item</h6>
+                    <h4 class="fw-bold">vat</h4>
+                    <h6>Manage your vats</h6>
                 </div>
             </div>
             <ul class="table-top-head">
@@ -25,12 +25,12 @@
                 </li>
             </ul>
             <div class="page-btn">
-                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-menu"><i class="ti ti-circle-plus me-1"></i>Add menu Item</a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-vat"><i class="ti ti-circle-plus me-1"></i>Add vat</a>
             </div>
         </div>
 
         <!-- Bulk Delete Form Start -->
-        <form action="{{ route('menu.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menuItems?');" enctype="multipart/form-data">
+        <form action="{{ route('vat.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected vats?');">
             @csrf
             @method('DELETE')
 
@@ -54,16 +54,15 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="no-sort">
-                                        @if (count($menuItems) > 0)
+                                        @if (count($vats) > 0)
                                             <label class="checkboxs">
                                                 <input type="checkbox" id="select-all">
                                                 <span class="checkmarks"></span>
                                             </label>
                                         @endif
                                     </th>
-                                    <th>Menu Item</th>
-                                    <th>Price</th>
-                                    <th>Image</th>
+                                    <th>Vat</th>
+                                    <th>Rate</th>
                                     <th>Status</th>
                                     <th class="no-sort"></th>
                                 </tr>
@@ -80,25 +79,20 @@
                                     </div>
                                 @endif
 
-                                @foreach ($menuItems as $menu)
+                                @foreach ($vats as $vat)
                                     <tr>
                                         <td>
                                             <label class="checkboxs">
-                                                <input type="checkbox" name="ids[]" value="{{ $menu->id }}">
+                                                <input type="checkbox" name="ids[]" value="{{ $vat->id }}">
                                                 <span class="checkmarks"></span>
                                             </label>
                                         </td>
 
-                                        <td><span class="text-gray-9">{{ $menu->name }}</span></td>
+                                        <td><span class="text-gray-9">{{ $vat->name }}</span></td>
                                         <td>
-                                            <span class="text-gray-9">${{ $menu->price }}</span>
-                                        </td>
-
+                                            {{ $vat->rate }}%</td>
                                         <td>
-                                            <img src="{{ asset($menu->image ?? 'backend/assets/img/no-image.jpg') }}" width="50" height="50" alt="image">
-                                        </td>
-                                        <td>
-                                            @if ($menu->status == 'active')
+                                            @if ($vat->status == 'active')
                                                 <span class="badge bg-success fw-medium fs-10">Active</span>
                                             @else
                                                 <span class="badge bg-danger fw-medium fs-10">Inactive</span>
@@ -106,18 +100,15 @@
                                         </td>
                                         <td class="action-table-data">
                                             <div class="edit-delete-action">
-                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-menu" id="edit-cat">
+                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-vat" id="edit-cat">
                                                     <i data-feather="edit" class="feather-edit"></i>
                                                 </a>
-                                                <input type="hidden" name="menu_id" value="{{ $menu->id }}" id="menu_id">
-                                                <input type="hidden" name="menu_name" value="{{ $menu->name }}" id="menu_name">
-                                                <input type="hidden" name="menu_price" value="{{ $menu->price }}" id="menu_price">
-                                                <input type="hidden" name="menu_image" value="{{ $menu->image }}" id="menu_image">
-                                                <input type="hidden" name="menu_status" value="{{ $menu->status }}" id="menu_status">
-                                                <input type="hidden" name="menu_category_id" value="{{ $menu->category }}" id="menu_category_id">
+                                                <input type="hidden" name="vat_id" value="{{ $vat->id }}" id="vat_id">
+                                                <input type="hidden" name="vat_name" value="{{ $vat->name }}" id="vat_name">
+                                                <input type="hidden" name="vat_rate" value="{{ $vat->rate }}" id="vat_rate">
+                                                <input type="hidden" name="vat_status" value="{{ $vat->status }}" id="vat_status">
 
-
-                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
+                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat" href="#">
                                                     <i data-feather="trash-2" class="feather-trash-2"></i>
                                                 </a>
                                             </div>
@@ -143,62 +134,32 @@
         </script>
 
 
-        <!-- Add menu -->
-        <div class="modal fade" id="add-menu">
+        <!-- Add vat -->
+        <div class="modal fade" id="add-vat">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Add menu</h4>
+                            <h4>Add vat</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('menu.item.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('vat.store') }}" method="POST">
                         @csrf
-                        <div class="modal-body add-list add">
-                             <div class="add-choosen">
-                                <div class="mb-3">
-                                    <div class="image-upload image-upload-two">
-                                        <input type="file" name="image" class="form-control" accept="image/*" required onchange="loadImage(this, 'image-preview')">
-                                        <div class="image-uploads">
-                                            <i data-feather="plus-circle" class="plus-down-add me-0"></i>
-                                            <h4>Add Images</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="phone-img">
-                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
-                                    {{-- <a href="javascript:void(0);"></a> --}}
-                                </div>
-                            </div>
-
+                        <div class="modal-body">
                             <div class="mb-3">
-                                <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
-                                <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
-                                    <select name="menu" class="form-select">
-                                        <option value="">Select Menu</option>
-                                        @foreach ($menus as $items)
-                                            <option value="{{ $items->id }}">{{ $items->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <label class="form-label">vat<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter vat name" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter menu name" required>
+                                <label class="form-label">Rate<span class="text-danger ms-1">*</span></label>
+                                <input type="number" class="form-control" name="rate" placeholder="Enter vat rate in %" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" name="price" placeholder="Enter menu price" required>
-                            </div>
-
-                            <div class="mb-3">
+                            <div class="mb-0">
                                 <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                                 <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
                                     <select name="status" class="form-select">
                                         <option value="">Select Status</option>
                                         <option value="active">Active</option>
@@ -209,72 +170,44 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Add Menu Item</button>
+                            <button type="submit" class="btn btn-primary">Add vat</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- /Add menu -->
+        <!-- /Add vat -->
         <!-- /product list -->
 
-        <!-- Edit menu -->
-        <div class="modal fade" id="edit-menu">
+        <!-- Edit vat -->
+        <div class="modal fade" id="edit-vat">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Edit Menu Item</h4>
+                            <h4>Edit vat</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('menu.item.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('vat.update') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" value="" id="id">
+                        <input type="hidden" name="id" value="1" id="vat_id">
                         <div class="modal-body">
-                             <div class="add-choosen">
-                                <div class="mb-3">
-                                    <div class="image-upload image-upload-two">
-                                        <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview-edit')">
-                                        <div class="image-uploads">
-                                            <i data-feather="plus-circle" class="plus-down-add me-0"></i>
-                                            <h4>Add Images</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="phone-img">
-                                    <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview-edit">
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label">vat<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" value="Computers" id="name" name="name" placeholder="Enter vat name" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
-                                <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
-                                    <select name="menu" class="form-select" id="menu_cat">
-                                        <option value="">Select Menu</option>
-                                        @foreach ($menus as $items)
-                                            <option value="{{ $items->id }}">{{ $items->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">menu<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter menu name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="" id="price" name="price" placeholder="Enter menu price" required>
+                                <label class="form-label">Rate<span class="text-danger ms-1">*</span></label>
+                                <input type="number" class="form-control" name="rate" placeholder="Enter vat rate in %" required id="rate">
                             </div>
                             <div class="mb-0">
-                                <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
+                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                                 <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-                                     <select name="status" class="form-select" id="status">
+                                    <select name="status" class="form-select" id="status">
                                         <option value="">Select Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
                                     </select>
                                 </div>
                             </div>
@@ -294,14 +227,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Delete menu</h4>
+                        <h4 class="modal-title">Delete vat</h4>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('menu.item.delete') }}" method="POST">
+                    <form action="{{ route('vat.delete') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" value="" id="delete_menu_id">
+                        <input type="hidden" name="id" value="" id="delete_vat_id">
                         <div class="modal-body">
                             <h1>Are you sure you want to delete?</h1>
                         </div>
@@ -317,33 +250,44 @@
     </div>
 
     <script>
-        //jQuery for edit menu
+        //jQuery for edit vat
         $(document).on('click', '#edit-cat', function() {
+            var vat_id = $(this).closest('tr').find('#vat_id').val();
+            $('#vat_id').val(vat_id);
 
-            var menu_id = $(this).closest('tr').find('#menu_id').val();
-            $('#id').val(menu_id);
+            var vat_name = $(this).closest('tr').find('#vat_name').val();
+            $('#name').val(vat_name);
 
-            var menu_name = $(this).closest('tr').find('#menu_name').val();
-            $('#name').val(menu_name);
+            var vat_rate = $(this).closest('tr').find('#vat_rate').val();
+            $('#rate').val(vat_rate);
 
-            var menu_price = $(this).closest('tr').find('#menu_price').val();
-            $('#price').val(menu_price);
 
-            var menu_image = $(this).closest('tr').find('#menu_image').val();
-            $('.image-preview-edit').attr('src', menu_image);
 
-            var menu_status = $(this).closest('tr').find('#menu_status').val();
-            $('#status option[value="' + menu_status + '"]').prop('selected', true);
+            var vat_status = $(this).closest('tr').find('#vat_status').val();
+            $('#status').val(vat_status);
 
-            var menuMenuId = $(this).closest('tr').find('#menu_category_id').val();
-            $('#menu_cat option[value="' + menuMenuId + '"]').prop('selected', true);
+            $('#status').html(`
+            <option value="">Select Status</option>
+            <option value="active" ${vat_status === 'active' ? 'selected' : ''}>Active</option>
+            <option value="inactive" ${vat_status === 'inactive' ? 'selected' : ''}>Inactive</option>
+        `);
+
+
         });
 
-        //jQuery for delete menu
+        //jQuery for delete vat
         $(document).on('click', '#delete-cat', function() {
-            var menu_id = $(this).closest('tr').find('#menu_id').val();
-            $('#delete_menu_id').val(menu_id);
+            var vat_id = $(this).closest('tr').find('#vat_id').val();
+            $('#delete_vat_id').val(vat_id);
         });
     </script>
-   
+
+    <script>
+        document.getElementById('select-all').onclick = function() {
+            let checkboxes = document.querySelectorAll('input[name="ids[]"]');
+            for (let checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        }
+    </script>
 @endsection

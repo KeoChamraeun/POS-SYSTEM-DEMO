@@ -175,6 +175,17 @@ class MenuController extends Controller
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->menu;
+
+            if ($request->file(key: 'image')) {
+                $menu_img = $request->file('image');
+                $manager = new ImageManager(new Driver());
+                $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
+                $image = $manager->read($menu_img);
+                $image->resize(150, 150);
+                $image->toJpeg(80)->save(base_path('public/uploads/menu_item/' . $name_gen));
+                $menu->image = 'uploads/menu_item/' . $name_gen;
+            }
+
             $menu->save();
 
             DB::commit();
@@ -198,6 +209,23 @@ class MenuController extends Controller
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->menu;
+
+            if ($request->file(key: 'image')) {
+                if ($menu->image) {
+                    $imagePath = public_path($menu->image);
+                    if (file_exists($imagePath) && is_file($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+                $menu_img = $request->file('image');
+                $manager = new ImageManager(new Driver());
+                $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
+                $image = $manager->read($menu_img);
+                $image->resize(150, 150);
+                $image->toJpeg(80)->save(base_path('public/uploads/menu_item/' . $name_gen));
+                $menu->image = 'uploads/menu_item/' . $name_gen;
+            }
+
             $menu->save();
 
             DB::commit();

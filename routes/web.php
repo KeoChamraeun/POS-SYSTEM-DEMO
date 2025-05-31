@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
 use App\Http\Controllers\Backend\SupplierController;
+use App\Http\Controllers\Backend\VatController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\OrderConfirmation;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,15 @@ Route::controller(SupplierController::class)->group(function () {
     Route::post('/supplier/update', 'update')->name('supplier.update');
     Route::post('/supplier/delete', 'destroy')->name('supplier.delete');
     Route::delete('/supplier/bulk-delete', 'bulkDelete')->name('supplier.bulk.delete');
+});
+
+// Vat Routes
+Route::controller(VatController::class)->group(function () {
+    Route::get('/vat', 'index')->name('vat.index');
+    Route::post('/vat/store', 'store')->name('vat.store');
+    Route::post('/vat/update', 'update')->name('vat.update');
+    Route::post('/vat/delete', 'destroy')->name('vat.delete');
+    Route::delete('/vat/bulk-delete', 'bulkDelete')->name('vat.bulk.delete');
 });
 
 

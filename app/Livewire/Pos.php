@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Vat;
 use Livewire\Component;
 
 use Pest\ArchPresets\Custom;
@@ -27,6 +28,7 @@ class Pos extends Component
     public $discount = 0;
     public $discountType = 'percentage'; // Default discount type
     public $discountValue = 0; // Default discount value
+    public $vat = 0; // Default VAT value
 
     public function mount()
     {
@@ -131,10 +133,11 @@ class Pos extends Component
             'customer_name' => $this->customerName,
             'status' => $this->status,
             'payment_method' => $this->paymentMethod,
-            'discount' => 0, // Default discount
+            'discount' => $this->getDiscount(), // Default discount
+            'vat' => ($this->getTotal() * ($this->vat / 100)),
             'sub_total' => $this->getTotal(),
             'adjustment' => 0, // Default adjustment
-            'total' => $this->getTotal(),
+            'total' => $this->getTotal() - $this->getDiscount() + ($this->getTotal() * ($this->vat / 100)),
         ]);
 
         foreach ($this->cart as $entry) {
@@ -193,6 +196,7 @@ class Pos extends Component
             'items' => $items,
             'categories' => MenuItem::select('category')->distinct()->pluck('category'),
             'customers' => Customer::where('status', 'active')->get(),
+            'vats' => Vat::where('status', 'active')->get(),
         ]);
     }
 }

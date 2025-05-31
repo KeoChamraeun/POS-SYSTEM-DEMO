@@ -176,8 +176,8 @@
                         <td style="text-align: right; color: red;">-${{ $order->discount }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3"><strong>Tax (0%):</strong></td>
-                        <td style="text-align: right;">$0.00</td>
+                        <td colspan="3"><strong>VAT ({{ round($order->vat / $order->sub_total * 100)  }}%):</strong></td>
+                        <td style="text-align: right;">${{ $order->vat }}</td>
                     </tr>
                     <tr>
                         <td colspan="3"><strong>Total Bill:</strong></td>
