@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Models\Customer;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Livewire\Component;
 
+use Pest\ArchPresets\Custom;
 use function Laravel\Prompts\alert;
 
 class Pos extends Component
@@ -18,7 +20,7 @@ class Pos extends Component
     public $table = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     public $tableNo; // fixed, initialized in mount()
     public $orderNumber; // fixed, initialized in mount()
-    public $customerName = 'Walk in Customer';
+    public $customerName = '';
     public $status = 'pending';
     public $paymentMethod = 'cash';
     public $subTotal = 0;
@@ -31,6 +33,7 @@ class Pos extends Component
         $this->tableNo = rand($this->table[0], $this->table[count($this->table) - 1]);
         $this->orderNumber = 'ORDER-' . date('Ymd') . '-' . rand(1000, 9999);
         $this->paymentMethod = 'cash'; // Default payment method
+
     }
 
 
@@ -51,6 +54,7 @@ class Pos extends Component
             'id' => $menu->id,
             'name' => $menu->name,
             'price' => $menu->price,
+            'image' => $menu->image,
             'quantity' => 1,
         ];
 
@@ -76,6 +80,7 @@ class Pos extends Component
             'id' => $item->id,
             'name' => $item->name,
             'price' => $item->price,
+            'image' => $item->image,
             'quantity' => 1,
         ];
 
@@ -187,6 +192,7 @@ class Pos extends Component
             'menus' => Menu::all(),
             'items' => $items,
             'categories' => MenuItem::select('category')->distinct()->pluck('category'),
+            'customers' => Customer::where('status', 'active')->get(),
         ]);
     }
 }

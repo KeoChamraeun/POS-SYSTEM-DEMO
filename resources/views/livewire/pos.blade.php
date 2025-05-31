@@ -46,7 +46,7 @@
                 @foreach($items as $item)
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm h-100" style="cursor: pointer;" wire:click="addItem({{ $item->id }})">
-                        <img src="{{asset('backend/assets/img/products/pos-product-01.png')}}" class="card-img-top"
+                        <img src="{{asset($item->image)}}" class="card-img-top"
                             alt="{{ $item->name }}">
                         <div class="card-body d-flex flex-column">
                             <h6 class="text-muted">{{ $item->category }}</h6>
@@ -77,7 +77,9 @@
                         <h5 class="fw-bold">Customer Information</h5>
                         <select class="form-select mb-2" wire:model="customerName">
                             <option value="Walk in Customer">Walk in Customer</option>
-                            {{-- Add more options as needed --}}
+                            @foreach($customers as $customer)
+                            <option value="{{ $customer->name }}">{{ $customer->name }}</option>
+                            @endforeach
                         </select>
                         <input type="text" class="form-control mb-2" placeholder="Search Products">
                     </div>
@@ -93,7 +95,7 @@
                         </div>
                         @foreach($cart as $index => $cartItem)
                         <div class="d-flex align-items-center mb-3 border rounded p-2">
-                            <img src="{{asset('backend/assets/img/products/pos-product-01.png')}}" class="me-2 rounded"
+                            <img src="{{asset($cartItem['image'])}}" class="me-2 rounded"
                                 alt="{{ $cartItem['name'] }}" width="50">
                             <div class="flex-grow-1">
                                 <small class="badge bg-warning text-dark mb-1">#{{ strtoupper($cartItem['type'])

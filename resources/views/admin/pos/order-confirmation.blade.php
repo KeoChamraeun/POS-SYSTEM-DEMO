@@ -69,7 +69,8 @@
             align-content: center;
         }
 
-        .company-info h6, p {
+        .company-info h6,
+        p {
             margin: 5px 0 !important;
         }
 
@@ -110,8 +111,7 @@
             <table>
                 <tr>
                     <td><a href="{{ route('pos') }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>Back</a> </td>
-                    <td><button onclick="window.print();" class="btn btn-primary"><i
-                                class="dripicons-print"></i>Print</button></td>
+                    <td><button onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>Print</button></td>
                 </tr>
             </table>
             <br>
@@ -120,25 +120,21 @@
         <div id="receipt-data">
             <div class="main-wrapper">
                 <!-- Receipt Section -->
-                <table align="center" class="mt-4" id="print-receipt"
-                    style="max-width: 400px; width: 100%;  padding: 20px; border-radius: 8px; font-size: 14px;">
+                <table align="center" class="mt-4" id="print-receipt" style="max-width: 400px; width: 100%;  padding: 20px; border-radius: 8px; font-size: 14px;">
                     <tr>
                         <td align="center" colspan="4">
-                            <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="Receipt Logo"
-                                width="150" style="margin:0;">
+                            <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="Receipt Logo" width="150" style="margin:0;">
                         </td>
                     </tr>
                     <tr>
                         <td align="center" colspan="4" class="company-info">
                             <h6 class="">Nebula IT BD.</h6>
-                            <p>Phone: +8801886927829<br>Email: <a style="color: #222; text-decoration: none;"
-                                    href="mailto:nebulaitd@gmail.com">nebulaitd@gmail.com</a>
+                            <p>Phone: +8801886927829<br>Email: <a style="color: #222; text-transform: lowercase;" href="mailto:nebulaitbd@gmail.com">nebulaitbd@gmail.com</a>
                             </p>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="4" align="center"
-                            style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f8f9fa;">
+                        <td colspan="4" align="center" style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f8f9fa;">
                             <strong>Tax Invoice</strong>
                         </td>
                     </tr>
@@ -149,7 +145,7 @@
                         <td colspan="4"><strong>Invoice No:</strong> {{ $order->order_number }}</td>
                     </tr>
                     <tr>
-                           <td colspan="2"><strong>Date:</strong> {{ date('d-m-Y', strtotime($order->created_at)) }}</td>
+                        <td colspan="2"><strong>Date:</strong> {{ date('d-m-Y', strtotime($order->created_at)) }}</td>
                     </tr>
 
                     <!-- Items Header -->
@@ -162,26 +158,13 @@
 
                     <!-- Items -->
                     @foreach ($order->orderItems as $key => $item)
-                      <tr>
-                        <td>{{ $key + 1 }}. {{ $item->menuItem->name ?? null }}</td>
-                        <td style="text-align: center;">$50</td>
+                    <tr>
+                        <td>{{ $key + 1 }}. {{ $item->item_type == 'menu' ? $item->menu->name : $item->menuItem->name }}</td>
+                        <td style="text-align: center;">${{ $item->price }}</td>
                         <td>{{ $item->quantity }}</td>
                         <td style="text-align: right;">${{ $item->quantity * $item->price }}</td>
                     </tr>  
                     @endforeach
-                    
-                    {{-- <tr>
-                        <td>2. iPhone 14</td>
-                        <td style="text-align: center;">$50</td>
-                        <td>2</td>
-                        <td style="text-align: right;">$100</td>
-                    </tr>
-                    <tr>
-                        <td>3. Apple Series</td>
-                        <td style="text-align: center;">$50</td>
-                        <td>3</td>
-                        <td style="text-align: right;">$150</td>
-                    </tr> --}}
 
                     <!-- Totals -->
                     <tr>
@@ -211,8 +194,7 @@
 
                     <!-- Footer -->
                     <tr>
-                        <td colspan="4"
-                            style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; text-align: center; padding: 10px 0;">
+                        <td colspan="4" style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; text-align: center; padding: 10px 0;">
                             <p>**Thank you for shopping with us. Please come again</p>
                         </td>
                     </tr>
@@ -228,10 +210,11 @@
 
     <script type="text/javascript">
         localStorage.clear();
-    function auto_print() {
-        window.print();
-    }
-    //setTimeout(auto_print, 1000);
+
+        function auto_print() {
+            window.print();
+        }
+        //setTimeout(auto_print, 1000);
     </script>
 
 </body>
