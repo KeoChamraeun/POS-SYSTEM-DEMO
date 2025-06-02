@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Support\Facades\Log;
@@ -159,10 +160,10 @@ class MenuController extends Controller
     // Menu Item Methods
      public function menuItemIndex()
     {
-        $menus = Menu::orderBy('id', 'desc')->get();
+        $categories = Category::orderBy('id', 'desc')->get();
         $menuItems = MenuItem::orderBy('id', 'desc')->get();
 
-        return view('admin.menu_item.menu_item_list', compact('menuItems', 'menus'));
+        return view('admin.menu_item.menu_item_list', compact('menuItems', 'categories'));
     }
 
     public function menuItemStore(Request $request)
@@ -174,7 +175,7 @@ class MenuController extends Controller
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
-            $menu->category = $request->menu;
+            $menu->category = $request->category;
 
             if ($request->file(key: 'image')) {
                 $menu_img = $request->file('image');
@@ -190,13 +191,13 @@ class MenuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('menu.item.index')->with('success', 'menu item created successfully.');
+            return redirect()->route('menu.item.index')->with('success', 'Menu item created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
             Log::error('Error creating menu: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'menu item created Failed. Please try again!');
+            return redirect()->back()->with('error', 'Menu item created Failed. Please try again!');
         }
     }
 
@@ -208,7 +209,7 @@ class MenuController extends Controller
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
-            $menu->category = $request->menu;
+            $menu->category = $request->category;
 
             if ($request->file(key: 'image')) {
                 if ($menu->image) {

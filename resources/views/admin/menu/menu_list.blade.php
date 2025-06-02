@@ -110,7 +110,7 @@
                                                 <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-menu" id="edit-cat">
                                                     <i data-feather="edit" class="feather-edit"></i>
                                                 </a>
-                                                <input type="hidden" name="menu_id" value="{{ $menu->id }}" id="menu_id">
+                                                <input type="hidden" name="item_id" value="{{ $menu->id }}" id="item_id">
                                                 <input type="hidden" name="menu_name" value="{{ $menu->name }}" id="menu_name">
                                                 <input type="hidden" name="menu_price" value="{{ $menu->price }}" id="menu_price">
                                                 <input type="hidden" name="menu_image" value="{{ $menu->image ?? 'backend/assets/img/no-image.jpg' }}" id="menu_image">
@@ -169,7 +169,6 @@
                                 </div>
                                 <div class="phone-img">
                                     <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
-                                    {{-- <a href="javascript:void(0);"></a> --}}
                                 </div>
                             </div>
 
