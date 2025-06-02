@@ -12,6 +12,10 @@ class MenuItem extends Model
     }
 
     public function menu() {
-        return $this->belongsTo(Menu::class, 'category', 'id');
+        return $this->belongsTo(Menu::class, '', 'id');
+    }
+
+    public function categoryName() {
+        return $this->belongsTo(Category::class,'category', 'id');
     }
 }

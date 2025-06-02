@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Menu;
 use App\Models\MenuItem;
@@ -111,9 +112,9 @@ class Pos extends Component
     public function getSubTotal()
     {
         return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
-   
+
     }
-    
+
     public function getTotal()
     {
         return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
@@ -179,7 +180,7 @@ class Pos extends Component
         }else{
            $this->discount= $this->discountValue;
         }
-        
+
         $this->dispatch('closeDiscountModal');
         return $this->discount;
 
@@ -190,13 +191,15 @@ class Pos extends Component
             ? MenuItem::where('category', $this->selectedCategory)->get()
             : MenuItem::where('name', 'like', '%' . $this->searchTerm . '%')
             ->get();
-
+        $numberOfItems = MenuItem::count();
         return view('livewire.pos', [
             'menus' => Menu::all(),
             'items' => $items,
-            'categories' => MenuItem::select('category')->distinct()->pluck('category'),
+            // 'categories' => MenuItem::select('category')->distinct()->pluck('category'),
+            'categories' => Category::where('status', 'active')->get(),
             'customers' => Customer::where('status', 'active')->get(),
             'vats' => Vat::where('status', 'active')->get(),
+            'numberOfItems' => $numberOfItems
         ]);
     }
 }

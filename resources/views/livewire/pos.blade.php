@@ -8,12 +8,12 @@
                 <h5 class="fw-bold mb-3">Categories</h5>
                 <div class="d-flex flex-wrap gap-2">
                     <button wire:click="$set('selectedCategory', null)" class="btn btn-outline-warning">
-                        All Categories<br><small class="text-muted">80 Items</small>
+                        All Categories<br><small class="text-muted">{{ $numberOfItems}} Items</small>
                     </button>
                     @foreach($categories as $category)
-                    <button wire:click="$set('selectedCategory', '{{ $category }}')"
+                    <button wire:click="$set('selectedCategory', '{{ $category->id }}')"
                         class="btn btn-outline-primary {{ $selectedCategory === $category ? 'border-2 border-primary' : '' }}">
-                        {{ $category }}<br><small class="text-muted">80 Items</small>
+                        {{ $category->name }}<br><small class="text-muted">{{ $category->menuItems()->count() }} Items</small>
                     </button>
                     @endforeach
                 </div>
@@ -49,7 +49,7 @@
                         <img src="{{asset($item->image)}}" class="card-img-top"
                             alt="{{ $item->name }}">
                         <div class="card-body d-flex flex-column">
-                            <h6 class="text-muted">{{ $item->menu->name }}</h6>
+                            <h6 class="text-muted">{{ $item->categoryName->name}}</h6>
                             <h5 class="fw-bold">{{ $item->name }}</h5>
                             {{-- <p class="mb-1 text-pink">30 Pcs</p> --}}
                             <p class="text-success fw-bold">${{ number_format($item->price, 2) }}</p>
@@ -131,8 +131,8 @@
                         <hr>
                         <p class="mb-1">Sub Total: <span class="float-end">${{ number_format($this->getSubTotal(), 2)
                                 }}</span></p>
-                        <p class="mb-1"> 
-                            <span class="text-danger">Discount 
+                        <p class="mb-1">
+                            <span class="text-danger">Discount
                             <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i class="ti ti-edit"></i></a>: </span>
                             <span class="float-end">${{ number_format($this->getDiscount(), 2) }}</span></p>
                         <p class="mb-1">VAT (GST {{ $this->vat  }}%): <span class="float-end">${{ number_format($this->getTotal() *

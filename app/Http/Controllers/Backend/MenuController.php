@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -124,7 +125,7 @@ class MenuController extends Controller
     public function bulkDelete(Request $request)
     {
 
-         DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $ids = $request->ids;
 
@@ -158,7 +159,7 @@ class MenuController extends Controller
 
 
     // Menu Item Methods
-     public function menuItemIndex()
+    public function menuItemIndex()
     {
         $categories = Category::orderBy('id', 'desc')->get();
         $menuItems = MenuItem::orderBy('id', 'desc')->get();
@@ -168,9 +169,20 @@ class MenuController extends Controller
 
     public function menuItemStore(Request $request)
     {
+
+        $validation = Validator::make($request->all(), [
+            'name' => 'required',
+            'price' => 'required',
+            'category' => 'required',
+            'status' => 'required',
+        ]);
+
+        if ($validation->fails()) {
+            return redirect()->back()->with('errors', $validation->errors());
+        }
+
         DB::beginTransaction();
         try {
-
             $menu = new MenuItem();
             $menu->name = $request->name;
             $menu->price = $request->price;
@@ -183,8 +195,9 @@ class MenuController extends Controller
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
                 $image = $manager->read($menu_img);
                 $image->resize(150, 150);
-                $image->toJpeg(80)->save(base_path('public/uploads/menu_item/' . $name_gen));
-                $menu->image = 'uploads/menu_item/' . $name_gen;
+                $save_url = '/uploads/menu_item/' . $name_gen;
+                $image->toJpeg(80)->save(public_path($save_url));
+                $menu->image = $save_url;
             }
 
             $menu->save();
@@ -194,9 +207,7 @@ class MenuController extends Controller
             return redirect()->route('menu.item.index')->with('success', 'Menu item created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error creating menu: ' . $th->getMessage());
-
             return redirect()->back()->with('error', 'Menu item created Failed. Please try again!');
         }
     }
@@ -223,8 +234,9 @@ class MenuController extends Controller
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
                 $image = $manager->read($menu_img);
                 $image->resize(150, 150);
-                $image->toJpeg(80)->save(base_path('public/uploads/menu_item/' . $name_gen));
-                $menu->image = 'uploads/menu_item/' . $name_gen;
+                $save_url = '/uploads/menu_item/' . $name_gen;
+                $image->toJpeg(80)->save(public_path($save_url));
+                $menu->image = $save_url;
             }
 
             $menu->save();
@@ -246,6 +258,9 @@ class MenuController extends Controller
         DB::beginTransaction();
         try {
             $menu = MenuItem::findOrFail($request->id);
+            if ($menu->image && file_exists(public_path($menu->image))) {
+                unlink(public_path($menu->image));
+            }
             $menu->delete();
 
             DB::commit();
@@ -263,7 +278,7 @@ class MenuController extends Controller
     public function menuItemBulkDelete(Request $request)
     {
 
-         DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $ids = $request->ids;
 
@@ -271,15 +286,21 @@ class MenuController extends Controller
                 return redirect()->route('menu.item.index')->with('error', 'No Menu item selected for deletion.');
             }
 
-            MenuItem::whereIn('id', $ids)->delete();
+            foreach ($ids as $id) {
+                $menuItem = MenuItem::find($id);
+                if ($menuItem && $menuItem->image && file_exists(public_path($menuItem->image))) {
+                    unlink(public_path($menuItem->image));
+                }
+                $menuItem->delete();
+            }
 
             DB::commit();
 
-            return redirect()->route('menu.item.index')->with('success', 'Selected Menu deleted successfully.');
+            return redirect()->route('menu.item.index')->with('success', 'Selected Items deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
-            Log::error('Error bulk deleting menu: ' . $th->getMessage());
+            Log::error('Error bulk deleting items: ' . $th->getMessage());
 
             return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
         }

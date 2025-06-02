@@ -18,7 +18,7 @@
             </div>
             <ul class="table-top-head">
                 <li>
-                    <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
+                    <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
                 </li>
                 <li>
                     <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a>
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Bulk Delete Form Start -->
-        <form action="{{ route('menu.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menuItems?');" enctype="multipart/form-data">
+        <form action="{{ route('menu.item.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menuItems?');" enctype="multipart/form-data">
             @csrf
             @method('DELETE')
 
@@ -74,9 +74,11 @@
                                         <strong>{{ session('success') }}</strong>
                                     </div>
                                 @endif
-                                @if (session()->has('error'))
+                                @if (session()->has('errors'))
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <strong>{{ session('error') }}</strong>
+                                            @foreach ($errors->all() as $error)
+                                                <p class="mb-0">{{ $error }}</p>
+                                            @endforeach
                                     </div>
                                 @endif
 
@@ -187,7 +189,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter item name" required>
+                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter item name">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
@@ -259,7 +261,7 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">menu<span class="text-danger ms-1">*</span></label>
+                                <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter menu item name" required>
                             </div>
                             <div class="mb-3">
