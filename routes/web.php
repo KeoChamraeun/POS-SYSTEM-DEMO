@@ -10,17 +10,17 @@ use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\VatController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\OrderConfirmation;
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use Pest\ArchPresets\Custom;
 
 
 Route::get('/', function () {
-   return view('admin.index');
+    return view('auth.login');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('admin.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
