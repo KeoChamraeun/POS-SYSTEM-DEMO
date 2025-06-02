@@ -105,7 +105,7 @@ class MenuController extends Controller
                     unlink($imagePath);
                 }
             }
-            
+
             $menu->delete();
 
             DB::commit();
@@ -122,7 +122,7 @@ class MenuController extends Controller
 
     public function bulkDelete(Request $request)
     {
-        
+
          DB::beginTransaction();
         try {
             $ids = $request->ids;
@@ -141,7 +141,7 @@ class MenuController extends Controller
                 }
             }
 
-            Menu::whereIn('id', $ids)->delete();            
+            Menu::whereIn('id', $ids)->delete();
 
             DB::commit();
 
@@ -261,7 +261,7 @@ class MenuController extends Controller
 
     public function menuItemBulkDelete(Request $request)
     {
-        
+
          DB::beginTransaction();
         try {
             $ids = $request->ids;
@@ -270,7 +270,7 @@ class MenuController extends Controller
                 return redirect()->route('menu.item.index')->with('error', 'No Menu item selected for deletion.');
             }
 
-            MenuItem::whereIn('id', $ids)->delete();            
+            MenuItem::whereIn('id', $ids)->delete();
 
             DB::commit();
 

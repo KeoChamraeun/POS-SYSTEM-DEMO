@@ -178,7 +178,7 @@
                                 </div>
                                 <div class="phone-img">
                                     <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image">
-\                                </div>
+                               </div>
                             </div>
                             
                             <div class="mb-3">
@@ -218,7 +218,7 @@
             </div>
         </div>
         <!-- /Add customer -->
-        <!-- /product list -->
+       
 
         <!-- Edit customer -->
         <div class="modal fade" id="edit-customer">

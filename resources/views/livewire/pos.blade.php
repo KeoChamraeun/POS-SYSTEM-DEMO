@@ -81,7 +81,6 @@
                             <option value="{{ $customer->name }}">{{ $customer->name }}</option>
                             @endforeach
                         </select>
-                        <input type="text" class="form-control mb-2" placeholder="Search Products">
                     </div>
                 </div>
 

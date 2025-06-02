@@ -80,6 +80,7 @@
                                     </div>
                                 @endif
 
+
                                 @foreach ($menus as $menu)
                                     <tr>
                                         <td>
@@ -95,7 +96,7 @@
                                         </td>
 
                                         <td>
-                                            <img src="{{ asset($menu->image) }}" width="50" height="50" alt="image">
+                                            <img src="{{ asset($menu->image ?? 'backend/assets/img/no-image.jpg') }}" width="50" height="50" alt="image">
                                         </td>
                                         <td>
                                             @if ($menu->status == 'active')
@@ -112,7 +113,7 @@
                                                 <input type="hidden" name="menu_id" value="{{ $menu->id }}" id="menu_id">
                                                 <input type="hidden" name="menu_name" value="{{ $menu->name }}" id="menu_name">
                                                 <input type="hidden" name="menu_price" value="{{ $menu->price }}" id="menu_price">
-                                                <input type="hidden" name="menu_image" value="{{ $menu->image }}" id="menu_image">
+                                                <input type="hidden" name="menu_image" value="{{ $menu->image ?? 'backend/assets/img/no-image.jpg' }}" id="menu_image">
                                                 <input type="hidden" name="menu_status" value="{{ $menu->status }}" id="menu_status">
 
                                                 <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
@@ -322,5 +323,5 @@
             $('#delete_menu_id').val(menu_id);
         });
     </script>
-   
+
 @endsection
