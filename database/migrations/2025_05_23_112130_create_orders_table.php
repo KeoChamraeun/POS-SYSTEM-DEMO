@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('customer_name')->nullable();
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('adjustment', 10, 2)->default(0);
+            $table->decimal('vat', 10, 2)->default(0);
             $table->string('payment_method')->nullable();
             $table->decimal('sub_total', 10, 2)->default(0);
             $table->decimal('total', 10, 2)->default(0);

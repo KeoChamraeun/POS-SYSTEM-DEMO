@@ -14,7 +14,7 @@ class PosController extends Controller
     }
     public function OrderConfirmed($orderId)
     {
-        $order = Order::findOrFail($orderId)->with('orderItems')->first();
+        $order = Order::with('orderItems')->findOrFail($orderId);
         if (!$order) {
             return redirect()->back()->with('error', 'Order not found.');
         }

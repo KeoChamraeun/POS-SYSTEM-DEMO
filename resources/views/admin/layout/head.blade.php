@@ -3,13 +3,13 @@
 
 
 <head>
-	<!-- Meta Tags -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="author" content="Dreams Technologies">
-	<meta name="robots" content="index, follow">
-	@yield('title')
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Dreams Technologies">
+    <meta name="robots" content="index, follow">
+    @yield('title')
 
     <script src="{{ asset('backend/assets/js/theme-script.js') }}"></script>
 
@@ -56,5 +56,12 @@
 
     <!-- jQuery -->
     <script src="{{ asset('backend/assets/js/jquery-3.7.1.min.js') }}"></script>
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 </head>

@@ -2,13 +2,13 @@
     <!-- Logo -->
     <div class="sidebar-logo active">
         <a href="index-2.html" class="logo logo-normal">
-            <img src="backend/assets/img/logo.svg" alt="Img">
+            <img src="{{ asset('backend/assets/img/logo.svg') }}" alt="Img">
         </a>
         <a href="index-2.html" class="logo logo-white">
-            <img src="backend/assets/img/logo-white.svg" alt="Img">
+            <img src="{{ asset('backend/assets/img/logo-white.svg') }}" alt="Img">
         </a>
         <a href="index-2.html" class="logo-small">
-            <img src="backend/assets/img/logo-small.png" alt="Img">
+            <img src="{{ asset('backend/assets/img/logo-small.png') }}" alt="Img">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
             <i data-feather="chevrons-left" class="feather-16"></i>
@@ -18,7 +18,7 @@
     <div class="modern-profile p-3 pb-0">
         <div class="text-center rounded bg-light p-3 mb-4 user-profile">
             <div class="avatar avatar-lg online mb-3">
-                <img src="backend/assets/img/customer/customer15.jpg" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
             </div>
             <h6 class="fs-14 fw-bold mb-1">Adrian Herman</h6>
             <p class="fs-12 mb-0">System Admin</p>
@@ -34,7 +34,7 @@
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md onlin">
-                <img src="backend/assets/img/customer/customer15.jpg" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
                 <h6 class="fs-14 fw-bold mb-1">Adrian Herman</h6>
@@ -76,7 +76,7 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Main</h6>
                     <ul>
-                        <li>
+                        <li class=" {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}" class="active">
                                 <i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span>
                             </a>
@@ -86,31 +86,24 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Inventory</h6>
                     <ul>
-                        <li><a href="product-list.html"><i data-feather="box"></i><span>Products</span></a></li>
-                        <li><a href="add-product.html"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create
-                                    Product</span></a></li>
-                        <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired
-                                    Products</span></a></li>
-                        <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low
-                                    Stocks</span></a></li>
-                        <li><a href="category-list.html"><i
-                                    class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
-                        <li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub
-                                    Category</span></a></li>
-                        <li><a href="brand-list.html"><i class="ti ti-triangles fs-16 me-2"></i><span>Brands</span></a>
+                        <li class=" {{ request()->routeIs('category.index') ? 'active' : '' }}">
+                            <a href="{{ route('category.index') }}">
+                                <i class="ti ti-list-details fs-16 me-2"></i><span>Category</span>
+                            </a>
                         </li>
-                        <li><a href="units.html"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
-                        <li><a href="varriant-attributes.html"><i class="ti ti-checklist fs-16 me-2"></i><span>Variant
-                                    Attributes</span></a></li>
-                        <li><a href="warranty.html"><i
-                                    class="ti ti-certificate fs-16 me-2"></i><span>Warranties</span></a></li>
-                        <li><a href="barcode.html"><i class="ti ti-barcode fs-16 me-2"></i><span>Print
-                                    Barcode</span></a></li>
-                        <li><a href="qrcode.html"><i class="ti ti-qrcode fs-16 me-2"></i><span>Print QR
-                                    Code</span></a></li>
+                        <li class=" {{ request()->routeIs('menu.index') ? 'active' : '' }}">
+                            <a href="{{ route('menu.index') }}">
+                                <i class="ti ti-tools-kitchen-2 fs-16 me-2"></i><span>Menu</span>
+                            </a>
+                        </li>
+                        <li class=" {{ request()->routeIs('menu.item.index') ? 'active' : '' }}">
+                            <a href="{{ route('menu.item.index') }}">
+                                <i class="ti ti-tools-kitchen fs-16 me-2"></i><span>Menu Item</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li class="submenu-open">
+                {{-- <li class="submenu-open">
                     <h6 class="submenu-hdr">Stock</h6>
                     <ul>
                         <li><a href="manage-stocks.html"><i class="ti ti-stack-3 fs-16 me-2"></i><span>Manage
@@ -199,24 +192,23 @@
                                     class="ti ti-file-infinity fs-16 me-2"></i><span>Account Statement</span></a></li>
 
                     </ul>
-                </li>
+                </li> --}}
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
-                        <li><a href="customers.html"><i
-                                    class="ti ti-users-group fs-16 me-2"></i><span>Customers</span></a></li>
-                        <li><a href="billers.html"><i class="ti ti-user-up fs-16 me-2"></i><span>Billers</span></a>
+                        <li class=" {{ request()->routeIs('customer.index') ? 'active' : '' }}">
+                            <a href="{{ route('customer.index') }}">
+                                <i class="ti ti-users-group fs-16 me-2"></i><span>Customers</span>
+                            </a>
                         </li>
-                        <li><a href="suppliers.html"><i
-                                    class="ti ti-user-dollar fs-16 me-2"></i><span>Suppliers</span></a></li>
-                        <li><a href="store-list.html"><i
-                                    class="ti ti-home-bolt fs-16 me-2"></i><span>Stores</span></a></li>
-                        <li><a href="warehouse.html"><i
-                                    class="ti ti-archive fs-16 me-2"></i><span>Warehouses</span></a>
+                        <li class=" {{ request()->routeIs('supplier.index') ? 'active' : '' }}">
+                            <a href="{{ route('supplier.index') }}"><i
+                                    class="ti ti-user-dollar fs-16 me-2"></i><span>Suppliers</span>
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li class="submenu-open">
+                {{-- <li class="submenu-open">
                     <h6 class="submenu-hdr">HRM</h6>
                     <ul>
                         <li><a href="employees-grid.html"><i
@@ -332,20 +324,13 @@
                         <li><a href="delete-account.html"><i class="ti ti-trash-x fs-16 me-2"></i><span>Delete Account
                                     Request</span></a></li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Settings</h6>
                     <ul>
-                        <li class="submenu">
-                            <a href="javascript:void(0);"><i class="ti ti-settings fs-16 me-2"></i><span>General
-                                    Settings</span><span class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="{{ route('site.setting.index') }}">Site Settings</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="signin.html"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
+                        <li class=" {{ request()->routeIs('vat.index') ? 'active' : '' }}">
+                                <a href="{{ route('vat.index') }}">Vat Settings</a>
                         </li>
                     </ul>
                 </li>

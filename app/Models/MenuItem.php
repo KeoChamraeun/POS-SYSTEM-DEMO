@@ -10,4 +10,8 @@ class MenuItem extends Model
     public function menus() {
         return $this->belongsToMany(Menu::class, 'menu_menu_item');
     }
+
+    public function menu() {
+        return $this->belongsTo(Menu::class, 'category', 'id');
+    }
 }

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->string('category')->nullable();
+            $table->string('image')->nullable()->comment('Path to the menu item image');
+            $table->string('status')->default('available')->comment('Status of the menu item');
             $table->timestamps();
         });
     }

@@ -2,12 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Models\Customer;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Vat;
 use Livewire\Component;
 
+use Pest\ArchPresets\Custom;
 use function Laravel\Prompts\alert;
 
 class Pos extends Component
@@ -18,19 +21,21 @@ class Pos extends Component
     public $table = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     public $tableNo; // fixed, initialized in mount()
     public $orderNumber; // fixed, initialized in mount()
-    public $customerName = 'Walk in Customer';
+    public $customerName = '';
     public $status = 'pending';
     public $paymentMethod = 'cash';
     public $subTotal = 0;
     public $discount = 0;
     public $discountType = 'percentage'; // Default discount type
     public $discountValue = 0; // Default discount value
+    public $vat = 0; // Default VAT value
 
     public function mount()
     {
         $this->tableNo = rand($this->table[0], $this->table[count($this->table) - 1]);
         $this->orderNumber = 'ORDER-' . date('Ymd') . '-' . rand(1000, 9999);
         $this->paymentMethod = 'cash'; // Default payment method
+
     }
 
 
@@ -51,6 +56,7 @@ class Pos extends Component
             'id' => $menu->id,
             'name' => $menu->name,
             'price' => $menu->price,
+            'image' => $menu->image,
             'quantity' => 1,
         ];
 
@@ -76,6 +82,7 @@ class Pos extends Component
             'id' => $item->id,
             'name' => $item->name,
             'price' => $item->price,
+            'image' => $item->image,
             'quantity' => 1,
         ];
 
@@ -126,10 +133,11 @@ class Pos extends Component
             'customer_name' => $this->customerName,
             'status' => $this->status,
             'payment_method' => $this->paymentMethod,
-            'discount' => 0, // Default discount
+            'discount' => $this->getDiscount(), // Default discount
+            'vat' => ($this->getTotal() * ($this->vat / 100)),
             'sub_total' => $this->getTotal(),
             'adjustment' => 0, // Default adjustment
-            'total' => $this->getTotal(),
+            'total' => $this->getTotal() - $this->getDiscount() + ($this->getTotal() * ($this->vat / 100)),
         ]);
 
         foreach ($this->cart as $entry) {
@@ -187,6 +195,8 @@ class Pos extends Component
             'menus' => Menu::all(),
             'items' => $items,
             'categories' => MenuItem::select('category')->distinct()->pluck('category'),
+            'customers' => Customer::where('status', 'active')->get(),
+            'vats' => Vat::where('status', 'active')->get(),
         ]);
     }
 }
