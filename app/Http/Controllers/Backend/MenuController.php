@@ -39,15 +39,16 @@ class MenuController extends Controller
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
                 $image = $manager->read($menu_img);
                 $image->resize(740, 740);
-                $image->toJpeg(80)->save(base_path('public/uploads/menu/' . $name_gen));
-                $menu->image = 'uploads/menu/' . $name_gen;
+                $save_url = '/uploads/menu/' . $name_gen;
+                $image->toJpeg(80)->save(public_path($save_url));
+                $menu->image = $save_url;
             }
 
             $menu->save();
 
             DB::commit();
 
-            return redirect()->route('menu.index')->with('success', 'menu created successfully.');
+            return redirect()->route('menu.index')->with('success', 'Menu created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
@@ -78,8 +79,9 @@ class MenuController extends Controller
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
                 $image = $manager->read($menu_img);
                 $image->resize(740, 740);
-                $image->toJpeg(80)->save(base_path('public/uploads/menu/' . $name_gen));
-                $menu->image = 'uploads/menu/' . $name_gen;
+                $save_url = '/uploads/menu/' . $name_gen;
+                $image->toJpeg(80)->save(public_path($save_url));
+                $menu->image = $save_url;
             }
 
             $menu->save();
@@ -141,9 +143,8 @@ class MenuController extends Controller
                         unlink($imagePath);
                     }
                 }
+                $menu->delete();
             }
-
-            Menu::whereIn('id', $ids)->delete();
 
             DB::commit();
 

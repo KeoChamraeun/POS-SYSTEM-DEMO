@@ -92,7 +92,7 @@
 
                                         <td><span class="text-gray-9">{{ $menu->name }}</span></td>
                                         <td>
-                                            <span class="text-gray-9">${{ $menu->price }}</span>
+                                            <span class="text-gray-9">{{ site_settings()->currency }}{{ $menu->price }}</span>
                                         </td>
 
                                         <td>
