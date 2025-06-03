@@ -84,6 +84,8 @@ Route::controller(VatController::class)->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
     Route::get('/pos', [PosController::class, 'POS'])->name('pos');
+    Route::get('/invoice', [PosController::class, 'InvoiceList'])->name('invoice.index');
+    Route::get('/order/delete/{id}', [PosController::class, 'OrderDelete'])->name('order.delete');
     Route::get('/pos-table', [AdminController::class, 'POSTable']);
     Route::get('/order/confirmed/{orderId}', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
 });
