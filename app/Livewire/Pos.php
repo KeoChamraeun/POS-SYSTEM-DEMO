@@ -33,7 +33,7 @@ class Pos extends Component
     public $paymentMethod = 'cash';
     public $subTotal = 0;
     public $discount = 0;
-    public $discountType = 'percentage'; // Default discount type
+    public $discountType = '';
     public $discountValue = 0; // Default discount value
     public $vat = 0; // Default VAT value
 
