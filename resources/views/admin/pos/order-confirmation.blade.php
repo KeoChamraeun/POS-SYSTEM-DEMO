@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" type="image/png" href="https://nebulaitbd.com/frontend/assets/images/favicon.png">
     <title>Nebula IT POS</title>
-    <meta name="description" content="Nebula IT POS - Streamline your sales, inventory, and billing with our powerful, easy-to-use point of sale system for businesses of all sizes.">
+    <meta name="description"
+        content="Nebula IT POS - Streamline your sales, inventory, and billing with our powerful, easy-to-use point of sale system for businesses of all sizes.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
 
@@ -101,6 +102,33 @@
                 margin-top: 0.5cm;
             }
         }
+
+        .receipt-container {
+            position: relative;
+        }
+
+        .receipt-container::before {
+            content: "PAID";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 48px;
+            font-weight: bold;
+            color: rgba(179, 180, 179, 0.15);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .receipt-container::before {
+            display: none;
+        }
+        @media print {
+            .receipt-container::before {
+                display: block;
+            }
+        }
     </style>
 </head>
 
@@ -110,99 +138,114 @@
         <div class="hidden-print">
             <table>
                 <tr>
-                    <td><a href="{{ route('pos') }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>Back to POS</a> </td>
-                    <td><button onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>Print</button></td>
+                    <td><a href="{{ route('pos') }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>Back to
+                            POS</a> </td>
+                    <td><button onclick="window.print();" class="btn btn-primary"><i
+                                class="dripicons-print"></i>Print</button></td>
                 </tr>
             </table>
             <br>
         </div>
 
-        <div id="receipt-data">
-            <div class="main-wrapper">
-                <!-- Receipt Section -->
-                <table align="center" class="mt-4" id="print-receipt" style="max-width: 400px; width: 100%;  padding: 20px; border-radius: 8px; font-size: 14px;">
-                    <tr>
-                        <td align="center" colspan="4">
-                            <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="Receipt Logo" width="150" style="margin:0;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" colspan="4" class="company-info">
-                            <h6 class="">Nebula IT BD.</h6>
-                            <p>Phone: +8801886927829<br>Email: <a style="color: #222; text-transform: lowercase;" href="mailto:nebulaitbd@gmail.com">nebulaitbd@gmail.com</a>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" align="center" style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f8f9fa;">
-                            <strong>Tax Invoice</strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Customer Name:</strong> {{ $order->customer_name }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Invoice No:</strong> {{ $order->order_number }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><strong>Date:</strong> {{ date('d-m-Y', strtotime($order->created_at)) }}</td>
-                    </tr>
+        <div class="receipt-container">
+            <div id="receipt-data">
+                <div class="main-wrapper">
+                    <!-- Receipt Section -->
+                    <table align="center" class="mt-4" id="print-receipt"
+                        style="max-width: 400px; width: 100%;  padding: 20px; border-radius: 8px; font-size: 14px;">
+                        <tr>
+                            <td align="center" colspan="4">
+                                <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="Receipt Logo"
+                                    width="150" style="margin:0;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="4" class="company-info">
+                                <h6 class="">Nebula IT BD.</h6>
+                                <p>Phone: +8801886927829<br>Email: <a style="color: #222; text-transform: lowercase;"
+                                        href="mailto:nebulaitbd@gmail.com">nebulaitbd@gmail.com</a>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center"
+                                style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f8f9fa;">
+                                <strong>Order Invoice</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><strong>Customer Name:</strong> {{ $order->customer_name }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><strong>Invoice No:</strong> {{ $order->order_number }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>Date:</strong> {{ date('d-m-Y h:i A', strtotime($order->created_at))
+                                }}</td>
+                        </tr>
 
-                    <!-- Items Header -->
-                    <tr style="background-color: #f8f9fa;">
-                        <th style="text-align: left;"># Item</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th style="text-align: right;">Total</th>
-                    </tr>
+                        <!-- Items Header -->
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="text-align: left;"># Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th style="text-align: right;">Total</th>
+                        </tr>
 
-                    <!-- Items -->
-                    @foreach ($order->orderItems as $key => $item)
-                    <tr>
-                        <td>{{ $key + 1 }}. {{ $item->item_type == 'menu' ? $item->menu->name : $item->menuItem->name }}</td>
-                        <td style="text-align: center;">{{ site_settings()->currency }}{{ $item->price }}</td>
-                        <td>{{ $item->quantity }}</td>
-                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $item->quantity * $item->price }}</td>
-                    </tr>  
-                    @endforeach
+                        <!-- Items -->
+                        @foreach ($order->orderItems as $key => $item)
+                        <tr>
+                            <td>{{ $key + 1 }}. {{ $item->item_type == 'menu' ? $item->menu->name :
+                                $item->menuItem->name }}</td>
+                            <td style="text-align: center;">{{ site_settings()->currency }}{{ $item->price }}</td>
+                            <td>{{ $item->quantity }}</td>
+                            <td style="text-align: right;">{{ site_settings()->currency }}{{ $item->quantity *
+                                $item->price }}</td>
+                        </tr>
+                        @endforeach
 
-                    <!-- Totals -->
-                    <tr>
-                        <td colspan="3"><strong>Sub Total:</strong></td>
-                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->sub_total }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><strong>Discount:</strong></td>
-                        <td style="text-align: right; color: red;">-{{ site_settings()->currency }}{{ $order->discount }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><strong>VAT ({{ $order->vat / $order->sub_total * 100  }}%):</strong></td>
-                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->vat }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><strong>Total Bill:</strong></td>
-                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->total }}</td>
-                    </tr>
+                        <!-- Totals -->
+                        <tr>
+                            <td colspan="3"><strong>Sub Total:</strong></td>
+                            <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->sub_total }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Discount:</strong></td>
+                            <td style="text-align: right; color: red;">-{{ site_settings()->currency }}{{
+                                $order->discount }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>VAT ({{ $order->vat / $order->sub_total * 100 }}%):</strong></td>
+                            <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->vat }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Total Bill:</strong></td>
+                            <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->total }}</td>
+                        </tr>
 
-                    <tr style="font-weight: bold; color: #0d6efd;">
-                        <td colspan="3"><strong>Total Payable:</strong></td>
-                        <td style="text-align: right;"><strong>{{ site_settings()->currency }}{{ $order->total }}</strong></td>
-                    </tr>
+                        <tr style="font-weight: bold; color: #0d6efd;">
+                            <td colspan="3"><strong>Total Payable:</strong></td>
+                            <td style="text-align: right;"><strong>{{ site_settings()->currency }}{{ $order->total
+                                    }}</strong></td>
+                        </tr>
 
-                    <!-- Footer -->
-                    <tr>
-                        <td colspan="4" style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; text-align: center; padding: 10px 0;">
-                            <p>**Thank you for shopping with us. Please come again</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" align="center">
-                            <p>Developed By Nebula IT</p>
-                        </td>
-                    </tr>
-                </table>
+                        <!-- Footer -->
+                        <tr>
+                            <td colspan="4"
+                                style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; text-align: center; padding: 10px 0;">
+                                <p>**Thank you for shopping with us. Please come again</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center">
+                                <p>Developed By Nebula IT</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
 
     <script type="text/javascript">

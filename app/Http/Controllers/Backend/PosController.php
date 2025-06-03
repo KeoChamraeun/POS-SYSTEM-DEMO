@@ -22,4 +22,20 @@ class PosController extends Controller
         // Check if the order is already confirmed
         return view('admin.pos.order-confirmation', compact('order'));
     }
+
+    public function InvoiceList()
+    {   
+        $invoiceList = Order::with('orderItems')->get();
+        return view('admin.pos.invoice-list',compact('invoiceList'));
+    }
+
+    public function OrderDelete($id){
+        $order = Order::findOrFail($id);
+        if ($order) {
+            $order->delete();
+            return redirect()->back()->with('success', 'Invoice deleted successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Invoice not found.');
+        }
+    }
 }

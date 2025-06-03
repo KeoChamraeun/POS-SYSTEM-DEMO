@@ -15,12 +15,13 @@
         </a>
     </div>
     <!-- /Logo -->
-   
+
 
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md onlin">
-                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img"
+                    class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
                 <h6 class="fs-14 fw-bold mb-1">{{ Auth::user()->name }}</h6>
@@ -68,7 +69,23 @@
                         </li>
                     </ul>
                 </li>
-               
+
+                <li class="submenu-open">
+                    <h6 class="submenu-hdr">Sales</h6>
+                    <ul>
+                        <li class=" {{ request()->routeIs('invoice.index') ? 'active' : '' }}">
+                            <a href="{{ route('invoice.index') }}">
+                                <i class="ti ti-file-invoice fs-16 me-2"></i><span>Invoices</span>
+                            </a>
+                        </li>
+                        <li class=" {{ request()->routeIs('pos') ? 'active' : '' }}">
+                            <a href="{{ route('pos') }}">
+                                <i class="ti ti-device-laptop fs-16 me-2"></i><span>POS</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
@@ -84,13 +101,13 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Settings</h6>
                     <ul>
                         <li class=" {{ request()->routeIs('vat.index') ? 'active' : '' }}">
-                            <a href="{{ route('vat.index') }}"><i
-                                    class="ti ti-file-text fs-16 me-2"></i><span>VAT Settings</span>    
+                            <a href="{{ route('vat.index') }}"><i class="ti ti-chart-dots-2 fs-16 me-2"></i><span>VAT
+                                    Settings</span>
                             </a>
                         </li>
                     </ul>
