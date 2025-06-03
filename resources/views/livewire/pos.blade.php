@@ -216,8 +216,8 @@
                     <div class="modal-body pb-1">
                         <div class="mb-3">
                             <label class="form-label">Order Discount Type <span class="text-danger">*</span></label>
-                            <select class="select" wire:model="discountType">
-                                <option>Select</option>
+                            <select class="select form-control" wire:model="discountType">
+                                <option value="">Select</option>
                                 <option value="flat">Flat</option>
                                 <option value="percentage">Percentage</option>
                             </select>
