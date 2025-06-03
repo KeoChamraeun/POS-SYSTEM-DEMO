@@ -9,18 +9,20 @@ use App\Http\Controllers\Backend\SiteSettingController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\VatController;
 use App\Http\Controllers\ProfileController;
-use App\Livewire\OrderConfirmation;
-use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Pest\ArchPresets\Custom;
 
 
+
+// Default route redirects to login or dashboard depending on auth state
 Route::get('/', function () {
-    return view('auth.login');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
+})->name('home');
 
-Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
+// Custom dashboard (protected)
+Route::get('/dashboard', [AdminController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
