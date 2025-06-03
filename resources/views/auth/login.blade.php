@@ -38,17 +38,21 @@
                     <div class="col-lg-5 mx-auto">
                         <div class="login-content user-login">
                             <div class="login-logo">
-                                {{-- <img src="assets/img/logo.svg" alt="img"> --}}
-                                <h3 class="mb-3">POS Inventory</h3>
-                                <a href="{{ route('login') }}" class="login-logo logo-white">
-                                    {{-- <img src="assets/img/logo-white.svg" alt="Img"> --}}
-                                    POS Inventory
-                                </a>
+                                <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="img">
                             </div>
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf
                                 <div class="card">
                                     <div class="card-body p-5">
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
                                         <div class="login-userheading">
                                             <h3>Sign In</h3>
                                             <h4>Access the Nebula POS admin panel using your email and password.</h4>
