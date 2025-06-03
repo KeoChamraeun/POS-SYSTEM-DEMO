@@ -208,7 +208,9 @@ class Pos extends Component
         return view('livewire.pos', [
             'menus' => Menu::all(),
             'items' => $items,
-            'categories' => Category::where('status', 'active')->get(),
+            'categories' => Category::where('status', 'active')
+                ->whereHas('menuItems')
+                ->get(),
             'vats' => Vat::where('status', 'active')->get(),
             'numberOfItems' => $numberOfItems
         ]);
