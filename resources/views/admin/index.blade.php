@@ -15,10 +15,9 @@
                 <p class="fw-medium">You have <span class="text-primary fw-bold">{{ $todaysOrder }}</span> Orders, Today</p>
             </div>
             <div class="input-icon-start position-relative mb-3">
-                <span class="input-icon-addon fs-16 text-gray-9">
-                    <i class="ti ti-calendar"></i>
-                </span>
-                <input type="text" class="form-control date-range bookingrange" placeholder="Search Product">
+                <a href="{{ route('pos') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
+                    <i class="ti ti-device-laptop me-1"></i>POS
+                </a>
             </div>
         </div>
 
