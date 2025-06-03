@@ -190,7 +190,7 @@ class Pos extends Component
 
         $this->subTotal = $this->getSubTotal();
         if ($this->discountType == 'percentage') {
-            $this->discount = $this->subTotal * $this->discountValue / 100;
+            $this->discount = ($this->subTotal * $this->discountValue) / 100;
         } else {
             $this->discount = $this->discountValue;
         }
