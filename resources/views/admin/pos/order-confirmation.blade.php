@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" type="image/png" href="https://nebulaitbd.com/frontend/assets/images/favicon.png">
-    <title>MyApp</title>
-    <meta name="description" content="MyApp is a leading platform for business solutions.">
+    <title>Nebula IT POS</title>
+    <meta name="description" content="Nebula IT POS - Streamline your sales, inventory, and billing with our powerful, easy-to-use point of sale system for businesses of all sizes.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
 
@@ -110,7 +110,7 @@
         <div class="hidden-print">
             <table>
                 <tr>
-                    <td><a href="{{ route('pos') }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>Back</a> </td>
+                    <td><a href="{{ route('pos') }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>Back to POS</a> </td>
                     <td><button onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>Print</button></td>
                 </tr>
             </table>
@@ -160,36 +160,33 @@
                     @foreach ($order->orderItems as $key => $item)
                     <tr>
                         <td>{{ $key + 1 }}. {{ $item->item_type == 'menu' ? $item->menu->name : $item->menuItem->name }}</td>
-                        <td style="text-align: center;">${{ $item->price }}</td>
+                        <td style="text-align: center;">{{ site_settings()->currency }}{{ $item->price }}</td>
                         <td>{{ $item->quantity }}</td>
-                        <td style="text-align: right;">${{ $item->quantity * $item->price }}</td>
+                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $item->quantity * $item->price }}</td>
                     </tr>  
                     @endforeach
 
                     <!-- Totals -->
                     <tr>
                         <td colspan="3"><strong>Sub Total:</strong></td>
-                        <td style="text-align: right;">${{ $order->sub_total }}</td>
+                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->sub_total }}</td>
                     </tr>
                     <tr>
                         <td colspan="3"><strong>Discount:</strong></td>
-                        <td style="text-align: right; color: red;">-${{ $order->discount }}</td>
+                        <td style="text-align: right; color: red;">-{{ site_settings()->currency }}{{ $order->discount }}</td>
                     </tr>
                     <tr>
                         <td colspan="3"><strong>VAT ({{ round($order->vat / $order->sub_total * 100)  }}%):</strong></td>
-                        <td style="text-align: right;">${{ $order->vat }}</td>
+                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->vat }}</td>
                     </tr>
                     <tr>
                         <td colspan="3"><strong>Total Bill:</strong></td>
-                        <td style="text-align: right;">${{ $order->total }}</td>
+                        <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->total }}</td>
                     </tr>
-                    <tr>
-                        <td colspan="3"><strong>Due:</strong></td>
-                        <td style="text-align: right;">$0.00</td>
-                    </tr>
+
                     <tr style="font-weight: bold; color: #0d6efd;">
                         <td colspan="3"><strong>Total Payable:</strong></td>
-                        <td style="text-align: right;"><strong>${{ $order->total }}</strong></td>
+                        <td style="text-align: right;"><strong>{{ site_settings()->currency }}{{ $order->total }}</strong></td>
                     </tr>
 
                     <!-- Footer -->
@@ -214,7 +211,6 @@
         function auto_print() {
             window.print();
         }
-        //setTimeout(auto_print, 1000);
     </script>
 
 </body>

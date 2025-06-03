@@ -18,19 +18,19 @@
             </div>
             <ul class="table-top-head">
                 <li>
-                    <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
+                    <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
                 </li>
                 <li>
                     <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a>
                 </li>
             </ul>
             <div class="page-btn">
-                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-menu"><i class="ti ti-circle-plus me-1"></i>Add menu Item</a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-menu"><i class="ti ti-circle-plus me-1"></i>Add Menu Item</a>
             </div>
         </div>
 
         <!-- Bulk Delete Form Start -->
-        <form action="{{ route('menu.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menuItems?');" enctype="multipart/form-data">
+        <form action="{{ route('menu.item.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menuItems?');" enctype="multipart/form-data">
             @csrf
             @method('DELETE')
 
@@ -74,31 +74,33 @@
                                         <strong>{{ session('success') }}</strong>
                                     </div>
                                 @endif
-                                @if (session()->has('error'))
+                                @if (session()->has('errors'))
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <strong>{{ session('error') }}</strong>
+                                            @foreach ($errors->all() as $error)
+                                                <p class="mb-0">{{ $error }}</p>
+                                            @endforeach
                                     </div>
                                 @endif
 
-                                @foreach ($menuItems as $menu)
+                                @foreach ($menuItems as $menuItem)
                                     <tr>
                                         <td>
                                             <label class="checkboxs">
-                                                <input type="checkbox" name="ids[]" value="{{ $menu->id }}">
+                                                <input type="checkbox" name="ids[]" value="{{ $menuItem->id }}">
                                                 <span class="checkmarks"></span>
                                             </label>
                                         </td>
 
-                                        <td><span class="text-gray-9">{{ $menu->name }}</span></td>
+                                        <td><span class="text-gray-9">{{ $menuItem->name }}</span></td>
                                         <td>
-                                            <span class="text-gray-9">${{ $menu->price }}</span>
+                                            <span class="text-gray-9">{{ site_settings()->currency }}{{ $menuItem->price }}</span>
                                         </td>
 
                                         <td>
-                                            <img src="{{ asset($menu->image ?? 'backend/assets/img/no-image.jpg') }}" width="50" height="50" alt="image">
+                                            <img src="{{ asset($menuItem->image ?? 'backend/assets/img/no-image.jpg') }}" width="50" height="50" alt="image">
                                         </td>
                                         <td>
-                                            @if ($menu->status == 'active')
+                                            @if ($menuItem->status == 'active')
                                                 <span class="badge bg-success fw-medium fs-10">Active</span>
                                             @else
                                                 <span class="badge bg-danger fw-medium fs-10">Inactive</span>
@@ -106,18 +108,18 @@
                                         </td>
                                         <td class="action-table-data">
                                             <div class="edit-delete-action">
-                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-menu" id="edit-cat">
+                                                <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-menu-item" id="edit-item">
                                                     <i data-feather="edit" class="feather-edit"></i>
                                                 </a>
-                                                <input type="hidden" name="menu_id" value="{{ $menu->id }}" id="menu_id">
-                                                <input type="hidden" name="menu_name" value="{{ $menu->name }}" id="menu_name">
-                                                <input type="hidden" name="menu_price" value="{{ $menu->price }}" id="menu_price">
-                                                <input type="hidden" name="menu_image" value="{{ $menu->image }}" id="menu_image">
-                                                <input type="hidden" name="menu_status" value="{{ $menu->status }}" id="menu_status">
-                                                <input type="hidden" name="menu_category_id" value="{{ $menu->category }}" id="menu_category_id">
+                                                <input type="hidden" name="item_id" value="{{ $menuItem->id }}" id="item_id">
+                                                <input type="hidden" name="item_name" value="{{ $menuItem->name }}" id="item_name">
+                                                <input type="hidden" name="item_price" value="{{ $menuItem->price }}" id="item_price">
+                                                <input type="hidden" name="item_image" value="{{ $menuItem->image }}" id="item_image">
+                                                <input type="hidden" name="item_status" value="{{ $menuItem->status }}" id="item_status">
+                                                <input type="hidden" name="item_category_id" value="{{ $menuItem->category }}" id="item_category_id">
 
 
-                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
+                                                <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2 border outline-" href="javascript:void(0);" id="delete-item">
                                                     <i data-feather="trash-2" class="feather-trash-2"></i>
                                                 </a>
                                             </div>
@@ -170,17 +172,16 @@
                                 </div>
                                 <div class="phone-img">
                                     <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
-                                    {{-- <a href="javascript:void(0);"></a> --}}
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
+                                <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
                                 <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
 
-                                    <select name="menu" class="form-select">
-                                        <option value="">Select Menu</option>
-                                        @foreach ($menus as $items)
+                                    <select name="category" class="form-select">
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $items)
                                             <option value="{{ $items->id }}">{{ $items->name }}</option>
                                         @endforeach
                                     </select>
@@ -188,11 +189,11 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter menu name" required>
+                                <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter item name">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" name="price" placeholder="Enter menu price" required>
+                                <input type="text" class="form-control" name="price" placeholder="Enter item price" required>
                             </div>
 
                             <div class="mb-3">
@@ -216,10 +217,9 @@
             </div>
         </div>
         <!-- /Add menu -->
-        <!-- /product list -->
 
         <!-- Edit menu -->
-        <div class="modal fade" id="edit-menu">
+        <div class="modal fade" id="edit-menu-item">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -249,24 +249,24 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
+                                <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
                                 <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
 
-                                    <select name="menu" class="form-select" id="menu_cat">
-                                        <option value="">Select Menu</option>
-                                        @foreach ($menus as $items)
+                                    <select name="category" class="form-select" id="menu_cat">
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $items)
                                             <option value="{{ $items->id }}">{{ $items->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">menu<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter menu name" required>
+                                <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter menu item name" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="" id="price" name="price" placeholder="Enter menu price" required>
+                                <input type="text" class="form-control" value="" id="price" name="price" placeholder="Enter menu item price" required>
                             </div>
                             <div class="mb-0">
                                 <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
@@ -294,14 +294,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Delete menu</h4>
+                        <h4 class="modal-title">Delete Item</h4>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <form action="{{ route('menu.item.delete') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" value="" id="delete_menu_id">
+                        <input type="hidden" name="id" value="" id="delete_item_id">
                         <div class="modal-body">
                             <h1>Are you sure you want to delete?</h1>
                         </div>
@@ -318,32 +318,32 @@
 
     <script>
         //jQuery for edit menu
-        $(document).on('click', '#edit-cat', function() {
+        $(document).on('click', '#edit-item', function() {
 
-            var menu_id = $(this).closest('tr').find('#menu_id').val();
-            $('#id').val(menu_id);
+            var item_id = $(this).closest('tr').find('#item_id').val();
+            $('#id').val(item_id);
 
-            var menu_name = $(this).closest('tr').find('#menu_name').val();
-            $('#name').val(menu_name);
+            var item_name = $(this).closest('tr').find('#item_name').val();
+            $('#name').val(item_name);
 
-            var menu_price = $(this).closest('tr').find('#menu_price').val();
-            $('#price').val(menu_price);
+            var item_price = $(this).closest('tr').find('#item_price').val();
+            $('#price').val(item_price);
 
-            var menu_image = $(this).closest('tr').find('#menu_image').val();
-            $('.image-preview-edit').attr('src', menu_image);
+            var item_image = $(this).closest('tr').find('#item_image').val();
+            $('.image-preview-edit').attr('src', item_image);
 
-            var menu_status = $(this).closest('tr').find('#menu_status').val();
-            $('#status option[value="' + menu_status + '"]').prop('selected', true);
+            var item_status = $(this).closest('tr').find('#item_status').val();
+            $('#status option[value="' + item_status + '"]').prop('selected', true);
 
-            var menuMenuId = $(this).closest('tr').find('#menu_category_id').val();
-            $('#menu_cat option[value="' + menuMenuId + '"]').prop('selected', true);
+            var categoryId = $(this).closest('tr').find('#item_category_id').val();
+            $('#menu_cat option[value="' + categoryId + '"]').prop('selected', true);
         });
 
         //jQuery for delete menu
-        $(document).on('click', '#delete-cat', function() {
-            var menu_id = $(this).closest('tr').find('#menu_id').val();
-            $('#delete_menu_id').val(menu_id);
+        $(document).on('click', '#delete-item', function() {
+            var item_id = $(this).closest('tr').find('#item_id').val();
+            $('#delete_item_id').val(item_id);
         });
     </script>
-   
+
 @endsection

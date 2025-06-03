@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Menu;
 use App\Models\MenuItem;
@@ -10,8 +11,13 @@ use App\Models\OrderItem;
 use App\Models\Vat;
 use Livewire\Component;
 
-use Pest\ArchPresets\Custom;
-use function Laravel\Prompts\alert;
+/**
+ * Class Pos
+ * @package App\Livewire
+ *
+ * This class handles the Point of Sale (POS) functionality, including managing the cart,
+ * adding items, calculating totals, and submitting orders.
+ */
 
 class Pos extends Component
 {
@@ -22,6 +28,7 @@ class Pos extends Component
     public $tableNo; // fixed, initialized in mount()
     public $orderNumber; // fixed, initialized in mount()
     public $customerName = '';
+    public $customers;
     public $status = 'pending';
     public $paymentMethod = 'cash';
     public $subTotal = 0;
@@ -30,17 +37,23 @@ class Pos extends Component
     public $discountValue = 0; // Default discount value
     public $vat = 0; // Default VAT value
 
+
     public function mount()
     {
         $this->tableNo = rand($this->table[0], $this->table[count($this->table) - 1]);
-        $this->orderNumber = 'ORDER-' . date('Ymd') . '-' . rand(1000, 9999);
+        $this->orderNumber = 'ORDER-' . date('Ymd') . '-' . rand(1, 1000);
         $this->paymentMethod = 'cash'; // Default payment method
 
+        $this->customers = Customer::where('status', 'active')->get(['id', 'name']);
+        if ($this->customers->isNotEmpty() && empty($this->customerName)) {
+            $this->customerName = $this->customers->first()->name;
+        }
     }
 
 
     public function addMenu($menuId)
     {
+
         // Check if menu already in cart (matching both id and type)
         foreach ($this->cart as $index => $cartItem) {
             if ($cartItem['id'] === $menuId && $cartItem['type'] === 'menu') {
@@ -111,9 +124,8 @@ class Pos extends Component
     public function getSubTotal()
     {
         return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
-   
     }
-    
+
     public function getTotal()
     {
         return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
@@ -126,7 +138,10 @@ class Pos extends Component
             session()->flash('error', 'Cart is empty. Please add items before submitting an order.');
             return;
         }
-
+        if (empty($this->customerName)) {
+            session()->flash('error', 'Please enter a customer name.');
+            return;
+        }
         $order = Order::create([
             'table_no' => $this->tableNo,
             'order_number' => $this->orderNumber,
@@ -174,15 +189,14 @@ class Pos extends Component
         }
 
         $this->subTotal = $this->getSubTotal();
-        if($this->discountType == 'percentage'){
+        if ($this->discountType == 'percentage') {
             $this->discount = $this->subTotal * $this->discountValue / 100;
-        }else{
-           $this->discount= $this->discountValue;
+        } else {
+            $this->discount = $this->discountValue;
         }
-        
+
         $this->dispatch('closeDiscountModal');
         return $this->discount;
-
     }
     public function render()
     {
@@ -190,13 +204,13 @@ class Pos extends Component
             ? MenuItem::where('category', $this->selectedCategory)->get()
             : MenuItem::where('name', 'like', '%' . $this->searchTerm . '%')
             ->get();
-
+        $numberOfItems = MenuItem::count();
         return view('livewire.pos', [
             'menus' => Menu::all(),
             'items' => $items,
-            'categories' => MenuItem::select('category')->distinct()->pluck('category'),
-            'customers' => Customer::where('status', 'active')->get(),
+            'categories' => Category::where('status', 'active')->get(),
             'vats' => Vat::where('status', 'active')->get(),
+            'numberOfItems' => $numberOfItems
         ]);
     }
 }
