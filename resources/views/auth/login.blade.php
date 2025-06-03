@@ -38,20 +38,22 @@
                     <div class="col-lg-5 mx-auto">
                         <div class="login-content user-login">
                             <div class="login-logo">
-                                <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="img">
+                                <a href="{{ route('dashboard') }}">
+                                    <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="img">
+                                </a>
                             </div>
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf
                                 <div class="card">
                                     <div class="card-body p-5">
                                         @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                         @endif
                                         <div class="login-userheading">
                                             <h3>Sign In</h3>
@@ -77,13 +79,6 @@
                                         <div class="form-login authentication-check">
                                             <div class="row">
                                                 <div class="col-12 d-flex align-items-center justify-content-between">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <label
-                                                            class="checkboxs ps-4 mb-0 pb-0 line-height-1 fs-16 text-gray-6">
-                                                            <input type="checkbox" name="remember" class="form-control">
-                                                            <span class="checkmarks"></span>Remember me
-                                                        </label>
-                                                    </div>
                                                     <div class="text-end">
                                                         <a class="text-orange fs-16 fw-medium"
                                                             href="{{ route('password.request') }}">Forgot Password?</a>
@@ -120,4 +115,5 @@
     <!-- Custom JS -->
     <script src="{{  asset('backend/assets/js/script.js') }}"></script>
 </body>
+
 </html>
