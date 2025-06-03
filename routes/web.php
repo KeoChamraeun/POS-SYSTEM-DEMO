@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CustomerController;
+use App\Http\Controllers\Backend\ExpenseController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PosController;
 use App\Http\Controllers\Backend\SiteSettingController;
@@ -80,6 +81,25 @@ Route::controller(VatController::class)->group(function () {
     Route::post('/vat/update', 'update')->name('vat.update');
     Route::post('/vat/delete', 'destroy')->name('vat.delete');
     Route::delete('/vat/bulk-delete', 'bulkDelete')->name('vat.bulk.delete');
+});
+
+
+// expense Routes
+Route::controller(ExpenseController::class)->group(function () {
+    Route::get('/expense', 'index')->name('expense.index');
+    Route::post('/expense/store', 'store')->name('expense.store');
+    Route::post('/expense/update', 'update')->name('expense.update');
+    Route::post('/expense/delete', 'destroy')->name('expense.delete');
+    Route::delete('/expense/bulk-delete', 'bulkDelete')->name('expense.bulk.delete');
+
+    // Expense Head Routes
+    Route::get('/expense-head', 'ExpenseHeadIndex')->name('expense.head.index');
+    Route::get('/expense-head/create', 'ExpenseHeadCreate')->name('expense.head.create');
+    Route::post('/expense-head/store', 'ExpenseHeadStore')->name('expense.head.store');
+    Route::get('/expense-head/edit/{id}', 'ExpenseHeadEdit')->name('expense.head.edit');
+    Route::post('/expense-head/update/{id}', 'ExpenseHeadUpdate')->name('expense.head.update');
+    Route::post('/expense-head/delete/{id}', 'ExpenseHeadDestroy')->name('expense.head.delete');
+    Route::delete('/expense-head/bulk-delete', 'ExpenseHeadBulkDelete')->name('expense.head.bulk.delete');
 });
 
 
