@@ -218,8 +218,8 @@
                             <label class="form-label">Order Discount Type <span class="text-danger">*</span></label>
                             <select class="select" wire:model="discountType">
                                 <option>Select</option>
-                                <option>Flat</option>
-                                <option>Percentage</option>
+                                <option value="flat">Flat</option>
+                                <option value="percentage">Percentage</option>
                             </select>
                         </div>
                         <div class="mb-3">
