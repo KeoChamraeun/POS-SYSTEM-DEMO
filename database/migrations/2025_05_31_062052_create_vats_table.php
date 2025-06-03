@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('rate', 10, 2);
+            $table->double('rate');
             $table->string('status')->default('active');
             $table->timestamps();
         });

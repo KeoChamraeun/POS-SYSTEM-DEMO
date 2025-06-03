@@ -62,13 +62,13 @@ class VatController extends Controller
 
             DB::commit();
 
-            return redirect()->route('vat.index')->with('success', 'vat updated successfully.');
+        return redirect()->route('vat.index')->with('success', 'VAT updated successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
             Log::error('Error updating vat: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'vat updated Failed. Please try again successfully.');
+            return redirect()->back()->with('error', 'VAT updated Failed. Please try again successfully.');
         }
     }
 
