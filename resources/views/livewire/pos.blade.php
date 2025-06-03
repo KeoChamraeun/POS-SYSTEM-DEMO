@@ -152,7 +152,7 @@
                             <select class="form-select mb-2" name="vat" wire:model.live="vat">
                                 <option value="">Select Vat</option>
                                 @foreach ($vats as $vat)
-                                <option value="{{ $vat->rate }}">{{ $vat->name }} ({{ number_format($vat->rate) }}%)</option>
+                                <option value="{{ $vat->rate }}">{{ $vat->name }} ({{ $vat->rate}}%)</option>
                                 @endforeach
                             </select>
                         </div>

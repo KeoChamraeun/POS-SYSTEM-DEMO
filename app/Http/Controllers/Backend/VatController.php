@@ -46,7 +46,7 @@ class VatController extends Controller
 
             Log::error('Error creating vat: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'vat created Failed. Please try again!');
+            return redirect()->back()->with('error', 'VAT created Failed. Please try again!');
         }
     }
 
@@ -81,13 +81,13 @@ class VatController extends Controller
 
             DB::commit();
 
-            return redirect()->route('vat.index')->with('success', 'vat deleted successfully.');
+            return redirect()->route('vat.index')->with('success', 'VAT deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
             Log::error('Error deleting vat: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'vat deleted Failed. Please try again!');
+            return redirect()->back()->with('error', 'VAT deleted Failed. Please try again!');
         }
     }
 
@@ -98,14 +98,14 @@ class VatController extends Controller
             $ids = $request->ids;
 
             if (!$ids || count($ids) === 0) {
-                return redirect()->route('vat.index')->with('error', 'No vats selected for deletion.');
+                return redirect()->route('vat.index')->with('error', 'No VATs selected for deletion.');
             }
 
             Vat::whereIn('id', $ids)->delete();
 
             DB::commit();
 
-            return redirect()->route('vat.index')->with('success', 'vats deleted successfully.');
+            return redirect()->route('vat.index')->with('success', 'VATs deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
