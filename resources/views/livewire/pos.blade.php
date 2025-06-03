@@ -152,7 +152,7 @@
                             <select class="form-select mb-2" name="vat" wire:model.live="vat">
                                 <option value="">Select Vat</option>
                                 @foreach ($vats as $vat)
-                                <option value="{{ $vat->rate }}">{{ $vat->name }} ({{ $vat->rate }}%)</option>
+                                <option value="{{ $vat->rate }}">{{ $vat->name }} ({{ number_format($vat->rate) }}%)</option>
                                 @endforeach
                             </select>
                         </div>
@@ -164,7 +164,7 @@
                                         class="ti ti-edit"></i></a>: </span>
                             <span class="float-end">৳{{ number_format($this->getDiscount(), 2) }}</span>
                         </p>
-                        <p class="mb-1">VAT (GST {{ $this->vat }}%): <span class="float-end">৳{{ number_format($this->getTotal() *
+                        <p class="mb-1">VAT (GST {{ number_format($this->vat )}}%): <span class="float-end">৳{{ number_format($this->getTotal() *
                                 ($this->vat / 100), 2) }}</span></p>
                         <p class="mb-1">Adjustment: <span class="float-end">৳0.00</span></p>
                         <hr>

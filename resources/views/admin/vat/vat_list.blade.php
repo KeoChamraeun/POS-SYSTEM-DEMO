@@ -13,7 +13,7 @@
             <div class="add-item d-flex">
                 <div class="page-title">
                     <h4 class="fw-bold">vat</h4>
-                    <h6>Manage your vats</h6>
+                    <h6>Manage your VATs</h6>
                 </div>
             </div>
             <ul class="table-top-head">
@@ -61,7 +61,7 @@
                                             </label>
                                         @endif
                                     </th>
-                                    <th>Vat</th>
+                                    <th>VAT</th>
                                     <th>Rate</th>
                                     <th>Status</th>
                                     <th class="no-sort"></th>
@@ -155,7 +155,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Rate<span class="text-danger ms-1">*</span></label>
-                                <input type="number" class="form-control" name="rate" placeholder="Enter vat rate in %" required>
+                                <input type="digit" class="form-control" name="rate" placeholder="Enter vat rate in %" required>
                             </div>
                             <div class="mb-0">
                                 <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Add vat</button>
+                            <button type="submit" class="btn btn-primary">Add VAT</button>
                         </div>
                     </form>
                 </div>
@@ -185,7 +185,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="page-title">
-                            <h4>Edit vat</h4>
+                            <h4>Edit VAT</h4>
                         </div>
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -193,15 +193,15 @@
                     </div>
                     <form action="{{ route('vat.update') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" value="1" id="vat_id">
+                        <input type="hidden" name="id" value="" id="id">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label class="form-label">vat<span class="text-danger ms-1">*</span></label>
+                                <label class="form-label">VAT<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" value="Computers" id="name" name="name" placeholder="Enter vat name" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Rate<span class="text-danger ms-1">*</span></label>
-                                <input type="number" class="form-control" name="rate" placeholder="Enter vat rate in %" required id="rate">
+                                <input type="digit" class="form-control" name="rate" placeholder="Enter vat rate in %" required id="rate">
                             </div>
                             <div class="mb-0">
                              <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
@@ -253,7 +253,7 @@
         //jQuery for edit vat
         $(document).on('click', '#edit-cat', function() {
             var vat_id = $(this).closest('tr').find('#vat_id').val();
-            $('#vat_id').val(vat_id);
+            $('#id').val(vat_id);
 
             var vat_name = $(this).closest('tr').find('#vat_name').val();
             $('#name').val(vat_name);
