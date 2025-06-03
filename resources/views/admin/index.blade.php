@@ -14,7 +14,7 @@
                 <h1 class="mb-1">Welcome, {{ Auth::user()->name }}</h1>
                 <p class="fw-medium">You have <span class="text-primary fw-bold">{{ $todaysOrder }}</span> Orders, Today</p>
             </div>
-            <div class="input-icon-start position-relative mb-3">
+            <div class="input-icon-start position-relative mb-3 d-lg-none d-sm-block">
                 <a href="{{ route('pos') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
                     <i class="ti ti-device-laptop me-1"></i>POS
                 </a>

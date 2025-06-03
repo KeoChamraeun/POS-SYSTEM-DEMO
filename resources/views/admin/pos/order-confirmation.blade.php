@@ -176,7 +176,7 @@
                         <td style="text-align: right; color: red;">-{{ site_settings()->currency }}{{ $order->discount }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3"><strong>VAT ({{ round($order->vat / $order->sub_total * 100)  }}%):</strong></td>
+                        <td colspan="3"><strong>VAT ({{ $order->vat / $order->sub_total * 100  }}%):</strong></td>
                         <td style="text-align: right;">{{ site_settings()->currency }}{{ $order->vat }}</td>
                     </tr>
                     <tr>
