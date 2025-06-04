@@ -89,7 +89,7 @@
 
         {{-- Right Column: Customer Info + Cart --}}
         <div class="col-lg-4">
-            <div class="sticky-top" style="top: 80px;">
+            <div class="sticky-top" style="top: 80px; z-index: 9 !important;">
                 {{-- Flash messages --}}
                 @if(session()->has('success'))
                 <div class="alert alert-success mt-3">{{ session('success') }}</div>

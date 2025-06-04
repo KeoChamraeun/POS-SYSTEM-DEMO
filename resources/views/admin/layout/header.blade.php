@@ -53,7 +53,7 @@
                 <a href="javascript:void(0);" class="btn btn-primary btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
                     <i class="ti ti-circle-plus me-1"></i>Add New
                 </a>
-                <div class="dropdown-menu dropdown-xl dropdown-menu-center">
+                <div class="dropdown-menu dropdown-xl dropdown-menu-center" style="z-index: 9999 !important;">
                     <div class="row g-2">
                         <div class="col-md-2">
                             <a href="{{ route('category.index') }}" class="link-item">
