@@ -87,6 +87,22 @@
                 </li>
 
                 <li class="submenu-open">
+                    <h6 class="submenu-hdr">Expense</h6>
+                    <ul>
+                        <li class=" {{ request()->routeIs('expense.head.index') ? 'active' : '' }}">
+                            <a href="{{ route('expense.head.index') }}">
+                                <i class="ti ti-list-details fs-16 me-2"></i><span>Expense Head</span>
+                            </a>
+                        </li>
+                        <li class=" {{ request()->routeIs('expense.index') ? 'active' : '' }}">
+                            <a href="{{ route('expense.index') }}">
+                                <i class="ti ti-file-text fs-16 me-2"></i><span>Expense</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
                         <li class=" {{ request()->routeIs('customer.index') ? 'active' : '' }}">

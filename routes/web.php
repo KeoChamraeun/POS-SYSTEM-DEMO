@@ -94,11 +94,9 @@ Route::controller(ExpenseController::class)->group(function () {
 
     // Expense Head Routes
     Route::get('/expense-head', 'ExpenseHeadIndex')->name('expense.head.index');
-    Route::get('/expense-head/create', 'ExpenseHeadCreate')->name('expense.head.create');
     Route::post('/expense-head/store', 'ExpenseHeadStore')->name('expense.head.store');
-    Route::get('/expense-head/edit/{id}', 'ExpenseHeadEdit')->name('expense.head.edit');
-    Route::post('/expense-head/update/{id}', 'ExpenseHeadUpdate')->name('expense.head.update');
-    Route::post('/expense-head/delete/{id}', 'ExpenseHeadDestroy')->name('expense.head.delete');
+    Route::post('/expense-head/update', 'ExpenseHeadUpdate')->name('expense.head.update');
+    Route::post('/expense-head/delete', 'ExpenseHeadDestroy')->name('expense.head.delete');
     Route::delete('/expense-head/bulk-delete', 'ExpenseHeadBulkDelete')->name('expense.head.bulk.delete');
 });
 
