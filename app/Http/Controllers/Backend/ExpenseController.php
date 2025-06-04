@@ -15,46 +15,88 @@ class ExpenseController extends Controller
     public function index()
     {
         $expenses = Expense::get();
-        return view('admin.expense.expense_list', compact('expenses'));
-    }
-    public function create()
-    {
-        // Logic to show the form for creating a new expense
-        return view('admin.expense.create');
+        $heads = ExpenseHead::where('status', 'active')->get();
+        return view('admin.expense.expense_list', compact('expenses', 'heads'));
     }
     public function store(Request $request)
     {
-        // Logic to store a new expense
-        // Validate and save the expense data
-        // Redirect or return response
+        DB::beginTransaction();
+        try {
+            $expense = new Expense();
+            $expense->amount = $request->amount;
+            $expense->head_id = $request->head_id;
+            $expense->date = $request->date;
+            $expense->description = $request->description;
+            $expense->save();
+
+            DB::commit();
+
+            return redirect()->route('expense.index')->with('success', 'Expense created successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+            Log::error('Error creating expense: ' . $th->getMessage());
+            return redirect()->route('expense.index')->with('error', 'Failed to create expense.');
+        }
     }
-    public function edit($id)
+    public function update(Request $request)
     {
-        // Logic to show the form for editing an existing expense
-        // Fetch the expense by ID and pass it to the view
-        return view('admin.expense.edit', compact('id'));
+        DB::beginTransaction();
+        try {
+            $expense = Expense::findOrFail($request->id);
+            $expense->amount = $request->amount;
+            $expense->head_id = $request->head_id;
+            $expense->date = $request->date;
+            $expense->description = $request->description;
+            $expense->save();
+
+            DB::commit();
+
+            return redirect()->route('expense.index')->with('success', 'Expense updated successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+            Log::error('Error updating expense: ' . $th->getMessage());
+            return redirect()->route('expense.index')->with('error', 'Failed to update expense.');
+        }
     }
-    public function update(Request $request, $id)
+    public function destroy(Request $request)
     {
-        // Logic to update an existing expense
-        // Validate and update the expense data
-        // Redirect or return response
-    }
-    public function destroy($id)
-    {
-        // Logic to delete an expense
-        // Find the expense by ID and delete it
-        // Redirect or return response
+        DB::beginTransaction();
+        try {
+            $expense = Expense::findOrFail($request->id);
+            $expense->delete();
+
+            DB::commit();
+
+            return redirect()->route('expense.index')->with('success', 'Expense deleted successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+            Log::error('Error deleting expense: ' . $th->getMessage());
+            return redirect()->route('expense.index')->with('error', 'Failed to delete expense.');
+        }
     }
     public function bulkDelete(Request $request)
     {
-        // Logic to delete multiple expenses
-        // Validate and delete the expenses based on IDs provided in the request
-        // Redirect or return response
+        DB::beginTransaction();
+        try {
+            $ids = $request->ids;
+            if (!$ids || count($ids) === 0) {       
+                return redirect()->route('expense.index')->with('error', 'No expenses selected for deletion.');
+            }
+            foreach ($ids as $id) {
+                $expense = Expense::findOrFail($id);
+                $expense->delete();
+            }
+            DB::commit();
+            return redirect()->route('expense.index')->with('success', 'Expenses deleted successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+            Log::error('Error bulk deleting expenses: ' . $th->getMessage());
+            return redirect()->route('expense.index')->with('error', 'Bulk delete failed. Please try again!');
+        }
     }
 
 
-    // Expense Head Routes
+    // Expense Head Methods
     public function ExpenseHeadIndex()
     {
         $expense_heads = ExpenseHead::all(); 
