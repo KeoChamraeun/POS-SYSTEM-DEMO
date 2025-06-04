@@ -96,7 +96,7 @@
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="#" class="link-item">
+                            <a href="{{ route('expense.index') }}" class="link-item">
                                 <span class="link-icon">
                                     <i class="ti ti-file-text"></i>
                                 </span>

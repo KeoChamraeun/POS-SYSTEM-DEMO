@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Expense;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Order;
@@ -20,7 +21,7 @@ class AdminController extends Controller
         $totalSales = Order::whereDate('created_at', now())->sum('total');
         $totalPurchase = 0; // Assuming you will calculate total purchase from a different model or logic
         $totalProfit = $totalSales - $totalPurchase;
-        $totalExpense = 0; // Assuming you will calculate total expense from a different model or logic
+        $totalExpense = Expense::sum('amount'); 
         return view('admin.index', compact('todaysOrder','totalSales', 'totalPurchase', 'totalProfit', 'totalExpense'));
     }
     public function adminLogout()
