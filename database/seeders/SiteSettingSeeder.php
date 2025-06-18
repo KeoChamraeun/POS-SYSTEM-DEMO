@@ -14,8 +14,8 @@ class SiteSettingSeeder extends Seeder
     public function run(): void
     {
         SiteSetting::create([
-            'site_name'     => 'My Restaurant POS',
-            'site_logo'          => 'default-logo.png',
+            'site_title'     => 'My Restaurant POS',
+            'company_name'   => 'Nebula IT',
             'address'       => '184 Senpara Parbata, Mirpur 10, Dhaka 1216',
             'site_phone'         => '01700000000',
             'site_email'         => 'info@nebulait.com',

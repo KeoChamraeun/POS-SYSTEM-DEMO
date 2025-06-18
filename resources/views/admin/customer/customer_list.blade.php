@@ -18,7 +18,7 @@
             </div>
             <ul class="table-top-head">
                 <li>
-                    <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
+                    <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
                 </li>
                 <li>
                     <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a>
@@ -180,7 +180,7 @@
                                     <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image">
                                </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" name="name" placeholder="Enter customer name" required>
@@ -218,7 +218,7 @@
             </div>
         </div>
         <!-- /Add customer -->
-       
+
 
         <!-- Edit customer -->
         <div class="modal fade" id="edit-customer">

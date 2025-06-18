@@ -18,7 +18,7 @@
         </div>
         <ul class="table-top-head">
             <li>
-                <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i
+                <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i
                         class="ti ti-refresh"></i></a>
             </li>
             <li>
@@ -65,7 +65,7 @@
                                     </label>
                                     @endif
                                 </th>
-                                <th>supplier</th>
+                                <th>Supplier</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Status</th>

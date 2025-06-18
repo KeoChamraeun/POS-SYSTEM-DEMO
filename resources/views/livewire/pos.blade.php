@@ -189,7 +189,8 @@
                                         class="payment-item d-flex align-items-center gap-2 p-3 border rounded shadow-sm {{ $paymentMethod === 'bkash' ? 'border-warning bg-warning bg-opacity-10' : '' }}"
                                         wire:click="$set('paymentMethod', 'bkash')"
                                         style="text-decoration: none; min-width: 140px;">
-                                        <i class="ti ti-building-bank fs-2 text-primary"></i>
+                                        {{-- <i class="ti ti-building-bank fs-2 text-primary"></i> --}}
+                                        <img src="{{ asset('/backend/assets/img/bkash-icon.svg') }}" alt="Bkash ICON" style="width: 30px; height: 30px;">
                                         <span class="fw-bold text-dark">Bkash</span>
                                     </a>
                                 </div>

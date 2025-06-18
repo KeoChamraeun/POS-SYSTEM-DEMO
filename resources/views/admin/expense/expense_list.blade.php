@@ -18,7 +18,7 @@
             </div>
             <ul class="table-top-head">
                 <li>
-                    <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
+                    <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
                 </li>
                 <li>
                     <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a>
@@ -107,7 +107,7 @@
                                                 <input type="hidden" id="expense_id" value="{{ $expense->id }}">
 
                                                 <input type="hidden" id="head_id" value="{{ $expense->head_id }}">
-                                                
+
                                                 <input type="hidden" id="expense_description" value="{{ $expense->description }}">
 
                                                 <input type="hidden" id="expense_amount" value="{{ $expense->amount }}">
@@ -150,7 +150,7 @@
                         <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </div>  
+                    </div>
                     <form action="{{ route('expense.store') }}" method="POST">
                         @csrf
                         <div class="modal-body">

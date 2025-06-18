@@ -3,13 +3,8 @@
         <!-- Logo -->
         <div class="header-left active">
             <a href="{{ route('dashboard') }}" class="logo logo-normal">
-                <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="Img">
-            </a>
-            <a href="{{ route('dashboard') }}" class="logo logo-white">
-                <img src="https://nebulaitbd.com/frontend/assets/images/logo-white.svg" alt="Img">
-            </a>
-            <a href="{{ route('dashboard') }}" class="logo-small">
-                <img src="https://nebulaitbd.com/frontend/assets/images/logo-small.png" alt="Img">
+                <p>{{ site_settings()->site_logo }}</p>
+                <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="Img">
             </a>
         </div>
         <!-- /Logo -->
@@ -153,7 +148,7 @@
            
 
             <li class="nav-item nav-item-box">
-                <a href="{{ route('dashboard') }}"><i class="ti ti-settings"></i></a>
+                <a href="{{ route('site.setting.index') }}"><i class="ti ti-settings"></i></a>
             </li>
             <li class="nav-item dropdown has-arrow main-drop profile-nav">
                 <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
@@ -173,9 +168,8 @@
                             <p>{{ Auth::user()->email }}</p>
                         </div>
                     </div>
-                    {{-- <a class="dropdown-item" href="profile.html"><i class="ti ti-user-circle me-2"></i>MyProfile</a>
-                    <a class="dropdown-item" href="sales-report.html"><i class="ti ti-file-text me-2"></i>Reports</a>
-                    <a class="dropdown-item" href="general-settings.html"><i class="ti ti-settings-2 me-2"></i>Settings</a> --}}
+                    <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ti ti-user-circle me-2"></i>My Profile</a>
+                    <a class="dropdown-item" href="{{ route('site.setting.index') }}"><i class="ti ti-settings-2 me-2"></i>Settings</a>
                     <hr class="my-2">
                     <a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}"><i class="ti ti-logout me-2"></i>Logout</a>
                 </div>
@@ -188,8 +182,8 @@
             <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                 aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
             <div class="dropdown-menu dropdown-menu-right">
-                {{-- <a class="dropdown-item" href="profile.html">My Profile</a>
-                <a class="dropdown-item" href="general-settings.html">Settings</a> --}}
+                <a class="dropdown-item" href="{{ route('admin.profile') }}">My Profile</a>
+                <a class="dropdown-item" href="{{ route('site.setting.index') }}">Settings</a>
                 <a class="dropdown-item" href="{{ route('admin.logout') }}">Logout</a>
             </div>
         </div>

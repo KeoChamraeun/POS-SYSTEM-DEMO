@@ -1,154 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layout.admin_master')
 
-<head>
+@section('title')
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>{{ site_settings()->site_name }}</title>
+@endsection
 
-		<!-- Meta Tags -->
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Dreams POS is a powerful Bootstrap based Inventory Management Admin Template designed for businesses, offering seamless invoicing, project tracking, and estimates.">
-		<meta name="keywords" content="inventory management, admin dashboard, bootstrap template, invoicing, estimates, business management, responsive admin, POS system">
-		<meta name="author" content="Dreams Technologies">
-		<meta name="robots" content="index, follow">
-		<title>Dreams POS - Inventory Management & Admin Dashboard Template</title>
+@section('content')
+<div class="content">
 
-		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-
-		<!-- Apple Touch Icon -->
-		<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
-
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
-        <!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-
-         <!-- Tabler Icon CSS -->
-	    <link rel="stylesheet" href="assets/plugins/tabler-icons/tabler-icons.css">
-
-	    <!-- Main CSS -->
-        <link rel="stylesheet" href="assets/css/style.css">
-
-    </head>
-    <body class="account-page bg-white">
-
-        <div id="global-loader" >
-			<div class="whirly-loader"> </div>
-		</div>
-
-		<!-- Main Wrapper -->
-        <div class="main-wrapper">
-			<div class="account-content">
-				<div class="login-wrapper login-new">
-                    <div class="row w-100">
-                        <div class="col-lg-5 mx-auto">
-                            <div class="login-content user-login">
-                                <div class="login-logo">
-                                    <img src="assets/img/logo.svg" alt="img">
-                                    <a href="index-2.html" class="login-logo logo-white">
-                                        <img src="assets/img/logo-white.svg"  alt="Img">
-                                    </a>
-                                </div>
-                                <form action="https://dreamspos.dreamstechnologies.com/html/template/index.html">
-                                    <div class="card">
-                                        <div class="card-body p-5">
-                                            <div class="login-userheading">
-                                                <h3>Sign In</h3>
-                                                <h4>Access the Dreamspos panel using your email and passcode.</h4>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Email <span class="text-danger"> *</span></label>
-                                                <div class="input-group">
-                                                    <input type="text" value="" class="form-control border-end-0">
-                                                    <span class="input-group-text border-start-0">
-                                                        <i class="ti ti-mail"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Password <span class="text-danger"> *</span></label>
-                                                <div class="pass-group">
-                                                    <input type="password" class="pass-input form-control">
-                                                    <span class="ti toggle-password ti-eye-off text-gray-9"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-login authentication-check">
-                                                <div class="row">
-                                                    <div class="col-12 d-flex align-items-center justify-content-between">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <label class="checkboxs ps-4 mb-0 pb-0 line-height-1 fs-16 text-gray-6">
-                                                                <input type="checkbox" class="form-control">
-                                                                <span class="checkmarks"></span>Remember me
-                                                            </label>
-                                                        </div>
-                                                        <div class="text-end">
-                                                            <a class="text-orange fs-16 fw-medium" href="forgot-password.html">Forgot Password?</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-login">
-                                                <button type="submit" class="btn btn-primary w-100">Sign In</button>
-                                            </div>
-                                            <div class="signinform">
-                                                <h4>New on our platform?<a href="register.html" class="hover-a"> Create an account</a></h4>
-                                            </div>
-                                            <div class="form-setlogin or-text">
-                                                <h4>OR</h4>
-                                            </div>
-                                            <div class="mt-2">
-                                                <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                                    <div class="text-center me-2 flex-fill">
-                                                        <a href="javascript:void(0);"
-                                                            class="br-10 p-2 btn btn-info d-flex align-items-center justify-content-center">
-                                                            <img class="img-fluid m-1" src="assets/img/icons/facebook-logo.svg" alt="Facebook">
-                                                        </a>
-                                                    </div>
-                                                    <div class="text-center me-2 flex-fill">
-                                                        <a href="javascript:void(0);"
-                                                            class="btn btn-white br-10 p-2  border d-flex align-items-center justify-content-center">
-                                                            <img class="img-fluid m-1" src="assets/img/icons/google-logo.svg" alt="Facebook">
-                                                        </a>
-                                                    </div>
-                                                    <div class="text-center flex-fill">
-                                                        <a href="javascript:void(0);"
-                                                            class="bg-dark br-10 p-2 btn btn-dark d-flex align-items-center justify-content-center">
-                                                            <img class="img-fluid m-1" src="assets/img/icons/apple-logo.svg" alt="Apple">
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
-                                <p>Copyright &copy; 2025 DreamsPOS</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-			</div>
+    <div class="page-header">
+        <div class="add-item d-flex">
+            <div class="page-title">
+                <h4 class="fw-bold">Site Settings</h4>
+                <h6>Manage your site settings</h6>
+            </div>
         </div>
-		<!-- /Main Wrapper -->
+        <ul class="table-top-head">
+            <li>
+                <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i
+                        class="ti ti-refresh"></i></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i
+                        class="ti ti-chevron-up"></i></a>
+            </li>
+        </ul>
+        <div class="page-btn">
+           <a href="{{ url()->previous() }}" class="btn btn-primary"><i class="ti ti-arrow-left me-1"></i>Back</a>
+        </div>
+    </div>
 
-		<!-- jQuery -->
-        <script src="assets/js/jquery-3.7.1.min.js" type="d3c74090479f2f3549344042-text/javascript"></script>
+    <!-- Site Settings -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table datatable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Site Title</th>
+                            <th>Company Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Currency Symbol</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (session()->has('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ session('success') }}</strong>
+                        </div>
+                        @endif
+                        @if (session()->has('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ session('error') }}</strong>
+                        </div>
+                        @endif
 
-         <!-- Feather Icon JS -->
-		<script src="assets/js/feather.min.js" type="d3c74090479f2f3549344042-text/javascript"></script>
+                        <tr>
+                            <td>{{ $siteSettings->site_title }}</td>
+                            <td> {{ $siteSettings->company_name }}</td>
+                            <td>
+                                <a href="mailto:{{ $siteSettings->site_email }}">{{ $siteSettings->site_email }}</a>
+                            </td>
+                            <td>
+                                <a href="tel:{{ $siteSettings->site_phone }}">{{ $siteSettings->site_phone }}</a>
+                            </td>
+                            <td>{{ $siteSettings->currency }}</td>
+                            <td>
+                                <a class="me-2 p-2" href="{{ route('site.setting.edit', $siteSettings->id) }}">
+                                    <i data-feather="edit" class="feather-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-		<!-- Bootstrap Core JS -->
-        <script src="assets/js/bootstrap.bundle.min.js" type="d3c74090479f2f3549344042-text/javascript"></script>
-
-		<!-- Custom JS -->
-        <script src="assets/js/script.js" type="d3c74090479f2f3549344042-text/javascript"></script>
-
-    <script src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="d3c74090479f2f3549344042-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"935b13955a1d771c","version":"2025.4.0-1-g37f21b1","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"3ca157e612a14eccbb30cf6db6691c29","b":1}' crossorigin="anonymous"></script>
-</body>
-
-<!-- Mirrored from dreamspos.dreamstechnologies.com/html/template/signin-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 25 Apr 2025 04:30:41 GMT -->
-</html>
+    @endsection

@@ -17,7 +17,7 @@
         </div>
         <ul class="table-top-head">
             <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"
+                <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"
                     data-bs-original-title="Refresh"><i class="ti ti-refresh"></i></a>
             </li>
             <li>

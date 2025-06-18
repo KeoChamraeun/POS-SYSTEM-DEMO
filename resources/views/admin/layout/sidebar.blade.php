@@ -2,13 +2,13 @@
     <!-- Logo -->
     <div class="sidebar-logo active">
         <a href="{{ route('dashboard') }}" class="logo logo-normal">
-            <img src="https://nebulaitbd.com/frontend/assets/images/logo.png" alt="Img">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a href="{{ route('dashboard') }}" class="logo logo-white">
-            <img src="https://nebulaitbd.com/frontend/assets/images/logo-white.svg" alt="Img">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a href="{{ route('dashboard') }}" class="logo-small">
-            <img src="https://nebulaitbd.com/frontend/assets/images/favicon.png" alt="Img">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
             <i data-feather="chevrons-left" class="feather-16"></i>
@@ -124,6 +124,10 @@
                         <li class=" {{ request()->routeIs('vat.index') ? 'active' : '' }}">
                             <a href="{{ route('vat.index') }}"><i class="ti ti-chart-dots-2 fs-16 me-2"></i><span>VAT
                                     Settings</span>
+                            </a>
+                        </li>
+                        <li class=" {{ request()->routeIs('site.setting.index') ? 'active' : '' }}">
+                            <a href="{{ route('site.setting.index') }}"><i class="ti ti-settings fs-16 me-2"></i><span>Site Settings</span>
                             </a>
                         </li>
                     </ul>

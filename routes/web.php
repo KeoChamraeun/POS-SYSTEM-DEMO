@@ -25,12 +25,6 @@ Route::get('/dashboard', [AdminController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
 // Category Routes
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/category', 'index')->name('category.index');
@@ -112,6 +106,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->controller(SiteSettingController::class)->group(function () {
     Route::get('/site-setting', 'index')->name('site.setting.index');
+    Route::get('/site-setting/edit/{id}', 'edit')->name('site.setting.edit');
+    Route::post('/site-setting/update/{id}', 'update')->name('site.setting.update');
 });
 
 require __DIR__ . '/auth.php';
