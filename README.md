@@ -84,7 +84,7 @@ php artisan test
 
 **Sheikh Forid**  
 [🔗 LinkedIn](https://www.linkedin.com/in/forid1026)  
-💼 *Portfolio: [https://pos.nebulaitbd.com/](https://pos.nebulaitbd.com/)*
+💼 *Portfolio: [https://faridsheikh.netlify.app/](https://faridsheikh.netlify.app/)*
 
 ## 📄 License
 
