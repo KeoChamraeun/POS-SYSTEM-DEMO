@@ -66,7 +66,6 @@ A web-based Point of Sale (POS) and Inventory Management System built with **Lar
 
 ![POS Screen](https://i.ibb.co/B2SpkfyM/pos-ui.png)
 
-_Add more screenshots of the dashboard and inventory views here as needed._
 
 ## 🧪 Testing
 
