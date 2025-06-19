@@ -8,7 +8,7 @@
             <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a href="{{ route('dashboard') }}" class="logo-small">
-            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->favicon : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
             <i data-feather="chevrons-left" class="feather-16"></i>
