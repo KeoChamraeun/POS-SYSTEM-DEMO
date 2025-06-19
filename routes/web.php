@@ -97,6 +97,10 @@ Route::controller(ExpenseController::class)->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
+    Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
+    Route::post('/admin/profile', [AdminController::class, 'AdminProfileUpdate'])->name('admin.profile.update');
+    Route::get('/admin/password', [AdminController::class, 'AdminPassword'])->name('admin.change.password');
+    Route::post('/admin/password/update', [AdminController::class, 'AdminPasswordUpdate'])->name('admin.password.update');
     Route::get('/pos', [PosController::class, 'POS'])->name('pos');
     Route::get('/invoice', [PosController::class, 'InvoiceList'])->name('invoice.index');
     Route::get('/order/delete/{id}', [PosController::class, 'OrderDelete'])->name('order.delete');

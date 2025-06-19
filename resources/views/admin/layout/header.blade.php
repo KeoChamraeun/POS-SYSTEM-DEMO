@@ -3,7 +3,6 @@
         <!-- Logo -->
         <div class="header-left active">
             <a href="{{ route('dashboard') }}" class="logo logo-normal">
-                <p>{{ site_settings()->site_logo }}</p>
                 <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="Img">
             </a>
         </div>
@@ -83,7 +82,7 @@
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="#" class="link-item">
+                            <a href="{{ route('pos') }}" class="link-item">
                                 <span class="link-icon">
                                     <i class="ti ti-shopping-cart"></i>
                                 </span>
@@ -147,9 +146,6 @@
             </li>
            
 
-            <li class="nav-item nav-item-box">
-                <a href="{{ route('site.setting.index') }}"><i class="ti ti-settings"></i></a>
-            </li>
             <li class="nav-item dropdown has-arrow main-drop profile-nav">
                 <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
                     <span class="user-info p-0">
@@ -169,7 +165,7 @@
                         </div>
                     </div>
                     <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ti ti-user-circle me-2"></i>My Profile</a>
-                    <a class="dropdown-item" href="{{ route('site.setting.index') }}"><i class="ti ti-settings-2 me-2"></i>Settings</a>
+                    <a class="dropdown-item" href="{{ route('admin.change.password') }}"><i class="ti ti-lock me-2"></i>Change Password</a>
                     <hr class="my-2">
                     <a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}"><i class="ti ti-logout me-2"></i>Logout</a>
                 </div>
@@ -182,9 +178,9 @@
             <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                 aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="{{ route('admin.profile') }}">My Profile</a>
-                <a class="dropdown-item" href="{{ route('site.setting.index') }}">Settings</a>
-                <a class="dropdown-item" href="{{ route('admin.logout') }}">Logout</a>
+                <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ti ti-user-circle me-2"></i>My Profile</a>
+                <a class="dropdown-item" href="{{ route('admin.change.password') }}"><i class="ti ti-lock me-2"></i>Change Password</a>
+                <a class="dropdown-item" href="{{ route('admin.logout') }}"><i class="ti ti-logout me-2"></i>Logout</a>
             </div>
         </div>
         <!-- /Mobile Menu -->

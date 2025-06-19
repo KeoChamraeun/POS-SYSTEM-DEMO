@@ -19,7 +19,7 @@
 
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
-            <div class="avatar avatar-md onlin">
+            <div class="avatar avatar-md online">
                 <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img"
                     class="img-fluid rounded-circle">
             </div>
