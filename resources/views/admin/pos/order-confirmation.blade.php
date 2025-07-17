@@ -175,7 +175,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4"><strong>Customer Name:</strong> {{ $order->customer_name }}</td>
+                            <td colspan="4"><strong>Customer Information:</strong> {{ $order->customer_name }}</td>
                         </tr>
                         <tr>
                             <td colspan="4"><strong>Invoice No:</strong> {{ $order->order_number }}</td>

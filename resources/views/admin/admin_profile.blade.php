@@ -10,10 +10,10 @@
 
 <div class="content">
     <div class="page-header">
-        <div class="page-title">
+        <!-- <div class="page-title">
             <h4>Profile</h4>
             <h6>User Profile</h6>
-        </div>
+        </div> -->
     </div>
     <!-- /product list -->
     <div class="card">
