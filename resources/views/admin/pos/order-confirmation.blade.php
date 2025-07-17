@@ -124,6 +124,7 @@
         .receipt-container::before {
             display: none;
         }
+
         @media print {
             .receipt-container::before {
                 display: block;
@@ -238,7 +239,7 @@
                         </tr>
                         <tr>
                             <td colspan="4" align="center">
-                                <p>Developed By Nebula IT</p>
+                                <p>Developed By RAEUN IT</p>
                             </td>
                         </tr>
                     </table>

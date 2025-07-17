@@ -80,7 +80,7 @@
                         <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="mb-2"
                             style="height: 100px; object-fit: contain;">
                         <div class="fw-semibold small text-dark fw-bold mb-1">{{ $item->name }}</div>
-                        <div class="text-success fw-bold small">৳{{ number_format($item->price, 2) }}</div>
+                        <div class="text-success fw-bold small">${{ number_format($item->price, 2) }}</div>
                     </div>
                 </div>
                 @endforeach
@@ -127,7 +127,7 @@
                                     }}</small>
                                 <div class="fw-bold">{{ $cartItem['name'] }}</div>
                                 <div class="text-success">
-                                    ৳{{ number_format($cartItem['price'], 2) }}
+                                    ${{ number_format($cartItem['price'], 2) }}
                                 </div>
                             </div>
                             <div class="text-end">
@@ -157,18 +157,18 @@
                             </select>
                         </div>
                         <hr>
-                        <p class="mb-1">Sub Total: <span class="float-end">৳{{ number_format($this->getSubTotal(), 2) }}</span></p>
+                        <p class="mb-1">Sub Total: <span class="float-end">${{ number_format($this->getSubTotal(), 2) }}</span></p>
                         <p class="mb-1">
                             <span class="text-danger">Discount
                                 <a href="#" class="link-default" data-bs-toggle="modal" data-bs-target="#discount"><i
                                         class="ti ti-edit"></i></a>: </span>
-                            <span class="float-end">৳{{ number_format($this->getDiscount(), 2) }}</span>
+                            <span class="float-end">${{ number_format($this->getDiscount(), 2) }}</span>
                         </p>
-                        <p class="mb-1">VAT (GST {{ number_format($this->vat )}}%): <span class="float-end">৳{{ number_format($this->getTotal() *
+                        <p class="mb-1">VAT (GST {{ number_format($this->vat )}}%): <span class="float-end">${{ number_format($this->getTotal() *
                                 ($this->vat / 100), 2) }}</span></p>
-                        <p class="mb-1">Adjustment: <span class="float-end">৳0.00</span></p>
+                        <p class="mb-1">Adjustment: <span class="float-end">$0.00</span></p>
                         <hr>
-                        <p class="fw-bold">Total: <span class="float-end">৳{{ number_format($this->getTotal() -
+                        <p class="fw-bold">Total: <span class="float-end">${{ number_format($this->getTotal() -
                                 $this->getDiscount() + ($this->getTotal() * ($this->vat / 100)), 2)
                                 }}</span></p>
 
@@ -184,7 +184,7 @@
                                         <span class="fw-bold text-dark">Cash</span>
                                     </a>
                                 </div>
-                                <div class="col-auto">
+                                <!-- <div class="col-auto">
                                     <a href="javascript:void(0);"
                                         class="payment-item d-flex align-items-center gap-2 p-3 border rounded shadow-sm {{ $paymentMethod === 'bkash' ? 'border-warning bg-warning bg-opacity-10' : '' }}"
                                         wire:click="$set('paymentMethod', 'bkash')"
@@ -193,7 +193,7 @@
                                         <img src="{{ asset('/backend/assets/img/bkash-icon.svg') }}" alt="Bkash ICON" style="width: 30px; height: 30px;">
                                         <span class="fw-bold text-dark">Bkash</span>
                                     </a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <button wire:click="submitOrder" class="btn btn-success w-100 mt-3">Submit Order</button>
