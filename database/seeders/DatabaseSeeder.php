@@ -22,6 +22,13 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'khraeun@gmail.com',
+            'password' => bcrypt('12345678'),
+        ]);
+
+
         Customer::create([
             'name' => 'Walk in Customer',
             'email' => 'walkin@gmail.com',
@@ -32,6 +39,5 @@ class DatabaseSeeder extends Seeder
             SiteSettingSeeder::class,
             CategorySeeder::class
         ]);
-
     }
 }
