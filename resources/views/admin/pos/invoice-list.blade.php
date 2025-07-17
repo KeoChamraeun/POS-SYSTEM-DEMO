@@ -10,10 +10,10 @@
 <div class="content">
     <div class="page-header">
         <div class="add-item d-flex">
-            <div class="page-title">
+            <!-- <div class="page-title">
                 <h4>Invoices</h4>
                 <h6>Manage your stock invoices</h6>
-            </div>
+            </div> -->
         </div>
         <ul class="table-top-head">
             <li>
@@ -144,12 +144,12 @@
 
 <script>
     $(document).on('click', 'a#delete', function(e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            $('#deleteConfirmModal').modal('show');
-            $('#deleteConfirmModal').on('click', 'a#deleteConfirm', function(e) {
-                window.location.href = url;
-            });
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $('#deleteConfirmModal').modal('show');
+        $('#deleteConfirmModal').on('click', 'a#deleteConfirm', function(e) {
+            window.location.href = url;
         });
+    });
 </script>
 @endsection

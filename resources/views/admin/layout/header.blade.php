@@ -3,7 +3,7 @@
         <!-- Logo -->
         <div class="header-left active">
             <a href="{{ route('dashboard') }}" class="logo logo-normal">
-                <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="Img">
+                <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/pos.png') }}" alt="Img">
             </a>
         </div>
         <!-- /Logo -->
@@ -35,14 +35,14 @@
                             </span>
                         </div>
                         <div class="dropdown-menu search-dropdown" aria-labelledby="dropdownMenuClickable">
-                           
+
                         </div>
                     </form>
                 </div>
             </li>
             <!-- /Search -->
 
-          
+
             <li class="nav-item dropdown link-nav">
                 <a href="javascript:void(0);" class="btn btn-primary btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
                     <i class="ti ti-circle-plus me-1"></i>Add New
@@ -129,6 +129,14 @@
                                 <p>VAT</p>
                             </a>
                         </div>
+                        <div class="col-md-2">
+                            <a href="{{ route('invoice.index') }}" class="link-item">
+                                <span class="link-icon">
+                                    <i class="ti ti-file-text"></i>
+                                </span>
+                                <p>Invoice</p>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -144,7 +152,7 @@
                     <i class="ti ti-maximize"></i>
                 </a>
             </li>
-           
+
 
             <li class="nav-item dropdown has-arrow main-drop profile-nav">
                 <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">

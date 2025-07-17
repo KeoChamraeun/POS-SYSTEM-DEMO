@@ -2,13 +2,13 @@
     <!-- Logo -->
     <div class="sidebar-logo active">
         <a href="{{ route('dashboard') }}" class="logo logo-normal">
-            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/pos.png') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a href="{{ route('dashboard') }}" class="logo logo-white">
-            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->site_logo : 'backend/assets/img/pos.png') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a href="{{ route('dashboard') }}" class="logo-small">
-            <img src="{{ asset(site_settings()->site_logo ? site_settings()->favicon : 'backend/assets/img/no-image.jpg') }}" alt="{{ site_settings()->site_title }}">
+            <img src="{{ asset(site_settings()->site_logo ? site_settings()->favicon : 'backend/assets/img/pos.png') }}" alt="{{ site_settings()->site_title }}">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
             <i data-feather="chevrons-left" class="feather-16"></i>
@@ -20,7 +20,7 @@
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md online">
-                <img src="{{ asset('backend/assets/img/customer/customer15.jpg') }}" alt="Img"
+                <img src="{{ asset('backend/assets/img/pos.png') }}" alt="Img"
                     class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
