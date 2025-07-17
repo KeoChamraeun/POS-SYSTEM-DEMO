@@ -11,10 +11,10 @@
 
     <div class="page-header">
         <div class="add-item d-flex">
-            <div class="page-title">
+            <!-- <div class="page-title">
                 <h4 class="fw-bold">Site Settings</h4>
                 <h6>Manage your site settings</h6>
-            </div>
+            </div> -->
         </div>
         <ul class="table-top-head">
             <li>
@@ -27,7 +27,7 @@
             </li>
         </ul>
         <div class="page-btn">
-           <a href="{{ url()->previous() }}" class="btn btn-primary"><i class="ti ti-arrow-left me-1"></i>Back</a>
+            <a href="{{ url()->previous() }}" class="btn btn-primary"><i class="ti ti-arrow-left me-1"></i>Back</a>
         </div>
     </div>
 

@@ -11,10 +11,10 @@
 
     <div class="page-header">
         <div class="add-item d-flex">
-            <div class="page-title">
+            <!-- <div class="page-title">
                 <h4 class="fw-bold">Supplier</h4>
                 <h6>Manage your supplier</h6>
-            </div>
+            </div> -->
         </div>
         <ul class="table-top-head">
             <li>
@@ -157,11 +157,11 @@
     <!-- Select All Checkbox Script -->
     <script>
         document.getElementById('select-all').onclick = function() {
-                let checkboxes = document.querySelectorAll('input[name="ids[]"]');
-                for (let checkbox of checkboxes) {
-                    checkbox.checked = this.checked;
-                }
+            let checkboxes = document.querySelectorAll('input[name="ids[]"]');
+            for (let checkbox of checkboxes) {
+                checkbox.checked = this.checked;
             }
+        }
     </script>
 
 
@@ -340,42 +340,42 @@
 
 <script>
     //jQuery for edit supplier
-        $(document).on('click', '#edit-cat', function() {
+    $(document).on('click', '#edit-cat', function() {
 
-            var supplier_id = $(this).closest('tr').find('#supplier_id').val();
-            $('#id').val(supplier_id);
+        var supplier_id = $(this).closest('tr').find('#supplier_id').val();
+        $('#id').val(supplier_id);
 
-            var supplier_name = $(this).closest('tr').find('#supplier_name').val();
-            $('#name').val(supplier_name);
+        var supplier_name = $(this).closest('tr').find('#supplier_name').val();
+        $('#name').val(supplier_name);
 
-            var supplier_email = $(this).closest('tr').find('#supplier_email').val();
-            $('#email').val(supplier_email);
+        var supplier_email = $(this).closest('tr').find('#supplier_email').val();
+        $('#email').val(supplier_email);
 
-            var supplier_phone = $(this).closest('tr').find('#supplier_phone').val();
-            $('#phone').val(supplier_phone);
+        var supplier_phone = $(this).closest('tr').find('#supplier_phone').val();
+        $('#phone').val(supplier_phone);
 
-            var supplier_address = $(this).closest('tr').find('#supplier_address').val();
-            $('#address').val(supplier_address);
+        var supplier_address = $(this).closest('tr').find('#supplier_address').val();
+        $('#address').val(supplier_address);
 
-            var supplier_image = $(this).closest('tr').find('#supplier_image').val();
-            $('.image-preview').attr('src', supplier_image);
+        var supplier_image = $(this).closest('tr').find('#supplier_image').val();
+        $('.image-preview').attr('src', supplier_image);
 
-            var supplier_status = $(this).closest('tr').find('#supplier_status').val();
-            $('#status').val(supplier_status);
+        var supplier_status = $(this).closest('tr').find('#supplier_status').val();
+        $('#status').val(supplier_status);
 
-            $('#status').html(`
+        $('#status').html(`
             <option value="">Select Status</option>
             <option value="active" ${supplier_status === 'active' ? 'selected' : ''}>Active</option>
             <option value="inactive" ${supplier_status === 'inactive' ? 'selected' : ''}>Inactive</option>
         `);
 
 
-        });
+    });
 
-        //jQuery for delete supplier
-        $(document).on('click', '#delete-cat', function() {
-            var supplier_id = $(this).closest('tr').find('#supplier_id').val();
-            $('#delete_supplier_id').val(supplier_id);
-        });
+    //jQuery for delete supplier
+    $(document).on('click', '#delete-cat', function() {
+        var supplier_id = $(this).closest('tr').find('#supplier_id').val();
+        $('#delete_supplier_id').val(supplier_id);
+    });
 </script>
 @endsection

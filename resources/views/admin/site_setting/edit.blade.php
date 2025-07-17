@@ -11,10 +11,10 @@
 
     <div class="page-header">
         <div class="add-item d-flex">
-            <div class="page-title">
+            <!-- <div class="page-title">
                 <h4 class="fw-bold">Site Settings</h4>
                 <h6>Manage your site settings</h6>
-            </div>
+            </div> -->
         </div>
         <ul class="table-top-head">
             <li>
@@ -70,7 +70,7 @@
                             <textarea class="form-control" id="address" name="address"
                                 rows="2">{{ old('address', $siteSettings->address) }}</textarea>
                         </div>
-                         <div class="mb-3">
+                        <div class="mb-3">
                             <label for="site_logo" class="form-label">Site Logo</label>
                             <div class="add-choosen">
                                 <div class="mb-3">
@@ -112,7 +112,7 @@
                             <input type="url" class="form-control" id="instagram" name="instagram"
                                 value="{{ old('instagram', $siteSettings->instagram) }}">
                         </div>
-                       
+
                         <div class="mb-3">
                             <label for="favicon" class="form-label">Site Favicon</label>
                             <div class="add-choosen">

@@ -184,16 +184,16 @@
                                         <span class="fw-bold text-dark">Cash</span>
                                     </a>
                                 </div>
-                                <!-- <div class="col-auto">
+                                <div class="col-auto">
                                     <a href="javascript:void(0);"
-                                        class="payment-item d-flex align-items-center gap-2 p-3 border rounded shadow-sm {{ $paymentMethod === 'bkash' ? 'border-warning bg-warning bg-opacity-10' : '' }}"
-                                        wire:click="$set('paymentMethod', 'bkash')"
+                                        class="payment-item d-flex align-items-center gap-2 p-3 border rounded shadow-sm {{ $paymentMethod === 'ABA' ? 'border-warning bg-warning bg-opacity-10' : '' }}"
+                                        wire:click="$set('paymentMethod', 'ABA')"
                                         style="text-decoration: none; min-width: 140px;">
                                         {{-- <i class="ti ti-building-bank fs-2 text-primary"></i> --}}
-                                        <img src="{{ asset('/backend/assets/img/bkash-icon.svg') }}" alt="Bkash ICON" style="width: 30px; height: 30px;">
-                                        <span class="fw-bold text-dark">Bkash</span>
+                                        <img src="{{ asset('/backend/assets/img/aba.png') }}" alt="ABA ICON" style="width: 30px; height: 30px;">
+                                        <span class="fw-bold text-dark">ABA</span>
                                     </a>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                         <button wire:click="submitOrder" class="btn btn-success w-100 mt-3">Submit Order</button>
