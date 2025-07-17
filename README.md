@@ -26,7 +26,7 @@ A web-based Point of Sale (POS) and Inventory Management System built with **Lar
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/forid1026/pos-inventory-system.git
+   git clone https://github.com/KeoChamraeun/POS-SYSTEM-DEMO.git
    cd pos-inventory-system
    ```
 
@@ -57,35 +57,5 @@ A web-based Point of Sale (POS) and Inventory Management System built with **Lar
 6. **Login credentials**
    ```
    Email: admin@example.com
-   Password: password
-   ```
-
-## 📸 Screenshots
-
-### POS Screen
-
-![POS Screen](https://i.ibb.co/B2SpkfyM/pos-ui.png)
-
-
-## 🧪 Testing
-
-To run tests:
-```bash
-php artisan test
-```
-
-## 📂 Folder Structure Highlights
-
-- `app/Http/Livewire`: POS and dynamic components  
-- `resources/views`: Blade templates  
-- `database/seeders`: Demo data and roles setup  
-
-## 🙋‍♂️ Author
-
-**Sheikh Forid**  
-[🔗 LinkedIn](https://www.linkedin.com/in/forid1026)  
-💼 *Portfolio: [https://faridsheikh.netlify.app/](https://faridsheikh.netlify.app/)*
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
+   Password: 12345678
+   ```# POS-SYSTEM-DEMO
