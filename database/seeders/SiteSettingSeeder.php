@@ -15,10 +15,10 @@ class SiteSettingSeeder extends Seeder
     {
         SiteSetting::create([
             'site_title'     => 'My Restaurant POS',
-            'company_name'   => 'Nebula IT',
-            'address'       => '184 Senpara Parbata, Mirpur 10, Dhaka 1216',
-            'site_phone'         => '01700000000',
-            'site_email'         => 'info@nebulait.com',
+            'company_name'   => 'RAEUN IT',
+            'address'       => 'Phnom Penh, Cambodia',
+            'site_phone'         => '+855 886576689',
+            'site_email'         => 'keochamraeun54@gmail.com',
             'currency'      => '$',
             'footer_text'   => '© 2025 RAEUN IT. All rights reserved.',
         ]);
