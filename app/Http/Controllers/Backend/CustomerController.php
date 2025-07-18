@@ -10,114 +10,112 @@ use Exception;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::orderBy('id', 'desc')->get();
+        $userId = Auth::id();
+        $customers = Customer::where('user_id', $userId)->orderBy('id', 'desc')->get();
         return view('admin.customer.customer_list', compact('customers'));
     }
+
     public function store(Request $request)
     {
         DB::beginTransaction();
         try {
-
             $customer = new Customer();
+            $customer->user_id = Auth::id(); // assign session user
             $customer->name = $request->name;
             $customer->email = $request->email;
             $customer->phone = $request->phone;
             $customer->address = $request->address;
             $customer->status = $request->status;
 
-            if ($request->file(key: 'image')) {
+            if ($request->file('image')) {
                 $customer_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $customer_img->getClientOriginalExtension();
                 $image = $manager->read($customer_img);
                 $image->resize(740, 740);
-                $image->toJpeg(80)->save(base_path('public/uploads/customer/' . $name_gen));
+                $image->toJpeg(80)->save(public_path('uploads/customer/' . $name_gen));
                 $customer->image = 'uploads/customer/' . $name_gen;
             }
 
-            $customer->updated_at = null;
             $customer->save();
-
             DB::commit();
 
-            return redirect()->route('customer.index')->with('success', 'customer created successfully.');
+            return redirect()->route('customer.index')->with('success', 'Customer created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error creating customer: ' . $th->getMessage());
-
-            return redirect()->back()->with('error', 'customer created Failed. Please try again!');
+            return redirect()->back()->with('error', 'Customer creation failed. Please try again!');
         }
     }
+
     public function update(Request $request)
     {
         DB::beginTransaction();
         try {
-            $customer = Customer::findOrFail($request->id);
+            $customer = Customer::where('id', $request->id)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
             $customer->name = $request->name;
             $customer->email = $request->email;
             $customer->phone = $request->phone;
             $customer->address = $request->address;
             $customer->status = $request->status;
 
-            if ($request->file(key: 'image')) {
-                if ($customer->image) {
-                    $imagePath = public_path($customer->image);
-                    if (file_exists($imagePath) && is_file($imagePath)) {
-                        unlink($imagePath);
-                    }
+            if ($request->file('image')) {
+                if ($customer->image && file_exists(public_path($customer->image))) {
+                    unlink(public_path($customer->image));
                 }
+
                 $customer_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $customer_img->getClientOriginalExtension();
                 $image = $manager->read($customer_img);
                 $image->resize(740, 740);
-                $image->toJpeg(80)->save(base_path('public/uploads/customer/' . $name_gen));
+                $image->toJpeg(80)->save(public_path('uploads/customer/' . $name_gen));
                 $customer->image = 'uploads/customer/' . $name_gen;
             }
 
             $customer->save();
-
             DB::commit();
 
-            return redirect()->route('customer.index')->with('success', 'customer updated successfully.');
+            return redirect()->route('customer.index')->with('success', 'Customer updated successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error updating customer: ' . $th->getMessage());
-
-            return redirect()->back()->with('error', 'customer updated Failed. Please try again!');
+            return redirect()->back()->with('error', 'Customer update failed. Please try again!');
         }
     }
+
     public function destroy(Request $request)
     {
         DB::beginTransaction();
         try {
-            $customer = Customer::findOrFail($request->id);
-            if ($customer->image ) {
-                $imagePath = public_path($customer->image);
-                if (file_exists($imagePath) && is_file($imagePath)) {
-                    unlink($imagePath);
-                }
-            }
-            $customer->delete();
+            $customer = Customer::where('id', $request->id)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
 
+            if ($customer->image && file_exists(public_path($customer->image))) {
+                unlink(public_path($customer->image));
+            }
+
+            $customer->delete();
             DB::commit();
 
             return redirect()->route('customer.index')->with('success', 'Customer deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error deleting customer: ' . $th->getMessage());
-
             return redirect()->back()->with('error', 'Customer deletion failed. Please try again!');
         }
     }
+
     public function bulkDelete(Request $request)
     {
         DB::beginTransaction();
@@ -125,27 +123,28 @@ class CustomerController extends Controller
             $ids = $request->ids;
 
             if (!$ids || count($ids) === 0) {
-                return redirect()->route('customer.index')->with('error', 'No customer selected for deletion.');
+                return redirect()->route('customer.index')->with('error', 'No customers selected for deletion.');
             }
 
             foreach ($ids as $id) {
-                $customer = Customer::findOrFail($id);
-                if ($customer->image) {
-                    $imagePath = public_path($customer->image);
-                    if (file_exists($imagePath) && is_file($imagePath)) {
-                        unlink($imagePath);
+                $customer = Customer::where('id', $id)
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+                if ($customer) {
+                    if ($customer->image && file_exists(public_path($customer->image))) {
+                        unlink(public_path($customer->image));
                     }
+                    $customer->delete();
                 }
-                $customer->delete();
             }
+
             DB::commit();
             return redirect()->route('customer.index')->with('success', 'Customers deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error deleting customers: ' . $th->getMessage());
-
-            return redirect()->back()->with('error', 'Customers deletion failed. Please try again!');
+            return redirect()->back()->with('error', 'Bulk deletion failed. Please try again!');
         }
     }
 }

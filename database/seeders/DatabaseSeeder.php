@@ -33,6 +33,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'Walk in Customer',
             'email' => 'walkin@gmail.com',
             'status' => 'active',
+            'user_id' => 1,
+        ]);
+        Customer::create([
+            'name' => 'Walk in Customer',
+            'email' => 'walkin2@gmail.com',
+            'status' => 'active',
+            'user_id' => 2,
         ]);
 
         $this->call([

@@ -11,22 +11,14 @@ use App\Models\OrderItem;
 use App\Models\Vat;
 use Livewire\Component;
 
-/**
- * Class Pos
- * @package App\Livewire
- *
- * This class handles the Point of Sale (POS) functionality, including managing the cart,
- * adding items, calculating totals, and submitting orders.
- */
-
 class Pos extends Component
 {
     public $cart = [];
     public $selectedCategory = null;
     public $searchTerm = '';
     public $table = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    public $tableNo; // fixed, initialized in mount()
-    public $orderNumber; // fixed, initialized in mount()
+    public $tableNo;
+    public $orderNumber;
     public $customerName = '';
     public $customers;
     public $status = 'pending';
@@ -34,27 +26,29 @@ class Pos extends Component
     public $subTotal = 0;
     public $discount = 0;
     public $discountType = '';
-    public $discountValue = 0; // Default discount value
-    public $vat = 0; // Default VAT value
-
+    public $discountValue = 0;
+    public $vat = 0;
 
     public function mount()
     {
+        $userId = auth()->id();
+
         $this->tableNo = rand($this->table[0], $this->table[count($this->table) - 1]);
         $this->orderNumber = 'ORDER-' . date('Ymd') . '-' . rand(1, 1000);
-        $this->paymentMethod = 'cash'; // Default payment method
+        $this->paymentMethod = 'cash';
 
-        $this->customers = Customer::where('status', 'active')->get(['id', 'name']);
+        // Load customers filtered by user_id
+        $this->customers = Customer::where('status', 'active')
+            ->where('user_id', $userId)
+            ->get(['id', 'name']);
+
         if ($this->customers->isNotEmpty() && empty($this->customerName)) {
             $this->customerName = $this->customers->first()->name;
         }
     }
 
-
     public function addMenu($menuId)
     {
-
-        // Check if menu already in cart (matching both id and type)
         foreach ($this->cart as $index => $cartItem) {
             if ($cartItem['id'] === $menuId && $cartItem['type'] === 'menu') {
                 $this->cart[$index]['quantity']++;
@@ -62,8 +56,8 @@ class Pos extends Component
             }
         }
 
-        // If not in cart, add new menu
-        $menu = Menu::findOrFail($menuId);
+        $menu = Menu::where('user_id', auth()->id())->findOrFail($menuId);
+
         $this->cart[] = [
             'type' => 'menu',
             'id' => $menu->id,
@@ -73,14 +67,11 @@ class Pos extends Component
             'quantity' => 1,
         ];
 
-        $this->dispatch('toast.success', 'Menu Added successfully!');
-
-        session()->flash('success', 'Cart Added successfully!');
+        session()->flash('success', 'Menu added successfully!');
     }
 
     public function addItem($itemId)
     {
-        // Check if item already in cart (matching both id and type)
         foreach ($this->cart as $index => $cartItem) {
             if ($cartItem['id'] === $itemId && $cartItem['type'] === 'item') {
                 $this->cart[$index]['quantity']++;
@@ -88,8 +79,8 @@ class Pos extends Component
             }
         }
 
-        // If not in cart, add new item
-        $item = MenuItem::findOrFail($itemId);
+        $item = MenuItem::where('user_id', auth()->id())->findOrFail($itemId);
+
         $this->cart[] = [
             'type' => 'item',
             'id' => $item->id,
@@ -99,7 +90,7 @@ class Pos extends Component
             'quantity' => 1,
         ];
 
-        session()->flash('success', 'Cart Added successfully!');
+        session()->flash('success', 'Item added successfully!');
     }
 
     public function increaseQty($index)
@@ -116,7 +107,7 @@ class Pos extends Component
                 $this->cart[$index]['quantity']--;
             } else {
                 unset($this->cart[$index]);
-                $this->cart = array_values($this->cart); // Reindex array
+                $this->cart = array_values($this->cart);
             }
         }
     }
@@ -128,30 +119,51 @@ class Pos extends Component
 
     public function getTotal()
     {
-        return collect($this->cart)->sum(fn($i) => $i['price'] * $i['quantity']);
+        return $this->getSubTotal();
+    }
+
+    public function getDiscount()
+    {
+        if ($this->discountValue < 0) {
+            session()->flash('error', 'Discount cannot be negative.');
+            return 0;
+        }
+
+        $this->subTotal = $this->getSubTotal();
+        if ($this->discountType === 'percentage') {
+            $this->discount = ($this->subTotal * $this->discountValue) / 100;
+        } elseif ($this->discountType === 'flat') {
+            $this->discount = $this->discountValue;
+        } else {
+            $this->discount = 0;
+        }
+
+        $this->dispatch('closeDiscountModal');
+        return $this->discount;
     }
 
     public function submitOrder()
     {
-
         if (empty($this->cart)) {
             session()->flash('error', 'Cart is empty. Please add items before submitting an order.');
             return;
         }
         if (empty($this->customerName)) {
-            session()->flash('error', 'Please enter a customer name.');
+            session()->flash('error', 'Please select a customer.');
             return;
         }
+
         $order = Order::create([
+            'user_id' => auth()->id(),
             'table_no' => $this->tableNo,
             'order_number' => $this->orderNumber,
             'customer_name' => $this->customerName,
             'status' => $this->status,
             'payment_method' => $this->paymentMethod,
-            'discount' => $this->getDiscount(), // Default discount
+            'discount' => $this->getDiscount(),
             'vat' => ($this->getTotal() * ($this->vat / 100)),
             'sub_total' => $this->getTotal(),
-            'adjustment' => 0, // Default adjustment
+            'adjustment' => 0,
             'total' => $this->getTotal() - $this->getDiscount() + ($this->getTotal() * ($this->vat / 100)),
         ]);
 
@@ -164,15 +176,13 @@ class Pos extends Component
                 'price' => $entry['price'],
             ]);
         }
-        // Clear the cart after submitting the order
+
         $this->cart = [];
 
         session()->flash('success', 'Order submitted successfully!');
-        // $this->dispatch('printReceiptShow');
 
         return redirect()->route('order.confirmation', $order->id);
     }
-
 
     public function clearCart()
     {
@@ -180,39 +190,30 @@ class Pos extends Component
         session()->flash('success', 'Cart cleared successfully!');
     }
 
-
-    public function getDiscount()
-    {
-        if ($this->discountValue < 0) {
-            session()->flash('error', 'Discount cannot be negative.');
-            return;
-        }
-
-        $this->subTotal = $this->getSubTotal();
-        if ($this->discountType == 'percentage') {
-            $this->discount = ($this->subTotal * $this->discountValue) / 100;
-        } else {
-            $this->discount = $this->discountValue;
-        }
-
-        $this->dispatch('closeDiscountModal');
-        return $this->discount;
-    }
     public function render()
     {
+        $userId = auth()->id();
+
         $items = $this->selectedCategory
-            ? MenuItem::where('category', $this->selectedCategory)->get()
+            ? MenuItem::where('category', $this->selectedCategory)
+            ->where('user_id', $userId)
+            ->get()
             : MenuItem::where('name', 'like', '%' . $this->searchTerm . '%')
+            ->where('user_id', $userId)
             ->get();
-        $numberOfItems = MenuItem::count();
+
+        $numberOfItems = MenuItem::where('user_id', $userId)->count();
+
         return view('livewire.pos', [
-            'menus' => Menu::all(),
+            'menus' => Menu::where('user_id', $userId)->get(),
             'items' => $items,
             'categories' => Category::where('status', 'active')
-                ->whereHas('menuItems')
+                ->whereHas('menuItems', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                })
                 ->get(),
             'vats' => Vat::where('status', 'active')->get(),
-            'numberOfItems' => $numberOfItems
+            'numberOfItems' => $numberOfItems,
         ]);
     }
 }

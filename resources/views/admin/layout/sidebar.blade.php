@@ -24,8 +24,8 @@
                     class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
-                <h6 class="fs-14 fw-bold mb-1">{{ Auth::user()->name }}</h6>
-                <p class="fs-12">{{ Auth::user()->role }}</p>
+                <h6 class="fs-14 fw-bold mb-1">{{ Auth::user() }}</h6>
+                <p class="fs-12">{{ Auth::user() }}</p>
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-between menu-item mb-3">

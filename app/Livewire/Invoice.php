@@ -5,19 +5,24 @@ namespace App\Livewire;
 use App\Models\Order;
 use Livewire\Component;
 
-class Invoice extends Component
+class InvoiceList extends Component
 {
-    public $order;
+    public $invoiceList;
 
-    public function mount($id)
+    public function mount()
     {
-        dd($id);
-        $this->order = Order::with('orderItems')->findOrFail($orderId);
+        $userId = auth()->id();
+
+        // Load orders for the logged-in user only
+        $this->invoiceList = Order::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
+
     public function render()
     {
-        return view('livewire.invoice', [
-            'invoice' => $this->order
+        return view('livewire.invoice-list', [
+            'invoiceList' => $this->invoiceList,
         ]);
     }
 }

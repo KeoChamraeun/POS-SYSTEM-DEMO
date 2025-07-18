@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,11 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CategoryFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Category::class;
+
     public function definition(): array
     {
         $categories = [
@@ -26,6 +25,7 @@ class CategoryFactory extends Factory
             'Snacks',
             'Bakery',
             'Seafood',
+            'Coffee & Tea',
             'Vegetarian',
             'Vegan',
             'Breakfast',
@@ -41,6 +41,8 @@ class CategoryFactory extends Factory
 
         return [
             'name' => $this->faker->unique()->randomElement($categories),
+            'status' => $this->faker->randomElement(['active', 'inactive']),
+            'user_id' => User::inRandomOrder()->first()?->id ?? 1, // fallback to user_id = 1
         ];
     }
 }

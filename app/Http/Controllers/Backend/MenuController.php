@@ -13,12 +13,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::orderBy('id', 'desc')->get();
+        $userId = Auth::id(); // current user ID
+
+        // Get menus only for the logged-in user
+        $menus = Menu::where('user_id', $userId)->orderBy('id', 'desc')->get();
 
         return view('admin.menu.menu_list', compact('menus'));
     }
@@ -27,13 +31,13 @@ class MenuController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $menu = new Menu();
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
+            $menu->user_id = Auth::id();
 
-            if ($request->file(key: 'image')) {
+            if ($request->file('image')) {
                 $menu_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
@@ -54,7 +58,7 @@ class MenuController extends Controller
 
             Log::error('Error creating menu: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'menu created Failed. Please try again!');
+            return redirect()->back()->with('error', 'Menu creation failed. Please try again!');
         }
     }
 
@@ -63,11 +67,16 @@ class MenuController extends Controller
         DB::beginTransaction();
         try {
             $menu = Menu::findOrFail($request->id);
+
+            if ($menu->user_id !== Auth::id()) {
+                return redirect()->route('menu.index')->with('error', 'Unauthorized action.');
+            }
+
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
 
-            if ($request->file(key: 'image')) {
+            if ($request->file('image')) {
                 if ($menu->image) {
                     $imagePath = public_path($menu->image);
                     if (file_exists($imagePath) && is_file($imagePath)) {
@@ -103,6 +112,11 @@ class MenuController extends Controller
         DB::beginTransaction();
         try {
             $menu = Menu::findOrFail($request->id);
+
+            if ($menu->user_id !== Auth::id()) {
+                return redirect()->route('menu.index')->with('error', 'Unauthorized action.');
+            }
+
             if ($menu->image) {
                 $imagePath = public_path($menu->image);
                 if (file_exists($imagePath) && is_file($imagePath)) {
@@ -126,7 +140,6 @@ class MenuController extends Controller
 
     public function bulkDelete(Request $request)
     {
-
         DB::beginTransaction();
         try {
             $ids = $request->ids;
@@ -137,13 +150,16 @@ class MenuController extends Controller
 
             foreach ($ids as $id) {
                 $menu = Menu::find($id);
-                if ($menu && $menu->image) {
-                    $imagePath = public_path($menu->image);
-                    if (file_exists($imagePath) && is_file($imagePath)) {
-                        unlink($imagePath);
+
+                if ($menu && $menu->user_id === Auth::id()) {
+                    if ($menu->image) {
+                        $imagePath = public_path($menu->image);
+                        if (file_exists($imagePath) && is_file($imagePath)) {
+                            unlink($imagePath);
+                        }
                     }
+                    $menu->delete();
                 }
-                $menu->delete();
             }
 
             DB::commit();
@@ -160,17 +176,19 @@ class MenuController extends Controller
 
 
     // Menu Item Methods
+
     public function menuItemIndex()
     {
-        $categories = Category::orderBy('id', 'desc')->get();
-        $menuItems = MenuItem::orderBy('id', 'desc')->get();
+        $userId = Auth::id();
+
+        $categories = Category::where('user_id', $userId)->orderBy('id', 'desc')->get();
+        $menuItems = MenuItem::where('user_id', $userId)->orderBy('id', 'desc')->get();
 
         return view('admin.menu_item.menu_item_list', compact('menuItems', 'categories'));
     }
 
     public function menuItemStore(Request $request)
     {
-
         $validation = Validator::make($request->all(), [
             'name' => 'required',
             'price' => 'required',
@@ -189,8 +207,9 @@ class MenuController extends Controller
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->category;
+            $menu->user_id = Auth::id();
 
-            if ($request->file(key: 'image')) {
+            if ($request->file('image')) {
                 $menu_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
@@ -209,7 +228,7 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
             Log::error('Error creating menu: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Menu item created Failed. Please try again!');
+            return redirect()->back()->with('error', 'Menu item creation failed. Please try again!');
         }
     }
 
@@ -218,12 +237,17 @@ class MenuController extends Controller
         DB::beginTransaction();
         try {
             $menu = MenuItem::findOrFail($request->id);
+
+            if ($menu->user_id !== Auth::id()) {
+                return redirect()->route('menu.item.index')->with('error', 'Unauthorized action.');
+            }
+
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->category;
 
-            if ($request->file(key: 'image')) {
+            if ($request->file('image')) {
                 if ($menu->image) {
                     $imagePath = public_path($menu->image);
                     if (file_exists($imagePath) && is_file($imagePath)) {
@@ -244,13 +268,13 @@ class MenuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('menu.item.index')->with('success', 'Menu Item updated successfully.');
+            return redirect()->route('menu.item.index')->with('success', 'Menu item updated successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
             Log::error('Error updating menu item: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'Menu Item update failed. Please try again!');
+            return redirect()->back()->with('error', 'Menu item update failed. Please try again!');
         }
     }
 
@@ -259,6 +283,11 @@ class MenuController extends Controller
         DB::beginTransaction();
         try {
             $menu = MenuItem::findOrFail($request->id);
+
+            if ($menu->user_id !== Auth::id()) {
+                return redirect()->route('menu.item.index')->with('error', 'Unauthorized action.');
+            }
+
             if ($menu->image && file_exists(public_path($menu->image))) {
                 unlink(public_path($menu->image));
             }
@@ -278,30 +307,32 @@ class MenuController extends Controller
 
     public function menuItemBulkDelete(Request $request)
     {
-
         DB::beginTransaction();
         try {
             $ids = $request->ids;
 
             if (!$ids || count($ids) === 0) {
-                return redirect()->route('menu.item.index')->with('error', 'No Menu item selected for deletion.');
+                return redirect()->route('menu.item.index')->with('error', 'No menu item selected for deletion.');
             }
 
             foreach ($ids as $id) {
                 $menuItem = MenuItem::find($id);
-                if ($menuItem && $menuItem->image && file_exists(public_path($menuItem->image))) {
-                    unlink(public_path($menuItem->image));
+
+                if ($menuItem && $menuItem->user_id === Auth::id()) {
+                    if ($menuItem->image && file_exists(public_path($menuItem->image))) {
+                        unlink(public_path($menuItem->image));
+                    }
+                    $menuItem->delete();
                 }
-                $menuItem->delete();
             }
 
             DB::commit();
 
-            return redirect()->route('menu.item.index')->with('success', 'Selected Items deleted successfully.');
+            return redirect()->route('menu.item.index')->with('success', 'Selected items deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
-            Log::error('Error bulk deleting items: ' . $th->getMessage());
+            Log::error('Error bulk deleting menu items: ' . $th->getMessage());
 
             return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
         }

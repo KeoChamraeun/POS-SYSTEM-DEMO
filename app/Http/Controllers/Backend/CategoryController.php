@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::orderBy('id', 'desc')->get();
+        $userId = Auth::id();
+        $categories = Category::where('user_id', $userId)->orderBy('id', 'desc')->get();
+
         return view('admin.category.category_list', compact('categories'));
     }
 
@@ -21,19 +24,17 @@ class CategoryController extends Controller
     {
         DB::beginTransaction();
         try {
-            $request->validate(
-                [
-                    'name' => 'required|string|max:255|unique:categories,name',
-                    'status' => 'required|in:active,inactive',
-                ],
-                [
-                    'name.unique' => 'The name has already been taken.',
-                ],
-            );
+            // Validate inputs including status
+            $request->validate([
+                'name' => 'required|string|max:255|unique:categories,name',
+                'status' => 'required|in:active,inactive',
+            ]);
 
             $category = new Category();
             $category->name = $request->name;
             $category->status = $request->status;
+            $category->user_id = Auth::id();
+
             $category->save();
 
             DB::commit();
@@ -44,7 +45,7 @@ class CategoryController extends Controller
 
             Log::error('Error creating category: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'Category created Failed. Please try again!');
+            return redirect()->back()->with('error', 'Category creation failed. Please try again!');
         }
     }
 
@@ -52,7 +53,18 @@ class CategoryController extends Controller
     {
         DB::beginTransaction();
         try {
+            $request->validate([
+                'id' => 'required|exists:categories,id',
+                'name' => 'required|string|max:255|unique:categories,name,' . $request->id,
+                'status' => 'required|in:active,inactive',
+            ]);
+
             $category = Category::findOrFail($request->id);
+
+            if ($category->user_id !== Auth::id()) {
+                return redirect()->route('category.index')->with('error', 'Unauthorized update attempt.');
+            }
+
             $category->name = $request->name;
             $category->status = $request->status;
             $category->save();
@@ -65,7 +77,7 @@ class CategoryController extends Controller
 
             Log::error('Error updating category: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'Category updated Failed. Please try again successfully.');
+            return redirect()->back()->with('error', 'Category update failed. Please try again!');
         }
     }
 
@@ -73,7 +85,16 @@ class CategoryController extends Controller
     {
         DB::beginTransaction();
         try {
+            $request->validate([
+                'id' => 'required|exists:categories,id',
+            ]);
+
             $category = Category::findOrFail($request->id);
+
+            if ($category->user_id !== Auth::id()) {
+                return redirect()->route('category.index')->with('error', 'Unauthorized delete attempt.');
+            }
+
             $category->delete();
 
             DB::commit();
@@ -84,7 +105,7 @@ class CategoryController extends Controller
 
             Log::error('Error deleting category: ' . $th->getMessage());
 
-            return redirect()->back()->with('error', 'Category deleted Failed. Please try again!');
+            return redirect()->back()->with('error', 'Category deletion failed. Please try again!');
         }
     }
 
@@ -98,7 +119,8 @@ class CategoryController extends Controller
                 return redirect()->route('category.index')->with('error', 'No categories selected for deletion.');
             }
 
-            Category::whereIn('id', $ids)->delete();
+            $userId = Auth::id();
+            Category::whereIn('id', $ids)->where('user_id', $userId)->delete();
 
             DB::commit();
 

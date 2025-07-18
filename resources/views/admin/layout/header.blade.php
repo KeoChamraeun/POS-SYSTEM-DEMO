@@ -167,10 +167,10 @@
                         <span class="user-img me-2">
                             <img src="{{ asset( Auth::user()->thumbnail ?? '/backend/assets/img/avatar.png') }}" alt="Img">
                         </span>
-                        <div>
-                            <h6 class="fw-medium">{{ Auth::user()->name }}</h6>
-                            <p>{{ Auth::user()->email }}</p>
-                        </div>
+                        <!-- <div>
+                            <h6 class="fw-medium">{{ Auth::user()}}</h6>
+                            <p>{{ Auth::user() }}</p>
+                        </div> -->
                     </div>
                     <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ti ti-user-circle me-2"></i>My Profile</a>
                     <a class="dropdown-item" href="{{ route('admin.change.password') }}"><i class="ti ti-lock me-2"></i>Change Password</a>

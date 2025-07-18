@@ -21,13 +21,30 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $todaysOrder = Order::whereDate('created_at', now())->count();
-        $totalSales = Order::whereDate('created_at', now())->sum('total');
-        $totalPurchase = 0; // Assuming you will calculate total purchase from a different model or logic
+        $userId = auth()->id();
+
+        // Orders for today for the current user
+        $todaysOrder = Order::where('user_id', $userId)
+            ->whereDate('created_at', now())
+            ->count();
+
+        // Total sales for today for the current user
+        $totalSales = Order::where('user_id', $userId)
+            ->whereDate('created_at', now())
+            ->sum('total');
+
+        // Total purchase for current user (replace with your own purchase logic)
+        $totalPurchase = 0; // Adjust this if you have a Purchase model linked to user
+
+        // Profit calculation
         $totalProfit = $totalSales - $totalPurchase;
-        $totalExpense = Expense::sum('amount');
+
+        // Total expense for current user
+        $totalExpense = Expense::where('user_id', $userId)->sum('amount');
+
         return view('admin.index', compact('todaysOrder', 'totalSales', 'totalPurchase', 'totalProfit', 'totalExpense'));
     }
+
     public function adminLogout()
     {
         Auth::logout();
@@ -38,16 +55,16 @@ class AdminController extends Controller
         return redirect('/login')->with($notification);
     }
 
-
-
     public function POSTable()
     {
-        $menus = Menu::all();
-        $menuItems = MenuItem::all();
-        $categories = MenuItem::get('category');
+        $userId = auth()->id();
+
+        $menus = Menu::where('user_id', $userId)->get();
+        $menuItems = MenuItem::where('user_id', $userId)->get();
+        $categories = MenuItem::where('user_id', $userId)->distinct()->pluck('category');
+
         return view('admin.pos.pos_table', compact('menus', 'menuItems', 'categories'));
     }
-
 
     public function AdminProfile()
     {
@@ -65,6 +82,7 @@ class AdminController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
+
             if ($request->hasFile('thumbnail')) {
                 // Delete old image if exists
                 if ($user->thumbnail && file_exists(public_path($user->thumbnail))) {
@@ -76,6 +94,7 @@ class AdminController extends Controller
                 $image->move(public_path('uploads/admin_images'), $imageName);
                 $user->thumbnail = 'uploads/admin_images/' . $imageName;
             }
+
             $user->save();
 
             DB::commit();
@@ -87,7 +106,6 @@ class AdminController extends Controller
         }
     }
 
-
     public function AdminPassword()
     {
         return view('admin.admin_change_password');
@@ -95,17 +113,12 @@ class AdminController extends Controller
 
     public function AdminPasswordUpdate(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:6|confirmed',
         ]);
 
         $user = User::findOrFail(Auth::id());
-        // Check if the current password matches
-        if (!$user) {
-            return back()->with('error', 'User not found.');
-        }
 
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->with('error', 'Current password is incorrect.');
@@ -114,6 +127,7 @@ class AdminController extends Controller
         $user->update([
             'password' => Hash::make($request->new_password),
         ]);
+
         return back()->with('success', 'Password updated successfully.');
     }
 }
