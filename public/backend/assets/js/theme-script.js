@@ -31,23 +31,23 @@ let themesettings = `
                         <div class="row gx-3">
                             <div class="col-4">
                                 <div class="theme-layout mb-3">
-                                    <input type="radio" name="LayoutTheme" id="defaultLayout" value="default" checked>
-                                    <label for="defaultLayout">
-                                        <span class="d-block mb-2 layout-img">
-                                            <img src="backend/assets/img/theme/default.svg" alt="img">
-                                        </span>                                     
-                                        <span class="layout-type">Default</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="theme-layout mb-3">
                                     <input type="radio" name="LayoutTheme" id="miniLayout" value="mini" >
                                     <label for="miniLayout">
                                         <span class="d-block mb-2 layout-img">
                                             <img src="backend/assets/img/theme/mini.svg" alt="img">
                                         </span>                                    
                                         <span class="layout-type">Mini</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="theme-layout mb-3">
+                                    <input type="radio" name="LayoutTheme" id="defaultLayout" value="default" checked>
+                                    <label for="defaultLayout">
+                                        <span class="d-block mb-2 layout-img">
+                                            <img src="backend/assets/img/theme/default.svg" alt="img">
+                                        </span>                                     
+                                        <span class="layout-type">Default</span>
                                     </label>
                                 </div>
                             </div>
