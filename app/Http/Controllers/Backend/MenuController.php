@@ -230,34 +230,37 @@ class MenuController extends Controller
         }
     }
 
-    public function menuItemUpdate(Request $request)
+    public function menuItemStore(Request $request)
     {
+        $validation = Validator::make($request->all(), [
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'category' => 'required|exists:categories,id',
+            'status' => 'required|in:active,inactive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation)->withInput();
+        }
+
         DB::beginTransaction();
         try {
-            $menu = MenuItem::findOrFail($request->id);
-
-            if ($menu->user_id !== Auth::id()) {
-                return redirect()->route('menu.item.index')->with('error', 'Unauthorized action.');
-            }
-
+            $menu = new MenuItem();
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->category;
+            $menu->user_id = Auth::id();
 
             if ($request->file('image')) {
-                if ($menu->image) {
-                    $imagePath = public_path($menu->image);
-                    if (file_exists($imagePath) && is_file($imagePath)) {
-                        unlink($imagePath);
-                    }
-                }
                 $menu_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
                 $image = $manager->read($menu_img);
                 $image->resize(150, 150);
-                $save_url = '/uploads/menu_item/' . $name_gen;
+
+                $save_url = 'uploads/menu_item/' . $name_gen; // No leading slash
                 $image->toJpeg(80)->save(public_path($save_url));
                 $menu->image = $save_url;
             }
@@ -266,13 +269,14 @@ class MenuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('menu.item.index')->with('success', 'Menu item updated successfully.');
+            return redirect()->route('menu.item.index')->with('success', 'Menu item created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Menu item update failed: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Menu item creation failed: ' . $th->getMessage());
         }
     }
+
 
     public function menuItemDestroy(Request $request)
     {
