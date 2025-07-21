@@ -8,7 +8,6 @@
 
 @section('content')
 <div class="content">
-
     <div class="page-header">
         <div class="add-item d-flex">
             <!-- <div class="page-title">
@@ -72,17 +71,19 @@
                             @if (session()->has('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <strong>{{ session('success') }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                             @endif
-                            @if (session()->has('errors'))
+                            @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 @foreach ($errors->all() as $error)
                                 <p class="mb-0">{{ $error }}</p>
                                 @endforeach
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                             @endif
 
-                            @foreach ($menuItems as $menuItem)
+                            @forelse ($menuItems as $menuItem)
                             <tr>
                                 <td>
                                     <label class="checkboxs">
@@ -90,12 +91,8 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-
                                 <td><span class="text-gray-9">{{ $menuItem->name }}</span></td>
-                                <td>
-                                    <span class="text-gray-9">{{ site_settings()->currency }}{{ $menuItem->price }}</span>
-                                </td>
-
+                                <td><span class="text-gray-9">{{ site_settings()->currency }}{{ $menuItem->price }}</span></td>
                                 <td>
                                     <img src="{{ asset($menuItem->image ?? 'backend/assets/img/no-image.jpg') }}" width="50" height="50" alt="image">
                                 </td>
@@ -117,15 +114,17 @@
                                         <input type="hidden" name="item_image" value="{{ $menuItem->image }}" id="item_image">
                                         <input type="hidden" name="item_status" value="{{ $menuItem->status }}" id="item_status">
                                         <input type="hidden" name="item_category_id" value="{{ $menuItem->category }}" id="item_category_id">
-
-
                                         <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2 border outline-" href="javascript:void(0);" id="delete-item">
                                             <i data-feather="trash-2" class="feather-trash-2"></i>
                                         </a>
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="6">No menu items found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -144,14 +143,13 @@
         }
     </script>
 
-
-    <!-- Add menu -->
+    <!-- Add Menu Modal -->
     <div class="modal fade" id="add-menu">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="page-title">
-                        <h4>Add menu</h4>
+                        <h4>Add Menu</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -161,15 +159,16 @@
                     @csrf
                     <div class="modal-body add-list add">
                         @if ($errors->any())
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <ul>
                                 @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         @endif
-                        <div class="add-choosen">
+                        <div class="add-cho4848osen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
                                     <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview')">
@@ -183,10 +182,9 @@
                                 <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
                             </div>
                         </div>
-                        <!-- Rest of the form fields -->
                         <div class="mb-3">
                             <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
-                            <select name="category" class="form-select">
+                            <select name="category" class="form-select" required>
                                 <option value="">Select Category</option>
                                 @foreach ($categories as $items)
                                 <option value="{{ $items->id }}">{{ $items->name }}</option>
@@ -195,15 +193,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="name" placeholder="Enter item name">
+                            <input type="text" class="form-control" name="name" placeholder="Enter item name" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="price" placeholder="Enter item price" required>
+                            <input type="number" step="0.01" class="form-control" name="price" placeholder="Enter item price" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <select name="status" class="form-select">
+                            <select name="status" class="form-select" required>
                                 <option value="">Select Status</option>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
@@ -218,9 +216,9 @@
             </div>
         </div>
     </div>
-    <!-- /Add menu -->
+    <!-- /Add Menu Modal -->
 
-    <!-- Edit menu -->
+    <!-- Edit Menu Modal -->
     <div class="modal fade" id="edit-menu-item">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -229,13 +227,23 @@
                         <h4>Edit Menu Item</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('menu.item.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="" id="id">
                     <div class="modal-body">
+                        @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        @endif
                         <div class="add-choosen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
@@ -247,20 +255,17 @@
                                 </div>
                             </div>
                             <div class="phone-img">
-                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview-edit">
+                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview-edit" alt="image" class="image-preview-edit">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
-                            <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
-                                <select name="category" class="form-select" id="menu_cat">
-                                    <option value="">Select Category</option>
-                                    @foreach ($categories as $items)
-                                    <option value="{{ $items->id }}">{{ $items->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <select name="category" class="form-select" id="menu_cat" required>
+                                <option value="">Select Category</option>
+                                @foreach ($categories as $items)
+                                <option value="{{ $items->id }}">{{ $items->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
@@ -268,17 +273,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" value="" id="price" name="price" placeholder="Enter menu item price" required>
+                            <input type="number" step="0.01" class="form-control" value="" id="price" name="price" placeholder="Enter menu item price" required>
                         </div>
                         <div class="mb-0">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-                                <select name="status" class="form-select" id="status">
-                                    <option value="">Select Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
+                            <select name="status" class="form-select" id="status" required>
+                                <option value="">Select Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -290,15 +293,14 @@
         </div>
     </div>
 
-    {{-- Delete modal --}}
-
+    <!-- Delete Modal -->
     <div class="modal fade" id="delete-modals">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Delete Item</h4>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('menu.item.delete') }}" method="POST">
@@ -316,36 +318,40 @@
         </div>
     </div>
 
+    <!-- JavaScript for Image Preview and Modal Actions -->
+    <script>
+        // Image Preview Function
+        function loadImage(input, previewId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(previewId).src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // jQuery for Edit Menu
+        $(document).on('click', '#edit-item', function() {
+            var item_id = $(this).closest('tr').find('#item_id').val();
+            $('#id').val(item_id);
+            var item_name = $(this).closest('tr').find('#item_name').val();
+            $('#name').val(item_name);
+            var item_price = $(this).closest('tr').find('#item_price').val();
+            $('#price').val(item_price);
+            var item_image = $(this).closest('tr').find('#item_image').val();
+            $('.image-preview-edit').attr('src', item_image || "{{ asset('backend/assets/img/no-image.jpg') }}");
+            var item_status = $(this).closest('tr').find('#item_status').val();
+            $('#status option[value="' + item_status + '"]').prop('selected', true);
+            var categoryId = $(this).closest('tr').find('#item_category_id').val();
+            $('#menu_cat option[value="' + categoryId + '"]').prop('selected', true);
+        });
+
+        // jQuery for Delete Menu
+        $(document).on('click', '#delete-item', function() {
+            var item_id = $(this).closest('tr').find('#item_id').val();
+            $('#delete_item_id').val(item_id);
+        });
+    </script>
 </div>
-
-<script>
-    //jQuery for edit menu
-    $(document).on('click', '#edit-item', function() {
-
-        var item_id = $(this).closest('tr').find('#item_id').val();
-        $('#id').val(item_id);
-
-        var item_name = $(this).closest('tr').find('#item_name').val();
-        $('#name').val(item_name);
-
-        var item_price = $(this).closest('tr').find('#item_price').val();
-        $('#price').val(item_price);
-
-        var item_image = $(this).closest('tr').find('#item_image').val();
-        $('.image-preview-edit').attr('src', item_image);
-
-        var item_status = $(this).closest('tr').find('#item_status').val();
-        $('#status option[value="' + item_status + '"]').prop('selected', true);
-
-        var categoryId = $(this).closest('tr').find('#item_category_id').val();
-        $('#menu_cat option[value="' + categoryId + '"]').prop('selected', true);
-    });
-
-    //jQuery for delete menu
-    $(document).on('click', '#delete-item', function() {
-        var item_id = $(this).closest('tr').find('#item_id').val();
-        $('#delete_item_id').val(item_id);
-    });
-</script>
-
 @endsection
