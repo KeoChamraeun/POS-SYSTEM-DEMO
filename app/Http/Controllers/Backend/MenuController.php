@@ -191,52 +191,6 @@ class MenuController extends Controller
             'price' => 'required|numeric',
             'category' => 'required|exists:categories,id',
             'status' => 'required|in:active,inactive',
-        ]);
-
-        if ($validation->fails()) {
-            return redirect()->back()->withErrors($validation)->withInput();
-        }
-
-        DB::beginTransaction();
-        try {
-            $menu = new MenuItem();
-            $menu->name = $request->name;
-            $menu->price = $request->price;
-            $menu->status = $request->status;
-            $menu->category = $request->category;
-            $menu->user_id = Auth::id();
-
-            if ($request->file('image')) {
-                $menu_img = $request->file('image');
-                $manager = new ImageManager(new Driver());
-                $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
-                $image = $manager->read($menu_img);
-                $image->resize(150, 150);
-                $save_url = '/uploads/menu_item/' . $name_gen;
-                $image->toJpeg(80)->save(public_path($save_url));
-                $menu->image = $save_url;
-            }
-
-            $menu->save();
-            dd($menu);
-
-            DB::commit();
-
-            return redirect()->route('menu.item.index')->with('success', 'Menu item created successfully.');
-        } catch (Exception $th) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Menu item creation failed: ' . $th->getMessage());
-        }
-    }
-
-    public function menuItemStore(Request $request)
-    {
-        $validation = Validator::make($request->all(), [
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'category' => 'required|exists:categories,id',
-            'status' => 'required|in:active,inactive',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -277,6 +231,50 @@ class MenuController extends Controller
         }
     }
 
+
+    public function menuItemUpdate(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $menu = MenuItem::findOrFail($request->id);
+
+            if ($menu->user_id !== Auth::id()) {
+                return redirect()->route('menu.item.index')->with('error', 'Unauthorized action.');
+            }
+
+            $menu->name = $request->name;
+            $menu->price = $request->price;
+            $menu->status = $request->status;
+            $menu->category = $request->category;
+
+            if ($request->file('image')) {
+                if ($menu->image) {
+                    $imagePath = public_path($menu->image);
+                    if (file_exists($imagePath) && is_file($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+                $menu_img = $request->file('image');
+                $manager = new ImageManager(new Driver());
+                $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
+                $image = $manager->read($menu_img);
+                $image->resize(150, 150);
+                $save_url = '/uploads/menu_item/' . $name_gen;
+                $image->toJpeg(80)->save(public_path($save_url));
+                $menu->image = $save_url;
+            }
+
+            $menu->save();
+
+            DB::commit();
+
+            return redirect()->route('menu.item.index')->with('success', 'Menu item updated successfully.');
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Menu item update failed: ' . $th->getMessage());
+        }
+    }
 
     public function menuItemDestroy(Request $request)
     {
