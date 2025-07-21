@@ -56,12 +56,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            // DEBUG: Return actual error message to see on page (development only)
-            return redirect()->back()->with('error', 'Menu creation failed: ' . $th->getMessage());
+            Log::error('Error creating menu: ' . $th->getMessage());
 
-            // In production, comment above line and use:
-            // Log::error('Error creating menu: ' . $th->getMessage());
-            // return redirect()->back()->with('error', 'Menu creation failed. Please try again!');
+            return redirect()->back()->with('error', 'Menu creation failed. Please try again!');
         }
     }
 
@@ -104,7 +101,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Menu update failed: ' . $th->getMessage());
+            Log::error('Error updating menu: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Menu update failed. Please try again!');
         }
     }
 
@@ -133,7 +132,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Menu item deletion failed: ' . $th->getMessage());
+            Log::error('Error deleting menu item: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Menu item deletion failed. Please try again!');
         }
     }
 
@@ -167,7 +168,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Bulk delete failed: ' . $th->getMessage());
+            Log::error('Error bulk deleting menu: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
         }
     }
 
@@ -188,14 +191,13 @@ class MenuController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'name' => 'required',
-            'price' => 'required|numeric',
-            'category' => 'required|exists:categories,id',
-            'status' => 'required|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'price' => 'required',
+            'category' => 'required',
+            'status' => 'required',
         ]);
 
         if ($validation->fails()) {
-            return redirect()->back()->withErrors($validation)->withInput();
+            return redirect()->back()->with('errors', $validation->errors());
         }
 
         DB::beginTransaction();
@@ -213,8 +215,7 @@ class MenuController extends Controller
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
                 $image = $manager->read($menu_img);
                 $image->resize(150, 150);
-
-                $save_url = 'uploads/menu_item/' . $name_gen; // No leading slash
+                $save_url = '/uploads/menu_item/' . $name_gen;
                 $image->toJpeg(80)->save(public_path($save_url));
                 $menu->image = $save_url;
             }
@@ -226,11 +227,10 @@ class MenuController extends Controller
             return redirect()->route('menu.item.index')->with('success', 'Menu item created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
-            return redirect()->back()->with('error', 'Menu item creation failed: ' . $th->getMessage());
+            Log::error('Error creating menu: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Menu item creation failed. Please try again!');
         }
     }
-
 
     public function menuItemUpdate(Request $request)
     {
@@ -272,7 +272,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Menu item update failed: ' . $th->getMessage());
+            Log::error('Error updating menu item: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Menu item update failed. Please try again!');
         }
     }
 
@@ -297,7 +299,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Menu item deletion failed: ' . $th->getMessage());
+            Log::error('Error deleting menu item: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Menu item deletion failed. Please try again!');
         }
     }
 
@@ -328,7 +332,9 @@ class MenuController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Bulk delete failed: ' . $th->getMessage());
+            Log::error('Error bulk deleting menu items: ' . $th->getMessage());
+
+            return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
         }
     }
 }
