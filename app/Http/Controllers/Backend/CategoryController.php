@@ -24,9 +24,21 @@ class CategoryController extends Controller
     {
         DB::beginTransaction();
         try {
-            // Validate inputs including status
+            // Validate inputs and ensure unique category name per user
             $request->validate([
-                'name' => 'required|string|max:255|unique:categories,name',
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    function ($attribute, $value, $fail) {
+                        $exists = Category::where('name', $value)
+                            ->where('user_id', Auth::id())
+                            ->exists();
+                        if ($exists) {
+                            $fail('The category name already exists.');
+                        }
+                    },
+                ],
                 'status' => 'required|in:active,inactive',
             ]);
 
@@ -34,7 +46,6 @@ class CategoryController extends Controller
             $category->name = $request->name;
             $category->status = $request->status;
             $category->user_id = Auth::id();
-
             $category->save();
 
             DB::commit();
@@ -42,7 +53,6 @@ class CategoryController extends Controller
             return redirect()->route('category.index')->with('success', 'Category created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error creating category: ' . $th->getMessage());
 
             return redirect()->back()->with('error', 'Category creation failed. Please try again!');
@@ -55,7 +65,20 @@ class CategoryController extends Controller
         try {
             $request->validate([
                 'id' => 'required|exists:categories,id',
-                'name' => 'required|string|max:255|unique:categories,name,' . $request->id,
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $exists = Category::where('name', $value)
+                            ->where('user_id', Auth::id())
+                            ->where('id', '!=', $request->id)
+                            ->exists();
+                        if ($exists) {
+                            $fail('The category name already exists.');
+                        }
+                    },
+                ],
                 'status' => 'required|in:active,inactive',
             ]);
 
@@ -74,7 +97,6 @@ class CategoryController extends Controller
             return redirect()->route('category.index')->with('success', 'Category updated successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error updating category: ' . $th->getMessage());
 
             return redirect()->back()->with('error', 'Category update failed. Please try again!');
@@ -102,7 +124,6 @@ class CategoryController extends Controller
             return redirect()->route('category.index')->with('success', 'Category deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error deleting category: ' . $th->getMessage());
 
             return redirect()->back()->with('error', 'Category deletion failed. Please try again!');
@@ -127,7 +148,6 @@ class CategoryController extends Controller
             return redirect()->route('category.index')->with('success', 'Categories deleted successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-
             Log::error('Error bulk deleting categories: ' . $th->getMessage());
 
             return redirect()->back()->with('error', 'Bulk delete failed. Please try again!');
