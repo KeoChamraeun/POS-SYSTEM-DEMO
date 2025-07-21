@@ -218,6 +218,7 @@ class MenuController extends Controller
             }
 
             $menu->save();
+            dd($menu);
 
             DB::commit();
 
