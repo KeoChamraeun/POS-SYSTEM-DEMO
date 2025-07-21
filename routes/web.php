@@ -21,6 +21,13 @@ Route::get('/', function () {
 // Routes protected by 'auth' middleware
 Route::middleware(['auth'])->group(function () {
 
+    //invioce
+    Route::get('pos/invoices', [PosController::class, 'InvoiceList'])->name('pos.invoice.list');
+    Route::get('pos/invoice/export', [PosController::class, 'exportInvoices'])->name('pos.invoice.export');
+
+    Route::get('pos/order/{orderId}/confirmation', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
+    Route::get('pos/order/{id}/delete', [PosController::class, 'OrderDelete'])->name('order.delete');
+
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['verified'])->name('dashboard');
 

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Exports\InvoicesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PosController extends Controller
 {
@@ -32,19 +35,32 @@ class PosController extends Controller
     }
 
     // Show invoice list for logged-in user only
-    public function InvoiceList()
+    public function InvoiceList(Request $request)
     {
         $userId = auth()->id();
 
-        $invoiceList = Order::with('orderItems')
+        $query = Order::with('orderItems')
             ->where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
 
-        return view('admin.pos.invoice-list', compact('invoiceList'));
+        // Apply date filters
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        $invoiceList = $query->get();
+
+        return view('admin.pos.invoice-list', compact('invoiceList', 'startDate', 'endDate'));
     }
 
-    // Delete order if it belongs to logged-in user
+    // Delete order if belongs to logged-in user
     public function OrderDelete($id)
     {
         $userId = auth()->id();
@@ -59,5 +75,17 @@ class PosController extends Controller
         } else {
             return redirect()->back()->with('error', 'Invoice not found or you do not have permission to delete it.');
         }
+    }
+
+    // Export invoices filtered by date range or default to today
+    public function exportInvoices()
+    {
+        $userId = auth()->id();
+
+
+        return Excel::download(
+            new InvoicesExport($userId),
+            'invoices_' . date('Ymd_His') . '.xlsx'
+        );
     }
 }

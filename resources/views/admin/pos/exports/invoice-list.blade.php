@@ -17,50 +17,52 @@
         <div class="add-item d-flex justify-content-between align-items-center flex-wrap gap-3">
             <ul class="table-top-head d-flex gap-2 mb-0 align-items-center">
                 <li>
-                    <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"><i class="ti ti-refresh"></i></a>
+                    <a href="{{ url()->current() }}" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
+                        <i class="ti ti-refresh"></i>
+                    </a>
                 </li>
                 <li>
-                    <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse" data-bs-original-title="Collapse"><i class="ti ti-chevron-up"></i></a>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse" data-bs-original-title="Collapse">
+                        <i class="ti ti-chevron-up"></i>
+                    </a>
                 </li>
-                <!-- <li>
+                <li>
                     <a href="{{ url()->previous() }}" class="btn btn-primary" style="min-width: 90px;">
                         <i class="ti ti-arrow-left me-1"></i>Back
                     </a>
-                </li> -->
+                </li>
             </ul>
 
             <form action="{{ route('pos.invoice.list') }}" method="GET" class="d-flex gap-1 align-items-center" id="dateFilterForm" style="min-width: 280px;">
                 <input type="text" name="start_date" id="start_date" class="form-control form-control-sm" autocomplete="off" value="{{ request('start_date') }}" placeholder="Start Date" style="max-width: 120px;">
                 <input type="text" name="end_date" id="end_date" class="form-control form-control-sm" autocomplete="off" value="{{ request('end_date') }}" placeholder="End Date" style="max-width: 120px;">
-                <!-- <a href="{{ route('pos.invoice.export') }}" class="btn btn-success btn-sm ms-2">Export</a> -->
+                <a href="{{ route('pos.invoice.export') }}" class="btn btn-success btn-sm ms-2" id="exportLink">Export</a>
             </form>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card mt-3">
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Success!</strong> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" class="fs-16 text-danger">×</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
+
         @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error!</strong> {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" class="fs-16 text-danger">×</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-bordered table-hover" id="invoiceTable">
                     <thead>
                         <tr>
-                            <th colspan="2">Invoice No</th>
+                            <th><input type="checkbox" id="checkAll"></th>
+                            <th>Invoice No</th>
                             <th>Customer</th>
                             <th>Date</th>
                             <th>Amount</th>
@@ -72,16 +74,20 @@
                     <tbody>
                         @forelse ($invoiceList as $invoice)
                         <tr>
-                            <td><input type="checkbox"></td>
-                            <td><a href="{{ route('order.confirmation', $invoice->id) }}">{{ $invoice->order_number }}</a></td>
+                            <td><input type="checkbox" name="selected_invoices[]" value="{{ $invoice->id }}"></td>
+                            <td>
+                                <a href="{{ route('order.confirmation', $invoice->id) }}">
+                                    {{ $invoice->order_number }}
+                                </a>
+                            </td>
                             <td>{{ $invoice->customer_name }}</td>
                             <td>{{ $invoice->created_at->format('d M Y') }}</td>
                             <td>{{ site_settings()->currency }}{{ number_format($invoice->total, 2) }}</td>
                             <td>{{ site_settings()->currency }}{{ number_format($invoice->total, 2) }}</td>
-                            <td><span class="badge badge-soft-success badge-xs shadow-none"><i class="ti ti-point-filled me-1"></i>Paid</span></td>
                             <td>
-                                <a href="{{ route('order.confirmation', $invoice->id) }}" class="btn btn-sm btn-info">View</a>
-                                <a href="{{ route('order.delete', $invoice->id) }}" class="btn btn-sm btn-danger" id="delete" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">Delete</a>
+                                <span class="badge bg-success">
+                                    <i class="ti ti-point-filled me-1"></i>Paid
+                                </span>
                             </td>
                         </tr>
                         @empty
@@ -96,33 +102,12 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center p-4">
-            <div class="modal-body">
-                <div class="mb-3">
-                    <div class="icon-circle bg-light-danger text-danger mx-auto mb-2" style="width: 50px; height: 50px; border-radius: 50%;">
-                        <span class="rounded-circle d-inline-flex p-2 bg-danger-transparent mb-2"><i class="ti ti-trash fs-24 text-danger"></i></span>
-                    </div>
-                    <h5 class="fw-bold">Delete Order</h5>
-                    <p class="text-muted">Are you sure you want to delete this order?</p>
-                </div>
-                <div class="d-flex justify-content-center gap-2">
-                    <button type="button" class="btn btn-dark px-4" data-bs-dismiss="modal">Cancel</button>
-                    <a id="deleteConfirm" class="btn btn-primary text-white px-4">Yes Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script>
-    $(document).ready(function() {
-        // Initialize datepickers with auto-submit
+    $(function() {
+        // Initialize datepickers
         $('#start_date, #end_date').datepicker({
             dateFormat: 'yy-mm-dd',
             onSelect: function() {
@@ -130,14 +115,22 @@
             }
         });
 
-        // Delete confirmation
-        $(document).on('click', 'a#delete', function(e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            $('#deleteConfirmModal').modal('show');
-            $('#deleteConfirm').off().on('click', function() {
-                window.location.href = url;
-            });
+        // Delete confirmation modal handling
+        let deleteUrl = '';
+        $('#deleteConfirmModal').on('show.bs.modal', function(event) {
+            let button = $(event.relatedTarget);
+            deleteUrl = button.data('delete-url');
+        });
+
+        $('#deleteConfirm').on('click', function() {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+
+        // Select/Deselect all checkboxes
+        $('#checkAll').on('change', function() {
+            $('input[name="selected_invoices[]"]').prop('checked', $(this).prop('checked'));
         });
     });
 </script>
