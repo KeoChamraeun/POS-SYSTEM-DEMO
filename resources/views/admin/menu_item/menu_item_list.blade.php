@@ -154,16 +154,25 @@
                         <h4>Add menu</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('menu.item.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body add-list add">
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                         <div class="add-choosen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
-                                    <input type="file" name="image" class="form-control" accept="image/*" required onchange="loadImage(this, 'image-preview')">
+                                    <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview')">
                                     <div class="image-uploads">
                                         <i data-feather="plus-circle" class="plus-down-add me-0"></i>
                                         <h4>Add Images</h4>
@@ -174,38 +183,31 @@
                                 <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
                             </div>
                         </div>
-
+                        <!-- Rest of the form fields -->
                         <div class="mb-3">
                             <label class="form-label">Category<span class="text-danger ms-1">*</span></label>
-                            <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
-                                <select name="category" class="form-select">
-                                    <option value="">Select Category</option>
-                                    @foreach ($categories as $items)
-                                    <option value="{{ $items->id }}">{{ $items->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <select name="category" class="form-select">
+                                <option value="">Select Category</option>
+                                @foreach ($categories as $items)
+                                <option value="{{ $items->id }}">{{ $items->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Menu Item<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter item name">
+                            <input type="text" class="form-control" name="name" placeholder="Enter item name">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
                             <input type="text" class="form-control" name="price" placeholder="Enter item price" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
-                                <select name="status" class="form-select">
-                                    <option value="">Select Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
+                            <select name="status" class="form-select">
+                                <option value="">Select Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
