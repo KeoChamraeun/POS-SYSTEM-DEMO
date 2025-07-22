@@ -146,7 +146,7 @@ class MenuController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|exists:categories,id',
             'status' => 'required|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
 
         if ($validation->fails()) {
