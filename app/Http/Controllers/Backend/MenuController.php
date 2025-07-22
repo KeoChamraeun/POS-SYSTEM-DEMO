@@ -191,26 +191,26 @@ class MenuController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|exists:categories,id',
             'status' => 'required|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
-    
+
         if ($validation->fails()) {
             Log::error('Validation failed: ', $validation->errors()->toArray());
             return redirect()->back()->withErrors($validation)->withInput();
         }
-    
+
         DB::beginTransaction();
         try {
             $menu = MenuItem::findOrFail($request->id);
             if ($menu->user_id !== Auth::id()) {
                 return redirect()->route('menu.item.index')->with('error', 'Unauthorized action.');
             }
-    
+
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->category;
-    
+
             if ($request->file('image')) {
                 if ($menu->image && file_exists(public_path($menu->image))) {
                     unlink(public_path($menu->image));
@@ -221,7 +221,7 @@ class MenuController extends Controller
                 $menu_img->move(public_path('Uploads/menu_item'), $name_gen);
                 $menu->image = $save_url;
             }
-    
+
             $menu->save();
             DB::commit();
             return redirect()->route('menu.item.index')->with('success', 'Menu item updated successfully.');
@@ -231,7 +231,7 @@ class MenuController extends Controller
             return redirect()->back()->with('error', 'Menu item update failed: ' . $e->getMessage());
         }
     }
-    
+
 
     public function menuItemDestroy(Request $request)
     {
