@@ -79,11 +79,15 @@ class MenuController extends Controller
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
+        if (!is_numeric($id) || $id <= 0) {
+            return redirect()->route('menu.index')->with('error', 'Invalid menu ID.');
+        }
+
         DB::beginTransaction();
         try {
-            $menu = Menu::findOrFail($request->id);
+            $menu = Menu::findOrFail($id);
             if ($menu->user_id !== Auth::id()) {
                 return redirect()->route('menu.index')->with('error', 'Unauthorized action.');
             }
@@ -92,11 +96,11 @@ class MenuController extends Controller
             }
             $menu->delete();
             DB::commit();
-            return redirect()->route('menu.index')->with('success', 'Menu item deleted successfully.');
+            return redirect()->route('menu.index')->with('success', 'Menu deleted successfully.');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Menu deletion failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Menu deletion failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Menu deletion failed.');
         }
     }
 
@@ -126,7 +130,6 @@ class MenuController extends Controller
         }
     }
 
-    // Menu Item Methods
     public function menuItemIndex()
     {
         $userId = Auth::id();
@@ -162,7 +165,6 @@ class MenuController extends Controller
             $menu->status = $request->status;
             $menu->category = $request->category;
             $menu->user_id = Auth::id();
-
             if ($request->file('image')) {
                 $menu_img = $request->file('image');
                 $name_gen = hexdec(uniqid()) . '.' . $menu_img->getClientOriginalExtension();
@@ -170,7 +172,6 @@ class MenuController extends Controller
                 $menu_img->move(public_path('Uploads/menu_item'), $name_gen);
                 $menu->image = $save_url;
             }
-
             $menu->save();
             DB::commit();
             Log::info('Menu item created successfully: ', ['id' => $menu->id]);
@@ -181,7 +182,6 @@ class MenuController extends Controller
             return redirect()->back()->with('error', 'Menu item creation failed: ' . $e->getMessage());
         }
     }
-
 
     public function menuItemUpdate(Request $request)
     {
@@ -205,12 +205,10 @@ class MenuController extends Controller
             if ($menu->user_id !== Auth::id()) {
                 return redirect()->route('menu.item.index')->with('error', 'Unauthorized action.');
             }
-
             $menu->name = $request->name;
             $menu->price = $request->price;
             $menu->status = $request->status;
             $menu->category = $request->category;
-
             if ($request->file('image')) {
                 if ($menu->image && file_exists(public_path($menu->image))) {
                     unlink(public_path($menu->image));
@@ -221,7 +219,6 @@ class MenuController extends Controller
                 $menu_img->move(public_path('Uploads/menu_item'), $name_gen);
                 $menu->image = $save_url;
             }
-
             $menu->save();
             DB::commit();
             return redirect()->route('menu.item.index')->with('success', 'Menu item updated successfully.');
@@ -231,7 +228,6 @@ class MenuController extends Controller
             return redirect()->back()->with('error', 'Menu item update failed: ' . $e->getMessage());
         }
     }
-
 
     public function menuItemDestroy(Request $request)
     {

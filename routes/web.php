@@ -32,25 +32,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/customer/bulk-delete', 'bulkDelete')->name('customer.bulk.delete');
     });
 
-    // Other routes (unchanged, included for context)
-    Route::get('pos/invoices', [PosController::class, 'InvoiceList'])->name('pos.invoice.list');
-    Route::get('pos/invoice/export', [PosController::class, 'exportInvoices'])->name('pos.invoice.export');
-    Route::get('pos/order/{orderId}/confirmation', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
-    Route::get('pos/order/{id}/delete', [PosController::class, 'OrderDelete'])->name('order.delete');
-
-    Route::controller(CategoryController::class)->group(function () {
-        Route::get('/category', 'index')->name('category.index');
-        Route::post('/category/store', 'store')->name('category.store');
-        Route::post('/category/update', 'update')->name('category.update');
-        Route::post('/category/delete', 'destroy')->name('category.delete');
-        Route::delete('/category/bulk-delete', 'bulkDelete')->name('category.bulk.delete');
-    });
-
+    // Menu Routes
     Route::controller(MenuController::class)->group(function () {
         Route::get('/menu', 'index')->name('menu.index');
         Route::post('/menu/store', 'store')->name('menu.store');
         Route::post('/menu/update', 'update')->name('menu.update');
-        Route::post('/menu/delete', 'destroy')->name('menu.delete');
+        Route::delete('/menu/{id}', 'destroy')->name('menu.delete'); // Fixed route
         Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
         Route::get('/menu-item', 'menuItemIndex')->name('menu.item.index');
         Route::post('/menu-item/store', 'menuItemStore')->name('menu.item.store');
@@ -59,6 +46,16 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/menu-item/bulk-delete', 'menuItemBulkDelete')->name('menu.item.bulk.delete');
     });
 
+    // Category Routes
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/category', 'index')->name('category.index');
+        Route::post('/category/store', 'store')->name('category.store');
+        Route::post('/category/update', 'update')->name('category.update');
+        Route::post('/category/delete', 'destroy')->name('category.delete');
+        Route::delete('/category/bulk-delete', 'bulkDelete')->name('category.bulk.delete');
+    });
+
+    // Supplier Routes
     Route::controller(SupplierController::class)->group(function () {
         Route::get('/supplier', 'index')->name('supplier.index');
         Route::post('/supplier/store', 'store')->name('supplier.store');
@@ -67,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/supplier/bulk-delete', 'bulkDelete')->name('supplier.bulk.delete');
     });
 
+    // Vat Routes
     Route::controller(VatController::class)->group(function () {
         Route::get('/vat', 'index')->name('vat.index');
         Route::post('/vat/store', 'store')->name('vat.store');
@@ -75,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/vat/bulk-delete', 'bulkDelete')->name('vat.bulk.delete');
     });
 
+    // Expense Routes
     Route::controller(ExpenseController::class)->group(function () {
         Route::get('/expense', 'index')->name('expense.index');
         Route::post('/expense/store', 'store')->name('expense.store');
@@ -88,18 +87,24 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/expense-head/bulk-delete', 'ExpenseHeadBulkDelete')->name('expense.head.bulk.delete');
     });
 
+    // POS Routes
+    Route::get('/pos', [PosController::class, 'POS'])->name('pos');
+    Route::get('/invoice', [PosController::class, 'InvoiceList'])->name('invoice.index');
+    Route::get('/pos/invoices', [PosController::class, 'InvoiceList'])->name('pos.invoice.list');
+    Route::get('/pos/invoice/export', [PosController::class, 'exportInvoices'])->name('pos.invoice.export');
+    Route::get('/pos/order/{orderId}/confirmation', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
+    Route::get('/order/delete/{id}', [PosController::class, 'OrderDelete'])->name('order.delete');
+    Route::get('/pos-table', [AdminController::class, 'POSTable'])->name('pos.table');
+    Route::get('/order/confirmed/{orderId}', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
+
+    // Admin Routes
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
     Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
     Route::post('/admin/profile', [AdminController::class, 'AdminProfileUpdate'])->name('admin.profile.update');
     Route::get('/admin/password', [AdminController::class, 'AdminPassword'])->name('admin.change.password');
     Route::post('/admin/password/update', [AdminController::class, 'AdminPasswordUpdate'])->name('admin.password.update');
 
-    Route::get('/pos', [PosController::class, 'POS'])->name('pos');
-    Route::get('/invoice', [PosController::class, 'InvoiceList'])->name('invoice.index');
-    Route::get('/order/delete/{id}', [PosController::class, 'OrderDelete'])->name('order.delete');
-    Route::get('/pos-table', [AdminController::class, 'POSTable'])->name('pos.table');
-    Route::get('/order/confirmed/{orderId}', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
-
+    // Site Setting Routes
     Route::controller(SiteSettingController::class)->group(function () {
         Route::get('/site-setting', 'index')->name('site.setting.index');
         Route::get('/site-setting/create', 'create')->name('site.setting.create');
