@@ -8,13 +8,12 @@
 
 @section('content')
 <div class="content">
-
     <div class="page-header">
         <div class="add-item d-flex">
             <!-- <div class="page-title">
-                    <h4 class="fw-bold">menu</h4>
-                    <h6>Manage your menu</h6>
-                </div> -->
+                <h4 class="fw-bold">Menu</h4>
+                <h6>Manage your menu</h6>
+            </div> -->
         </div>
         <ul class="table-top-head">
             <li>
@@ -25,7 +24,7 @@
             </li>
         </ul>
         <div class="page-btn">
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-menu"><i class="ti ti-circle-plus me-1"></i>Add menu</a>
+            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-menu"><i class="ti ti-circle-plus me-1"></i>Add Menu</a>
         </div>
     </div>
 
@@ -33,7 +32,6 @@
     <form action="{{ route('menu.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected menus?');" enctype="multipart/form-data">
         @csrf
         @method('DELETE')
-
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                 <div class="search-set">
@@ -47,7 +45,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table datatable">
@@ -79,8 +76,6 @@
                                 <strong>{{ session('error') }}</strong>
                             </div>
                             @endif
-
-
                             @foreach ($menus as $menu)
                             <tr>
                                 <td>
@@ -89,12 +84,10 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-
                                 <td><span class="text-gray-9">{{ $menu->name }}</span></td>
                                 <td>
                                     <span class="text-gray-9">{{ site_settings()->currency }}{{ $menu->price }}</span>
                                 </td>
-
                                 <td>
                                     <img src="{{ asset($menu->image ?? 'backend/assets/img/no-image.jpg') }}" width="50" height="50" alt="image">
                                 </td>
@@ -115,8 +108,7 @@
                                         <input type="hidden" name="menu_price" value="{{ $menu->price }}" id="menu_price">
                                         <input type="hidden" name="menu_image" value="{{ $menu->image ?? 'backend/assets/img/no-image.jpg' }}" id="menu_image">
                                         <input type="hidden" name="menu_status" value="{{ $menu->status }}" id="menu_status">
-
-                                        <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
+                                        <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat" data-id="{{ $menu->id }}">
                                             <i data-feather="trash-2" class="feather-trash-2"></i>
                                         </a>
                                     </div>
@@ -131,27 +123,16 @@
     </form>
     <!-- Bulk Delete Form End -->
 
-    <!-- Select All Checkbox Script -->
-    <script>
-        document.getElementById('select-all').onclick = function() {
-            let checkboxes = document.querySelectorAll('input[name="ids[]"]');
-            for (let checkbox of checkboxes) {
-                checkbox.checked = this.checked;
-            }
-        }
-    </script>
-
-
-    <!-- Add menu -->
+    <!-- Add Menu Modal -->
     <div class="modal fade" id="add-menu">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="page-title">
-                        <h4>Add menu</h4>
+                        <h4>Add Menu</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
@@ -171,20 +152,17 @@
                                 <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" wire:model="name" name="name" placeholder="Enter menu name" required>
+                            <input type="text" class="form-control" name="name" placeholder="Enter menu name" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Price<span class="text-danger ms-1">*</span></label>
                             <input type="text" class="form-control" name="price" placeholder="Enter menu price" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                             <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
                                 <select name="status" class="form-select">
                                     <option value="">Select Status</option>
                                     <option value="active">Active</option>
@@ -195,30 +173,28 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add menu</button>
+                        <button type="submit" class="btn btn-primary">Add Menu</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <!-- /Add menu -->
-    <!-- /product list -->
 
-    <!-- Edit menu -->
+    <!-- Edit Menu Modal -->
     <div class="modal fade" id="edit-menu">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="page-title">
-                        <h4>Edit menu</h4>
+                        <h4>Edit Menu</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('menu.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="text" name="id" value="" id="id">
+                    <input type="hidden" name="id" value="" id="id">
                     <div class="modal-body">
                         <div class="add-choosen">
                             <div class="mb-3">
@@ -235,7 +211,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">menu<span class="text-danger ms-1">*</span></label>
+                            <label class="form-label">Menu<span class="text-danger ms-1">*</span></label>
                             <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter menu name" required>
                         </div>
                         <div class="mb-3">
@@ -247,6 +223,8 @@
                             <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
                                 <select name="status" class="form-select" id="status">
                                     <option value="">Select Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
                                 </select>
                             </div>
                         </div>
@@ -260,20 +238,19 @@
         </div>
     </div>
 
-    {{-- Delete modal --}}
-
+    <!-- Delete Menu Modal -->
     <div class="modal fade" id="delete-modals">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete menu</h4>
+                    <h4 class="modal-title">Delete Menu</h4>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('menu.delete') }}" method="POST">
+                <form id="delete-menu-form" method="POST">
                     @csrf
-                    <input type="hidden" name="id" value="" id="delete_menu_id">
+                    @method('DELETE')
                     <div class="modal-body">
                         <h1>Are you sure you want to delete?</h1>
                     </div>
@@ -285,42 +262,51 @@
             </div>
         </div>
     </div>
-
 </div>
 
+<!-- Scripts -->
 <script>
-    //jQuery for edit menu
+    // Select All Checkbox
+    document.getElementById('select-all').onclick = function() {
+        let checkboxes = document.querySelectorAll('input[name="ids[]"]');
+        for (let checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+
+    // Image Preview Function
+    function loadImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(previewId).src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // jQuery for Edit Menu
     $(document).on('click', '#edit-cat', function() {
-
-        var menu_id = $(this).closest('tr').find('#menu_id').val();
+        var menu_id = $(this).closest('tr').find('#item_id').val();
         $('#id').val(menu_id);
-
         var menu_name = $(this).closest('tr').find('#menu_name').val();
         $('#name').val(menu_name);
-
         var menu_price = $(this).closest('tr').find('#menu_price').val();
         $('#price').val(menu_price);
-
         var menu_image = $(this).closest('tr').find('#menu_image').val();
         $('.image-preview-edit').attr('src', menu_image);
-
         var menu_status = $(this).closest('tr').find('#menu_status').val();
-        $('#status').val(menu_status);
-
         $('#status').html(`
             <option value="">Select Status</option>
             <option value="active" ${menu_status === 'active' ? 'selected' : ''}>Active</option>
             <option value="inactive" ${menu_status === 'inactive' ? 'selected' : ''}>Inactive</option>
         `);
-
-
     });
 
-    //jQuery for delete menu
+    // jQuery for Delete Menu
     $(document).on('click', '#delete-cat', function() {
-        var menu_id = $(this).closest('tr').find('#menu_id').val();
-        $('#delete_menu_id').val(menu_id);
+        var menu_id = $(this).data('id');
+        $('#delete-menu-form').attr('action', '{{ url("menu") }}/' + menu_id);
     });
 </script>
-
 @endsection
