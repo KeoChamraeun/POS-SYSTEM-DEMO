@@ -31,17 +31,10 @@ class CustomerController extends Controller
             'address' => 'required|string|max:500',
             'status' => 'required|in:active,inactive',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'email.unique' => 'This email is already associated with another customer.',
-            'phone.unique' => 'This phone number is already associated with another customer.',
         ]);
 
         DB::beginTransaction();
         try {
-            if (!Auth::check()) {
-                throw new Exception('User not authenticated.');
-            }
-
             $customer = new Customer();
             $customer->user_id = Auth::id();
             $customer->name = $request->name;
@@ -82,10 +75,7 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with('success', 'Customer created successfully.');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error creating customer: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
+            Log::error('Error creating customer: ' . $e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Failed to create customer: ' . $e->getMessage())->withInput();
         }
     }
@@ -100,16 +90,19 @@ class CustomerController extends Controller
             'address' => 'required|string|max:500',
             'status' => 'required|in:active,inactive',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'email.unique' => 'This email is already associated with another customer.',
-            'phone.unique' => 'This phone number is already associated with another customer.',
         ]);
 
         DB::beginTransaction();
         try {
+            Log::info('Update request for customer ID: ' . $request->id . ' by user: ' . Auth::id());
+
             $customer = Customer::where('id', $request->id)
                 ->where('user_id', Auth::id())
-                ->firstOrFail();
+                ->first();
+
+            if (!$customer) {
+                throw new Exception('Customer not found or does not belong to the current user.');
+            }
 
             $customer->name = $request->name;
             $customer->email = $request->email ?: null;
@@ -131,7 +124,6 @@ class CustomerController extends Controller
                     throw new Exception('The directory uploads/customer/ is not writable. Please set permissions to 775.');
                 }
 
-                // Delete old image if it exists
                 if ($customer->image && file_exists(public_path($customer->image))) {
                     unlink(public_path($customer->image));
                 }
@@ -154,7 +146,7 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with('success', 'Customer updated successfully.');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error updating customer: ' . $e->getMessage());
+            Log::error('Error updating customer: ' . $e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Failed to update customer: ' . $e->getMessage())->withInput();
         }
     }
@@ -169,7 +161,11 @@ class CustomerController extends Controller
         try {
             $customer = Customer::where('id', $request->id)
                 ->where('user_id', Auth::id())
-                ->firstOrFail();
+                ->first();
+
+            if (!$customer) {
+                throw new Exception('Customer not found or does not belong to the current user.');
+            }
 
             if ($customer->image && file_exists(public_path($customer->image))) {
                 unlink(public_path($customer->image));
@@ -181,7 +177,7 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with('success', 'Customer deleted successfully.');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error deleting customer: ' . $e->getMessage());
+            Log::error('Error deleting customer: ' . $e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Failed to delete customer: ' . $e->getMessage());
         }
     }
@@ -195,12 +191,7 @@ class CustomerController extends Controller
 
         DB::beginTransaction();
         try {
-            $ids = $request->ids;
-            if (empty($ids)) {
-                return redirect()->route('customer.index')->with('error', 'No customers selected for deletion.');
-            }
-
-            $customers = Customer::whereIn('id', $ids)
+            $customers = Customer::whereIn('id', $request->ids)
                 ->where('user_id', Auth::id())
                 ->get();
 
@@ -215,7 +206,7 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with('success', 'Customers deleted successfully.');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error deleting customers: ' . $e->getMessage());
+            Log::error('Error deleting customers: ' . $e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Failed to delete customers: ' . $e->getMessage());
         }
     }

@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/customer', 'index')->name('customer.index');
         Route::post('/customer/store', 'store')->name('customer.store');
         Route::post('/customer/update', 'update')->name('customer.update');
-        Route::post('/customer/destroy', 'destroy')->name('customer.destroy');
+        Route::delete('/customer/destroy', 'destroy')->name('customer.destroy');
         Route::delete('/customer/bulk-delete', 'bulkDelete')->name('customer.bulk.delete');
     });
 

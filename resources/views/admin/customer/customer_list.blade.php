@@ -158,14 +158,15 @@
                 </div>
                 <form action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="modal-body add-list add">
+                    <input type="hidden" name="id" id="edit-id">
+                    <div class="modal-body">
                         <div class="add-choosen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
-                                    <input type="file" name="image" class="form-control" accept="image/*" id="add-image">
+                                    <input type="file" name="image" class="form-control" accept="image/*" id="edit-image">
                                     <div class="image-uploads">
                                         <i data-feather="plus-circle" class="plus-down-add me-0"></i>
-                                        <h4>Add Image</h4>
+                                        <h4>Update Image</h4>
                                     </div>
                                 </div>
                                 @error('image')
@@ -173,44 +174,43 @@
                                 @enderror
                             </div>
                             <div class="phone-img">
-                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
+                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview-edit" alt="image" class="image-preview">
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="name" placeholder="Enter customer name" value="{{ old('name') }}" required>
+                            <input type="text" class="form-control" id="edit-name" name="name" placeholder="Enter customer name" required>
                             @error('name')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter customer email" value="{{ old('email') }}">
+                            <input type="email" class="form-control" id="edit-email" name="email" placeholder="Enter customer email">
                             @error('email')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="phone" placeholder="Enter customer phone" value="{{ old('phone') }}" required>
+                            <input type="text" class="form-control" id="edit-phone" name="phone" placeholder="Enter customer phone" required>
                             @error('phone')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="address" placeholder="Enter customer address" value="{{ old('address') }}" required>
+                            <input type="text" class="form-control" id="edit-address" name="address" placeholder="Enter customer address" required>
                             @error('address')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <select name="status" class="form-select" required>
-                                <option value="" disabled selected>Select Status</option>
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <select name="status" class="form-select" id="edit-status" required>
+                                <option value="" disabled>Select Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                             </select>
                             @error('status')
                             <div class="text-danger">{{ $message }}</div>
@@ -219,7 +219,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Customer</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -340,6 +340,12 @@
 </div>
 
 <script>
+    document.querySelectorAll('.delete-customer').forEach(button => {
+        button.addEventListener('click', function() {
+            const customerId = this.dataset.id;
+            document.getElementById('delete-id').value = customerId;
+        });
+    });
     // Select All Checkbox
     document.getElementById('select-all').addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('.customer-checkbox');
