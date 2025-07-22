@@ -242,7 +242,6 @@
                 </div>
                 <form action="{{ route('customer.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT')
                     <input type="hidden" name="id" id="edit-id">
                     <div class="modal-body">
                         <div class="add-choosen">
