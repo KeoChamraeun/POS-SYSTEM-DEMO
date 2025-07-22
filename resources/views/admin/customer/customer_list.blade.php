@@ -37,11 +37,12 @@
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                 <div class="search-set">
                     <div class="search-input">
+                        <input type="text" class="form-control" placeholder="Search customers..." id="search-input">
                         <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
                     </div>
                 </div>
                 <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-danger" id="bulk-delete-btn" disabled>
                         <i class="ti ti-trash"></i> Delete Selected
                     </button>
                 </div>
@@ -95,7 +96,7 @@
                             <tr>
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" name="ids[]" value="{{ $customer->id }}">
+                                        <input type="checkbox" name="ids[]" value="{{ $customer->id }}" class="customer-checkbox">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
@@ -122,18 +123,10 @@
                                 </td>
                                 <td class="action-table-data">
                                     <div class="edit-delete-action">
-                                        <a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-customer" id="edit-cat">
+                                        <a class="me-2 p-2 edit-customer" href="#" data-bs-toggle="modal" data-bs-target="#edit-customer" data-id="{{ $customer->id }}" data-name="{{ $customer->name }}" data-email="{{ $customer->email ?? '' }}" data-phone="{{ $customer->phone }}" data-address="{{ $customer->address }}" data-image="{{ $customer->image ? asset($customer->image) : asset('backend/assets/img/no-image.jpg') }}" data-status="{{ $customer->status }}">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <input type="hidden" name="customer_id" value="{{ $customer->id }}" id="customer_id">
-                                        <input type="hidden" name="customer_name" value="{{ $customer->name }}" id="customer_name">
-                                        <input type="hidden" name="customer_email" value="{{ $customer->email ?? '' }}" id="customer_email">
-                                        <input type="hidden" name="customer_phone" value="{{ $customer->phone }}" id="customer_phone">
-                                        <input type="hidden" name="customer_address" value="{{ $customer->address }}" id="customer_address">
-                                        <input type="hidden" name="customer_image" value="{{ $customer->image ? asset($customer->image) : asset('backend/assets/img/no-image.jpg') }}" id="customer_image">
-                                        <input type="hidden" name="customer_status" value="{{ $customer->status }}" id="customer_status">
-
-                                        <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
+                                        <a class="p-2 delete-customer" href="#" data-bs-toggle="modal" data-bs-target="#delete-modals" data-id="{{ $customer->id }}">
                                             <i data-feather="trash-2" class="feather-trash-2"></i>
                                         </a>
                                     </div>
@@ -170,33 +163,48 @@
                         <div class="add-choosen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
-                                    <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview')">
+                                    <input type="file" name="image" class="form-control" accept="image/*" id="add-image">
                                     <div class="image-uploads">
                                         <i data-feather="plus-circle" class="plus-down-add me-0"></i>
                                         <h4>Add Image</h4>
                                     </div>
                                 </div>
+                                @error('image')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="phone-img">
-                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image">
+                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
                             <input type="text" class="form-control" name="name" placeholder="Enter customer name" value="{{ old('name') }}" required>
+                            @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" class="form-control" name="email" placeholder="Enter customer email" value="{{ old('email') }}">
+                            @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
                             <input type="text" class="form-control" name="phone" placeholder="Enter customer phone" value="{{ old('phone') }}" required>
+                            @error('phone')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
                             <input type="text" class="form-control" name="address" placeholder="Enter customer address" value="{{ old('address') }}" required>
+                            @error('address')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
@@ -205,6 +213,9 @@
                                 <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
+                            @error('status')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -231,17 +242,21 @@
                 </div>
                 <form action="{{ route('customer.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id" id="id">
+                    @method('PUT')
+                    <input type="hidden" name="id" id="edit-id">
                     <div class="modal-body">
                         <div class="add-choosen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
-                                    <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview-edit')">
+                                    <input type="file" name="image" class="form-control" accept="image/*" id="edit-image">
                                     <div class="image-uploads">
                                         <i data-feather="plus-circle" class="plus-down-add me-0"></i>
                                         <h4>Update Image</h4>
                                     </div>
                                 </div>
+                                @error('image')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="phone-img">
                                 <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview-edit" alt="image" class="image-preview">
@@ -249,27 +264,42 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter customer name" required>
+                            <input type="text" class="form-control" id="edit-name" name="name" placeholder="Enter customer name" required>
+                            @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter customer email">
+                            <input type="email" class="form-control" id="edit-email" name="email" placeholder="Enter customer email">
+                            @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter customer phone" required>
+                            <input type="text" class="form-control" id="edit-phone" name="phone" placeholder="Enter customer phone" required>
+                            @error('phone')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" id="address" name="address" placeholder="Enter customer address" required>
+                            <input type="text" class="form-control" id="edit-address" name="address" placeholder="Enter customer address" required>
+                            @error('address')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <select name="status" class="form-select" id="status" required>
+                            <select name="status" class="form-select" id="edit-status" required>
                                 <option value="" disabled>Select Status</option>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
                             </select>
+                            @error('status')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -295,7 +325,7 @@
                 <form action="{{ route('customer.destroy') }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <input type="hidden" name="id" id="delete_customer_id">
+                    <input type="hidden" name="id" id="delete-id">
                     <div class="modal-body">
                         <h5>Are you sure you want to delete this customer?</h5>
                     </div>
@@ -313,52 +343,76 @@
 
 <script>
     // Select All Checkbox
-    document.getElementById('select-all').onclick = function() {
-        let checkboxes = document.querySelectorAll('input[name="ids[]"]');
-        for (let checkbox of checkboxes) {
-            checkbox.checked = this.checked;
-        }
-    }
+    document.getElementById('select-all').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.customer-checkbox');
+        const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        bulkDeleteBtn.disabled = !Array.from(checkboxes).some(cb => cb.checked);
+    });
+
+    // Individual Checkbox
+    document.querySelectorAll('.customer-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+            bulkDeleteBtn.disabled = !Array.from(document.querySelectorAll('.customer-checkbox')).some(cb => cb.checked);
+        });
+    });
 
     // Image Preview
     function loadImage(input, previewId) {
+        const preview = document.getElementById(previewId);
         if (input.files && input.files[0]) {
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById(previewId).src = e.target.result;
-            }
+                preview.src = e.target.result;
+            };
             reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = "{{ asset('backend/assets/img/no-image.jpg') }}";
         }
     }
 
-    // jQuery for Edit Customer Modal
-    $(document).on('click', '#edit-cat', function() {
-        let customer_id = $(this).closest('tr').find('#customer_id').val();
-        $('#id').val(customer_id);
-
-        let customer_name = $(this).closest('tr').find('#customer_name').val();
-        $('#name').val(customer_name);
-
-        let customer_email = $(this).closest('tr').find('#customer_email').val();
-        $('#email').val(customer_email);
-
-        let customer_phone = $(this).closest('tr').find('#customer_phone').val();
-        $('#phone').val(customer_phone);
-
-        let customer_address = $(this).closest('tr').find('#customer_address').val();
-        $('#address').val(customer_address);
-
-        let customer_image = $(this).closest('tr').find('#customer_image').val();
-        $('#image-preview-edit').attr('src', customer_image);
-
-        let customer_status = $(this).closest('tr').find('#customer_status').val();
-        $('#status').val(customer_status);
+    // Add Image Preview
+    document.getElementById('add-image').addEventListener('change', function() {
+        loadImage(this, 'image-preview');
     });
 
-    // jQuery for Delete Customer Modal
-    $(document).on('click', '#delete-cat', function() {
-        let customer_id = $(this).closest('tr').find('#customer_id').val();
-        $('#delete_customer_id').val(customer_id);
+    // Edit Image Preview
+    document.getElementById('edit-image').addEventListener('change', function() {
+        loadImage(this, 'image-preview-edit');
+    });
+
+    // Edit Customer Modal
+    document.querySelectorAll('.edit-customer').forEach(button => {
+        button.addEventListener('click', function() {
+            const data = this.dataset;
+            document.getElementById('edit-id').value = data.id;
+            document.getElementById('edit-name').value = data.name;
+            document.getElementById('edit-email').value = data.email;
+            document.getElementById('edit-phone').value = data.phone;
+            document.getElementById('edit-address').value = data.address;
+            document.getElementById('edit-status').value = data.status;
+            document.getElementById('image-preview-edit').src = data.image;
+        });
+    });
+
+    // Delete Customer Modal
+    document.querySelectorAll('.delete-customer').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('delete-id').value = this.dataset.id;
+        });
+    });
+
+    // Search Functionality (Client-side)
+    document.getElementById('search-input').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const rows = document.querySelectorAll('.datatable tbody tr');
+        rows.forEach(row => {
+            const name = row.querySelector('td:nth-child(2) a').textContent.toLowerCase();
+            const email = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            const phone = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+            row.style.display = name.includes(searchValue) || email.includes(searchValue) || phone.includes(searchValue) ? '' : 'none';
+        });
     });
 </script>
 @endsection
