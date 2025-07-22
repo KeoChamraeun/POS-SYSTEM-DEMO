@@ -37,7 +37,6 @@
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                 <div class="search-set">
                     <div class="search-input">
-                        <input type="text" class="form-control" placeholder="Search customers..." id="search-input">
                         <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
                     </div>
                 </div>

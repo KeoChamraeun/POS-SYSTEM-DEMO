@@ -51,6 +51,19 @@ class CustomerController extends Controller
             $customer->status = $request->status;
 
             if ($request->hasFile('image')) {
+                if (!extension_loaded('gd')) {
+                    throw new Exception('GD PHP extension is required for image processing.');
+                }
+
+                $uploadPath = public_path('uploads/customer');
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
+                if (!is_writable($uploadPath)) {
+                    throw new Exception('The directory uploads/customer/ is not writable. Please set permissions to 775.');
+                }
+
                 $customer_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $customer_img->getClientOriginalExtension();
@@ -59,7 +72,7 @@ class CustomerController extends Controller
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
-                $image->toJpeg(80)->save(public_path('uploads/customer/' . $name_gen));
+                $image->toJpeg(80)->save($uploadPath . '/' . $name_gen);
                 $customer->image = 'uploads/customer/' . $name_gen;
             }
 
@@ -105,6 +118,20 @@ class CustomerController extends Controller
             $customer->status = $request->status;
 
             if ($request->hasFile('image')) {
+                if (!extension_loaded('gd')) {
+                    throw new Exception('GD PHP extension is required for image processing.');
+                }
+
+                $uploadPath = public_path('uploads/customer');
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
+                if (!is_writable($uploadPath)) {
+                    throw new Exception('The directory uploads/customer/ is not writable. Please set permissions to 775.');
+                }
+
+                // Delete old image if it exists
                 if ($customer->image && file_exists(public_path($customer->image))) {
                     unlink(public_path($customer->image));
                 }
@@ -117,7 +144,7 @@ class CustomerController extends Controller
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
-                $image->toJpeg(80)->save(public_path('uploads/customer/' . $name_gen));
+                $image->toJpeg(80)->save($uploadPath . '/' . $name_gen);
                 $customer->image = 'uploads/customer/' . $name_gen;
             }
 
