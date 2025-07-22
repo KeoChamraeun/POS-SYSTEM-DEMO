@@ -23,17 +23,34 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
+        // Log request data for debugging
+        Log::info('Customer store request:', $request->all());
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:customers,email',
+            'phone' => 'required|string|max:20|unique:customers,phone', // Added unique validation
+            'address' => 'required|string|max:500',
+            'status' => 'required|in:active,inactive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
         DB::beginTransaction();
         try {
+            // Verify authentication
+            if (!Auth::check()) {
+                throw new Exception('User not authenticated.');
+            }
+
             $customer = new Customer();
-            $customer->user_id = Auth::id(); // assign session user
+            $customer->user_id = Auth::id();
             $customer->name = $request->name;
             $customer->email = $request->email;
             $customer->phone = $request->phone;
             $customer->address = $request->address;
             $customer->status = $request->status;
 
-            if ($request->file('image')) {
+            if ($request->hasFile('image')) {
                 $customer_img = $request->file('image');
                 $manager = new ImageManager(new Driver());
                 $name_gen = hexdec(uniqid()) . '.' . $customer_img->getClientOriginalExtension();
@@ -49,13 +66,27 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with('success', 'Customer created successfully.');
         } catch (Exception $th) {
             DB::rollBack();
-            Log::error('Error creating customer: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Customer creation failed. Please try again!');
+            Log::error('Error creating customer: ' . $th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Customer creation failed: ' . $th->getMessage());
         }
     }
 
     public function update(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:customers,id',
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:customers,email,' . $request->id,
+            'phone' => 'required|string|max:20|unique:customers,phone,' . $request->id, // Added unique validation
+            'address' => 'required|string|max:500',
+            'status' => 'required|in:active,inactive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
         DB::beginTransaction();
         try {
             $customer = Customer::where('id', $request->id)
@@ -68,7 +99,7 @@ class CustomerController extends Controller
             $customer->address = $request->address;
             $customer->status = $request->status;
 
-            if ($request->file('image')) {
+            if ($request->hasFile('image')) {
                 if ($customer->image && file_exists(public_path($customer->image))) {
                     unlink(public_path($customer->image));
                 }
@@ -89,12 +120,16 @@ class CustomerController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
             Log::error('Error updating customer: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Customer update failed. Please try again!');
+            return redirect()->back()->with('error', 'Customer update failed: ' . $th->getMessage());
         }
     }
 
     public function destroy(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:customers,id',
+        ]);
+
         DB::beginTransaction();
         try {
             $customer = Customer::where('id', $request->id)
@@ -112,12 +147,17 @@ class CustomerController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
             Log::error('Error deleting customer: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Customer deletion failed. Please try again!');
+            return redirect()->back()->with('error', 'Customer deletion failed: ' . $th->getMessage());
         }
     }
 
     public function bulkDelete(Request $request)
     {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:customers,id',
+        ]);
+
         DB::beginTransaction();
         try {
             $ids = $request->ids;
@@ -144,7 +184,7 @@ class CustomerController extends Controller
         } catch (Exception $th) {
             DB::rollBack();
             Log::error('Error deleting customers: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Bulk deletion failed. Please try again!');
+            return redirect()->back()->with('error', 'Bulk deletion failed: ' . $th->getMessage());
         }
     }
 }

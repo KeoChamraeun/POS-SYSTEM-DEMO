@@ -1,20 +1,19 @@
 @extends('admin.layout.admin_master')
 
 @section('title')
-<meta name="description" content="">
-<meta name="keywords" content="">
-<title>{{ site_settings()->site_name }}</title>
+<meta name="description" content="Manage your customers">
+<meta name="keywords" content="customers, admin, management">
+<title>{{ site_settings()->site_name ?? 'Customer Management' }}</title>
 @endsection
 
 @section('content')
 <div class="content">
-
     <div class="page-header">
         <div class="add-item d-flex">
-            <!-- <div class="page-title">
-                    <h4 class="fw-bold">Customer</h4>
-                    <h6>Manage your customer</h6>
-                </div> -->
+            <div class="page-title">
+                <h4 class="fw-bold">Customers</h4>
+                <h6>Manage your customers</h6>
+            </div>
         </div>
         <ul class="table-top-head">
             <li>
@@ -29,7 +28,7 @@
         </div>
     </div>
 
-    <!-- Bulk Delete Form Start -->
+    <!-- Bulk Delete Form -->
     <form action="{{ route('customer.bulk.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete selected customers?');" enctype="multipart/form-data">
         @csrf
         @method('DELETE')
@@ -65,24 +64,34 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Status</th>
-                                <th class="no-sort"></th>
+                                <th class="no-sort">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (session()->has('success'))
+                            @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>
-                                    {{ session('success') }}
-                                </strong>
+                                <strong>{{ session('success') }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                             @endif
-                            @if (session()->has('error'))
+                            @if (session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>{{ session('error') }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            @endif
+                            @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                             @endif
 
-                            @foreach ($customers as $customer)
+                            @forelse ($customers as $customer)
                             <tr>
                                 <td>
                                     <label class="checkboxs">
@@ -90,17 +99,16 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <a href="javascript:void(0);" class="avatar avatar-md me-2">
-                                            <img src="{{ asset($customer->image) }}" alt="customer image" class="avatar-img rounded-circle">
+                                            <img src="{{ $customer->image ? asset($customer->image) : asset('backend/assets/img/no-image.jpg') }}" alt="customer image" class="avatar-img rounded-circle">
                                         </a>
                                         <a href="javascript:void(0);">{{ $customer->name }}</a>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-gray-9">{{ $customer->email }}</span>
+                                    <span class="text-gray-9">{{ $customer->email ?? 'N/A' }}</span>
                                 </td>
                                 <td>
                                     <span class="text-gray-9">{{ $customer->phone }}</span>
@@ -119,10 +127,10 @@
                                         </a>
                                         <input type="hidden" name="customer_id" value="{{ $customer->id }}" id="customer_id">
                                         <input type="hidden" name="customer_name" value="{{ $customer->name }}" id="customer_name">
-                                        <input type="hidden" name="customer_email" value="{{ $customer->email }}" id="customer_email">
+                                        <input type="hidden" name="customer_email" value="{{ $customer->email ?? '' }}" id="customer_email">
                                         <input type="hidden" name="customer_phone" value="{{ $customer->phone }}" id="customer_phone">
                                         <input type="hidden" name="customer_address" value="{{ $customer->address }}" id="customer_address">
-                                        <input type="hidden" name="customer_image" value="{{ $customer->image }}" id="customer_image">
+                                        <input type="hidden" name="customer_image" value="{{ $customer->image ? asset($customer->image) : asset('backend/assets/img/no-image.jpg') }}" id="customer_image">
                                         <input type="hidden" name="customer_status" value="{{ $customer->status }}" id="customer_status">
 
                                         <a data-bs-toggle="modal" data-bs-target="#delete-modals" class="p-2 me-2" href="javascript:void(0);" id="delete-cat">
@@ -131,36 +139,29 @@
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No customers found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </form>
-    <!-- Bulk Delete Form End -->
+    <!-- /Bulk Delete Form -->
 
-    <!-- Select All Checkbox Script -->
-    <script>
-        document.getElementById('select-all').onclick = function() {
-            let checkboxes = document.querySelectorAll('input[name="ids[]"]');
-            for (let checkbox of checkboxes) {
-                checkbox.checked = this.checked;
-            }
-        }
-    </script>
-
-
-    <!-- Add customer -->
+    <!-- Add Customer Modal -->
     <div class="modal fade" id="add-customer">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="page-title">
-                        <h4>Add customer</h4>
+                        <h4>Add Customer</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
@@ -169,10 +170,10 @@
                         <div class="add-choosen">
                             <div class="mb-3">
                                 <div class="image-upload image-upload-two">
-                                    <input type="file" name="image" class="form-control" accept="image/*" required onchange="loadImage(this, 'image-preview')">
+                                    <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview')">
                                     <div class="image-uploads">
                                         <i data-feather="plus-circle" class="plus-down-add me-0"></i>
-                                        <h4>Add Images</h4>
+                                        <h4>Add Image</h4>
                                     </div>
                                 </div>
                             </div>
@@ -183,58 +184,54 @@
 
                         <div class="mb-3">
                             <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="name" placeholder="Enter customer name" required>
+                            <input type="text" class="form-control" name="name" placeholder="Enter customer name" value="{{ old('name') }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter customer email">
+                            <input type="email" class="form-control" name="email" placeholder="Enter customer email" value="{{ old('email') }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="phone" placeholder="Enter customer price" required>
+                            <input type="text" class="form-control" name="phone" placeholder="Enter customer phone" value="{{ old('phone') }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="address" placeholder="Enter your address" required>
+                            <input type="text" class="form-control" name="address" placeholder="Enter customer address" value="{{ old('address') }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-
-                                <select name="status" class="form-select">
-                                    <option value="">Select Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
+                            <select name="status" class="form-select" required>
+                                <option value="" disabled selected>Select Status</option>
+                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add customer</button>
+                        <button type="submit" class="btn btn-primary">Add Customer</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <!-- /Add customer -->
+    <!-- /Add Customer Modal -->
 
-
-    <!-- Edit customer -->
+    <!-- Edit Customer Modal -->
     <div class="modal fade" id="edit-customer">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="page-title">
-                        <h4>Edit customer</h4>
+                        <h4>Edit Customer</h4>
                     </div>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('customer.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id" value="" id="id">
+                    <input type="hidden" name="id" id="id">
                     <div class="modal-body">
                         <div class="add-choosen">
                             <div class="mb-3">
@@ -242,37 +239,37 @@
                                     <input type="file" name="image" class="form-control" accept="image/*" onchange="loadImage(this, 'image-preview-edit')">
                                     <div class="image-uploads">
                                         <i data-feather="plus-circle" class="plus-down-add me-0"></i>
-                                        <h4>Add Images</h4>
+                                        <h4>Update Image</h4>
                                     </div>
                                 </div>
                             </div>
                             <div class="phone-img">
-                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview" alt="image" class="image-preview">
+                                <img src="{{ asset('backend/assets/img/no-image.jpg') }}" id="image-preview-edit" alt="image" class="image-preview">
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">customer<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" value="" id="name" name="name" placeholder="Enter customer name" required>
+                            <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter customer name" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter customer email" id="email">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter customer email">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="phone" placeholder="Enter customer price" required id="phone">
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter customer phone" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" name="address" placeholder="Enter your address" required id="address">
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Enter customer address" required>
                         </div>
-                        <div class="mb-0">
+                        <div class="mb-3">
                             <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
-                            <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-                                <select name="status" class="form-select" id="status">
-                                    <option value="">Select Status</option>
-                                </select>
-                            </div>
+                            <select name="status" class="form-select" id="status" required>
+                                <option value="" disabled>Select Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -283,72 +280,84 @@
             </div>
         </div>
     </div>
+    <!-- /Edit Customer Modal -->
 
-    {{-- Delete modal --}}
-
+    <!-- Delete Customer Modal -->
     <div class="modal fade" id="delete-modals">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete customer</h4>
+                    <h4 class="modal-title">Delete Customer</h4>
                     <button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('customer.delete') }}" method="POST">
+                <form action="{{ route('customer.destroy') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="id" value="" id="delete_customer_id">
+                    @method('DELETE')
+                    <input type="hidden" name="id" id="delete_customer_id">
                     <div class="modal-body">
-                        <h1>Are you sure you want to delete?</h1>
+                        <h5>Are you sure you want to delete this customer?</h5>
                     </div>
                     <div class="modal-footer justify-content-start">
                         <button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <!-- /Delete Customer Modal -->
 
 </div>
 
 <script>
-    //jQuery for edit customer
-    $(document).on('click', '#edit-cat', function() {
+    // Select All Checkbox
+    document.getElementById('select-all').onclick = function() {
+        let checkboxes = document.querySelectorAll('input[name="ids[]"]');
+        for (let checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
 
-        var customer_id = $(this).closest('tr').find('#customer_id').val();
+    // Image Preview
+    function loadImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(previewId).src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // jQuery for Edit Customer Modal
+    $(document).on('click', '#edit-cat', function() {
+        let customer_id = $(this).closest('tr').find('#customer_id').val();
         $('#id').val(customer_id);
 
-        var customer_name = $(this).closest('tr').find('#customer_name').val();
+        let customer_name = $(this).closest('tr').find('#customer_name').val();
         $('#name').val(customer_name);
 
-        var customer_email = $(this).closest('tr').find('#customer_email').val();
+        let customer_email = $(this).closest('tr').find('#customer_email').val();
         $('#email').val(customer_email);
 
-        var customer_phone = $(this).closest('tr').find('#customer_phone').val();
+        let customer_phone = $(this).closest('tr').find('#customer_phone').val();
         $('#phone').val(customer_phone);
 
-        var customer_address = $(this).closest('tr').find('#customer_address').val();
+        let customer_address = $(this).closest('tr').find('#customer_address').val();
         $('#address').val(customer_address);
 
-        var customer_image = $(this).closest('tr').find('#customer_image').val();
-        $('.image-preview').attr('src', customer_image);
+        let customer_image = $(this).closest('tr').find('#customer_image').val();
+        $('#image-preview-edit').attr('src', customer_image);
 
-        var customer_status = $(this).closest('tr').find('#customer_status').val();
+        let customer_status = $(this).closest('tr').find('#customer_status').val();
         $('#status').val(customer_status);
-
-        $('#status').html(`
-            <option value="">Select Status</option>
-            <option value="active" ${customer_status === 'active' ? 'selected' : ''}>Active</option>
-            <option value="inactive" ${customer_status === 'inactive' ? 'selected' : ''}>Inactive</option>
-        `);
-
-
     });
 
-    //jQuery for delete customer
+    // jQuery for Delete Customer Modal
     $(document).on('click', '#delete-cat', function() {
-        var customer_id = $(this).closest('tr').find('#customer_id').val();
+        let customer_id = $(this).closest('tr').find('#customer_id').val();
         $('#delete_customer_id').val(customer_id);
     });
 </script>

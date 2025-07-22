@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CustomerController;
@@ -11,7 +12,6 @@ use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\VatController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 
 // Default route redirects to login or dashboard depending on auth state
 Route::get('/', function () {
@@ -20,18 +20,24 @@ Route::get('/', function () {
 
 // Routes protected by 'auth' middleware
 Route::middleware(['auth'])->group(function () {
-
-    //invioce
-    Route::get('pos/invoices', [PosController::class, 'InvoiceList'])->name('pos.invoice.list');
-    Route::get('pos/invoice/export', [PosController::class, 'exportInvoices'])->name('pos.invoice.export');
-
-    Route::get('pos/order/{orderId}/confirmation', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
-    Route::get('pos/order/{id}/delete', [PosController::class, 'OrderDelete'])->name('order.delete');
-
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['verified'])->name('dashboard');
 
-    // Category Routes
+    // Customer Routes
+    Route::controller(CustomerController::class)->group(function () {
+        Route::get('/customer', 'index')->name('customer.index');
+        Route::post('/customer/store', 'store')->name('customer.store');
+        Route::post('/customer/update', 'update')->name('customer.update');
+        Route::post('/customer/destroy', 'destroy')->name('customer.destroy');
+        Route::delete('/customer/bulk-delete', 'bulkDelete')->name('customer.bulk.delete');
+    });
+
+    // Other routes (unchanged, included for context)
+    Route::get('pos/invoices', [PosController::class, 'InvoiceList'])->name('pos.invoice.list');
+    Route::get('pos/invoice/export', [PosController::class, 'exportInvoices'])->name('pos.invoice.export');
+    Route::get('pos/order/{orderId}/confirmation', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
+    Route::get('pos/order/{id}/delete', [PosController::class, 'OrderDelete'])->name('order.delete');
+
     Route::controller(CategoryController::class)->group(function () {
         Route::get('/category', 'index')->name('category.index');
         Route::post('/category/store', 'store')->name('category.store');
@@ -40,15 +46,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/category/bulk-delete', 'bulkDelete')->name('category.bulk.delete');
     });
 
-    // Menu Routes
     Route::controller(MenuController::class)->group(function () {
         Route::get('/menu', 'index')->name('menu.index');
         Route::post('/menu/store', 'store')->name('menu.store');
         Route::post('/menu/update', 'update')->name('menu.update');
         Route::post('/menu/delete', 'destroy')->name('menu.delete');
         Route::delete('/menu/bulk-delete', 'bulkDelete')->name('menu.bulk.delete');
-
-        // Menu Item Routes
         Route::get('/menu-item', 'menuItemIndex')->name('menu.item.index');
         Route::post('/menu-item/store', 'menuItemStore')->name('menu.item.store');
         Route::post('/menu-item/update', 'menuItemUpdate')->name('menu.item.update');
@@ -56,16 +59,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/menu-item/bulk-delete', 'menuItemBulkDelete')->name('menu.item.bulk.delete');
     });
 
-    // Customer Routes
-    Route::controller(CustomerController::class)->group(function () {
-        Route::get('/customer', 'index')->name('customer.index');
-        Route::post('/customer/store', 'store')->name('customer.store');
-        Route::post('/customer/update', 'update')->name('customer.update');
-        Route::post('/customer/delete', 'destroy')->name('customer.delete');
-        Route::delete('/customer/bulk-delete', 'bulkDelete')->name('customer.bulk.delete');
-    });
-
-    // Supplier Routes
     Route::controller(SupplierController::class)->group(function () {
         Route::get('/supplier', 'index')->name('supplier.index');
         Route::post('/supplier/store', 'store')->name('supplier.store');
@@ -74,7 +67,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/supplier/bulk-delete', 'bulkDelete')->name('supplier.bulk.delete');
     });
 
-    // VAT Routes
     Route::controller(VatController::class)->group(function () {
         Route::get('/vat', 'index')->name('vat.index');
         Route::post('/vat/store', 'store')->name('vat.store');
@@ -83,15 +75,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/vat/bulk-delete', 'bulkDelete')->name('vat.bulk.delete');
     });
 
-    // Expense Routes
     Route::controller(ExpenseController::class)->group(function () {
         Route::get('/expense', 'index')->name('expense.index');
         Route::post('/expense/store', 'store')->name('expense.store');
         Route::post('/expense/update', 'update')->name('expense.update');
         Route::post('/expense/delete', 'destroy')->name('expense.delete');
         Route::delete('/expense/bulk-delete', 'bulkDelete')->name('expense.bulk.delete');
-
-        // Expense Head Routes
         Route::get('/expense-head', 'ExpenseHeadIndex')->name('expense.head.index');
         Route::post('/expense-head/store', 'ExpenseHeadStore')->name('expense.head.store');
         Route::post('/expense-head/update', 'ExpenseHeadUpdate')->name('expense.head.update');
@@ -99,27 +88,24 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/expense-head/bulk-delete', 'ExpenseHeadBulkDelete')->name('expense.head.bulk.delete');
     });
 
-    // Admin/Profile Routes
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
     Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
     Route::post('/admin/profile', [AdminController::class, 'AdminProfileUpdate'])->name('admin.profile.update');
     Route::get('/admin/password', [AdminController::class, 'AdminPassword'])->name('admin.change.password');
     Route::post('/admin/password/update', [AdminController::class, 'AdminPasswordUpdate'])->name('admin.password.update');
 
-    // POS & Orders
     Route::get('/pos', [PosController::class, 'POS'])->name('pos');
     Route::get('/invoice', [PosController::class, 'InvoiceList'])->name('invoice.index');
     Route::get('/order/delete/{id}', [PosController::class, 'OrderDelete'])->name('order.delete');
     Route::get('/pos-table', [AdminController::class, 'POSTable'])->name('pos.table');
     Route::get('/order/confirmed/{orderId}', [PosController::class, 'OrderConfirmed'])->name('order.confirmation');
 
-    // Site Setting
     Route::controller(SiteSettingController::class)->group(function () {
-        Route::get('/site-setting', 'index')->name('site.setting.index');          // List/show
-        Route::get('/site-setting/create', 'create')->name('site.setting.create');  // Show create form
-        Route::post('/site-setting/store', 'store')->name('site.setting.store');    // Save new setting
-        Route::get('/site-setting/edit/{id}', 'edit')->name('site.setting.edit');   // Edit form
-        Route::post('/site-setting/update/{id}', 'update')->name('site.setting.update'); // Update action
+        Route::get('/site-setting', 'index')->name('site.setting.index');
+        Route::get('/site-setting/create', 'create')->name('site.setting.create');
+        Route::post('/site-setting/store', 'store')->name('site.setting.store');
+        Route::get('/site-setting/edit/{id}', 'edit')->name('site.setting.edit');
+        Route::post('/site-setting/update/{id}', 'update')->name('site.setting.update');
     });
 });
 
